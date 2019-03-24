@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "array.hpp"
 
-int main()
+void test_array()
 {
 	using sdizo::Array;
 
@@ -25,5 +25,10 @@ int main()
 
 	array.generate(-20, 74, 20);
 	array.add(1337, 0);
+}
+
+int main()
+{
+	test_array();
 	return 0;
 }
