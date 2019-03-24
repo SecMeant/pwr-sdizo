@@ -14,10 +14,11 @@ class Array
 
     ~Array() noexcept;
 
-    int32_t loadFromFile();
+    int32_t loadFromFile() noexcept;
 
     // Inserts element at location given by index.
     // Throws std::out_of_range if index exceeds insert span of array,
+    // TODO(holz) make it use malloc and realloc instead of new.
     void insert(int32_t element, int32_t index);
 
     // Throws std::out_of_range if index exceeds span of array.
@@ -31,9 +32,10 @@ class Array
     // Overwrites value at index with given element.
     void add(int32_t element, int32_t index);
   
-    // Finds element in table.
-    // If element is in the table, returns it's index, -1 otherwise.
-    int32_t find(int32_t elem) const noexcept;
+    // Searches for element in container.
+    // Returns true if element is in container.
+    // False otherwise.
+    bool contains(int32_t element) const noexcept;
 
     // Randomly generates table.
     void generate(int32_t rand_range_begin, int32_t rand_range_end,
@@ -65,5 +67,9 @@ class Array
 
       return true;
     }
+
+    // Finds element in table.
+    // If element is in the table, returns it's index, -1 otherwise.
+    int32_t find(int32_t elem) const noexcept;
 };
 } // namespace sdizo
