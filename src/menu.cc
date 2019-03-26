@@ -70,20 +70,19 @@ void test_list2()
   puts(list.contains(1337) ? "true" : "false");
 }
 
-void test_heap()
+bool test_heap()
 {
 	using sdizo::Heap;
 	
 	Heap heap;
-	heap.generate(0, 20, 10);
-	heap.generate(0, 20, 10);
-	heap.remove(heap.at(7));
+	heap.generate(0, 20, 7);
+	heap.generate(0, 20, 7);
 
-	heap.verify();
+	return heap.verify();
 }
 
 int main()
 {
-	test_heap();
+	while(test_heap());
   return 0;
 }

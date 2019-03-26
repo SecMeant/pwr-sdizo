@@ -3,6 +3,7 @@
 #include <string.h>
 #include <algorithm>
 #include <random>
+#include <cassert>
 
 #define DEBUG_PRINT_ON
 
@@ -60,6 +61,10 @@ void sdizo::Heap::removeAt(int32_t index)
   --this->ssize;
 
   this->heapify(index);
+
+	#ifdef DEBUG_PRINT_ON
+	this->display();
+	#endif
 }
 
 void sdizo::Heap::remove(int32_t element) noexcept
@@ -76,6 +81,10 @@ void sdizo::Heap::remove(int32_t element) noexcept
   --this->ssize;
 
   this->heapify(index);
+
+	#ifdef DEBUG_PRINT_ON
+	this->display();
+	#endif
 }
 
 bool sdizo::Heap::contains(int32_t element) const noexcept
@@ -109,13 +118,15 @@ void sdizo::Heap::display() const noexcept
   {
     printf("%i ", this->array[i]);
   }
-  printf("}\n");
+  printf("} SIZE: %i\n", this->ssize);
 }
 
-void sdizo::Heap::heapify(int32_t index)
+void sdizo::Heap::heapify(int32_t index) noexcept
 {
-  if(index >= this->ssize)
-    throw std::out_of_range("Heapify on index out of range.");
+  assert(index < this->ssize);
+
+  if(index >= this->ssize/2)
+    return;
 
   auto left = LEFT(index);
   auto right = RIGHT(index);
@@ -167,11 +178,13 @@ bool sdizo::Heap::verify() const noexcept
     #ifdef DEBUG_PRINT_ON
     printf("Veryfing index %i. ", i);
     #endif
-
-    if(this->array[i] < this->array[LEFT(i)])
+  
+    auto left = LEFT(i);
+    if(left < this->ssize && this->array[i] < this->array[left])
       return false;
 
-    if(this->array[i] < this->array[RIGHT(i)])
+    auto right = RIGHT(i);
+    if(right < this->ssize && this->array[i] < this->array[right])
       return false;
 
     #ifdef DEBUG_PRINT_ON

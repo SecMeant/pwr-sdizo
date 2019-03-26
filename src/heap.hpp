@@ -52,7 +52,7 @@ class Heap
 		bool verify() const noexcept;
 	
 	private:
-		void heapify(int32_t index);
+		void heapify(int32_t index) noexcept;
 
 		// Reallocs heap to new, bigger space.
 		// New space is bigger by Heap::expand_size.
