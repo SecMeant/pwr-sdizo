@@ -6,6 +6,10 @@
 
 int main()
 {
-	TEST("Heap test", run_heap_tests);
+	using namespace sdizo::tests;
+
+  TEST("Array test", run_array_tests);
+  TEST("List test", run_list_tests);
+  TEST("Heap test", run_heap_tests);
   return 0;
 }

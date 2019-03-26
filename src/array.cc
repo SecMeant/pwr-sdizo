@@ -2,8 +2,6 @@
 #include <algorithm>
 #include <random>
 
-#define DEBUG_PRINT_ON
-
 sdizo::Array::Array() noexcept
 :data{nullptr}, ssize{0} {}
 
@@ -84,7 +82,7 @@ void sdizo::Array::remove(int32_t element)
     return;
 
   this->removeAt(index);
-}	
+}  
 
 void sdizo::Array::add(int32_t element, int32_t index)
 {

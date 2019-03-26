@@ -5,8 +5,6 @@
 #include <random>
 #include <cassert>
 
-#define DEBUG_PRINT_ON
-
 sdizo::Heap::Heap() noexcept
 :array{new int32_t[sdizo::Heap::expand_size]},
  ssize{0},
@@ -15,7 +13,7 @@ sdizo::Heap::Heap() noexcept
 
 sdizo::Heap::~Heap() noexcept
 {
-	delete [] this->array;
+  delete [] this->array;
 }
 
 int32_t sdizo::Heap::at(int32_t index) const
@@ -28,25 +26,25 @@ int32_t sdizo::Heap::at(int32_t index) const
 
 void sdizo::Heap::insert(int32_t element)
 {
-	if(this->ssize == this->length)
-		this->expand();
-	
-	auto i = this->ssize;
-	auto parent = PARENT(i);
+  if(this->ssize == this->length)
+    this->expand();
+  
+  auto i = this->ssize;
+  auto parent = PARENT(i);
 
-	while(i > 0 && this->array[parent] < element)
-	{
-		this->array[i] = this->array[parent];
-		i = parent;
-		parent = PARENT(i);
-	}
+  while(i > 0 && this->array[parent] < element)
+  {
+    this->array[i] = this->array[parent];
+    i = parent;
+    parent = PARENT(i);
+  }
 
-	this->array[i] = element;
-	++this->ssize;
+  this->array[i] = element;
+  ++this->ssize;
 
-	#ifdef DEBUG_PRINT_ON
-	this->display();
-	#endif
+  #ifdef DEBUG_PRINT_ON
+  this->display();
+  #endif
 }
 
 void sdizo::Heap::removeAt(int32_t index)
@@ -62,9 +60,9 @@ void sdizo::Heap::removeAt(int32_t index)
 
   this->heapify(index);
 
-	#ifdef DEBUG_PRINT_ON
-	this->display();
-	#endif
+  #ifdef DEBUG_PRINT_ON
+  this->display();
+  #endif
 }
 
 void sdizo::Heap::remove(int32_t element) noexcept
@@ -82,9 +80,9 @@ void sdizo::Heap::remove(int32_t element) noexcept
 
   this->heapify(index);
 
-	#ifdef DEBUG_PRINT_ON
-	this->display();
-	#endif
+  #ifdef DEBUG_PRINT_ON
+  this->display();
+  #endif
 }
 
 bool sdizo::Heap::contains(int32_t element) const noexcept
@@ -148,16 +146,16 @@ void sdizo::Heap::heapify(int32_t index) noexcept
 
 void sdizo::Heap::expand() noexcept
 {
-	int32_t new_size = this->length + sdizo::Heap::expand_size;
-	int32_t *new_array = new int32_t[new_size];
+  int32_t new_size = this->length + sdizo::Heap::expand_size;
+  int32_t *new_array = new int32_t[new_size];
 
-	// copy old part of heap
-	std::copy(this->array, this->array + this->length, new_array);
+  // copy old part of heap
+  std::copy(this->array, this->array + this->length, new_array);
 
-	delete [] this->array;
-	this->array = new_array;
+  delete [] this->array;
+  this->array = new_array;
 
-	this->length = new_size;
+  this->length = new_size;
 }
 
 int32_t sdizo::Heap::find(int32_t elem) const noexcept

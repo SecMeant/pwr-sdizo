@@ -3,8 +3,6 @@
 #include <cassert>
 #include <random>
 
-#define DEBUG_PRINT_ON
-
 sdizo::List::List() noexcept
 :begin{nullptr}, end(nullptr)
 {}
