@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include "array.hpp"
 #include "list.hpp"
+#include "heap.hpp"
+
+#include <random>
 
 void test_array()
 {
@@ -67,8 +70,24 @@ void test_list2()
   puts(list.contains(1337) ? "true" : "false");
 }
 
+void test_heap()
+{
+	using sdizo::Heap;
+	
+	Heap heap;
+	
+  std::random_device generator;
+  std::uniform_int_distribution<int32_t>
+   distribution(0, 20);
+
+  for(int32_t i = 0; i < 10; ++i)
+  {
+    heap.insert(distribution(generator));
+  }
+}
+
 int main()
 {
-  test_list2();
+	test_heap();
   return 0;
 }
