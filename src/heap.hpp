@@ -15,8 +15,7 @@ class Heap
 		constexpr static std::size_t expand_size = 4;
 	private:
 		int32_t *array;
-		// TODO(holz) change size name to ssize.
-		int32_t size;
+		int32_t ssize;
 		int32_t length;
 
 	public:
@@ -25,21 +24,19 @@ class Heap
 
     int32_t loadFromFile() noexcept;
 
+		// Returns element from given index.
+		// Throws std::out_of_range if index exceeds read span of array.
+		int32_t at(int32_t index) const;
+
     // Inserts element at location given by index.
     // Throws std::out_of_range if index exceeds insert span of array,
     void insert(int32_t element);
 
     // Throws std::out_of_range if index exceeds span of array.
-    // Throws std::length_error if array is already empty.
     void removeAt(int32_t index);
 
-    // Throws std::out_of_range if index exceeds span of array.
-    // Throws std::length_error if array is already empty.
-    void remove(int32_t element);
+    void remove(int32_t element) noexcept;
 
-    // Overwrites value at index with given element.
-    void add(int32_t element, int32_t index);
-  
     // Searches for element in container.
     // Returns true if element is in container.
     // False otherwise.
@@ -50,12 +47,19 @@ class Heap
                   int32_t size) noexcept;
 
     void display() const noexcept;
+
+		// Checks if container is proper heap,
+		bool verify() const noexcept;
 	
 	private:
-		void heapify(int32_t index) noexcept;
+		void heapify(int32_t index);
 
 		// Reallocs heap to new, bigger space.
 		// New space is bigger by Heap::expand_size.
 		void expand() noexcept;
+
+    // Finds element in table.
+    // If element is in the table, returns it's index, -1 otherwise.
+		int32_t find(int32_t elem) const noexcept;
 };
 } // namespace sdizo

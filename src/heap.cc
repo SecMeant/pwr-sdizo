@@ -2,12 +2,13 @@
 #include <stdexcept>
 #include <string.h>
 #include <algorithm>
+#include <random>
 
 #define DEBUG_PRINT_ON
 
 sdizo::Heap::Heap() noexcept
 :array{new int32_t[sdizo::Heap::expand_size]},
- size{0},
+ ssize{0},
  length{sdizo::Heap::expand_size}
 {}
 
@@ -16,12 +17,20 @@ sdizo::Heap::~Heap() noexcept
 	delete [] this->array;
 }
 
+int32_t sdizo::Heap::at(int32_t index) const
+{
+  if(index >= this->ssize)
+    throw std::out_of_range("Cannot read from index exceeding span of heap.");
+
+  return this->array[index];
+}
+
 void sdizo::Heap::insert(int32_t element)
 {
-	if(this->size == this->length)
+	if(this->ssize == this->length)
 		this->expand();
 	
-	auto i = this->size;
+	auto i = this->ssize;
 	auto parent = PARENT(i);
 
 	while(i > 0 && this->array[parent] < element)
@@ -32,11 +41,98 @@ void sdizo::Heap::insert(int32_t element)
 	}
 
 	this->array[i] = element;
-	++this->size;
+	++this->ssize;
 
 	#ifdef DEBUG_PRINT_ON
 	this->display();
 	#endif
+}
+
+void sdizo::Heap::removeAt(int32_t index)
+{
+  if(this->ssize <= 0)
+    return;
+
+  if(index >= this->ssize)
+    throw std::out_of_range("Cannot remove past last element.");
+
+  std::swap(this->array[index], this->array[this->ssize-1]);
+  --this->ssize;
+
+  this->heapify(index);
+}
+
+void sdizo::Heap::remove(int32_t element) noexcept
+{
+  if(this->ssize <= 0)
+    return;
+
+  auto index = this->find(element);
+
+  if(index == -1)
+    return;
+
+  std::swap(this->array[index], this->array[this->ssize-1]);
+  --this->ssize;
+
+  this->heapify(index);
+}
+
+bool sdizo::Heap::contains(int32_t element) const noexcept
+{
+  for(int32_t i = 0; i < this->ssize; ++i)
+  {
+    if(this->array[i] == element)
+      return true;
+  }
+
+  return false;
+}
+
+void sdizo::Heap::generate
+(int32_t rand_range_begin, int32_t rand_range_end, int32_t size) noexcept
+{
+  std::random_device generator;
+  std::uniform_int_distribution<int32_t>
+   distribution(rand_range_begin, rand_range_end);
+
+  for(int32_t i = 0; i < size; ++i)
+  {
+    this->insert(distribution(generator));
+  }
+}
+
+void sdizo::Heap::display() const noexcept
+{
+  printf("{ ");
+  for(int32_t i = 0; i < this->ssize; ++i)
+  {
+    printf("%i ", this->array[i]);
+  }
+  printf("}\n");
+}
+
+void sdizo::Heap::heapify(int32_t index)
+{
+  if(index >= this->ssize)
+    throw std::out_of_range("Heapify on index out of range.");
+
+  auto left = LEFT(index);
+  auto right = RIGHT(index);
+  auto largest = index;
+
+  if(left <= this->ssize && this->array[left] > this->array[index])
+    largest = left;
+
+  if(right <= this->ssize && this->array[right]  > this->array[largest])
+    largest = right;
+
+  if(largest != index)
+  {
+    std::swap(this->array[largest], this->array[index]);
+    this->heapify(largest);
+  }
+
 }
 
 void sdizo::Heap::expand() noexcept
@@ -53,12 +149,35 @@ void sdizo::Heap::expand() noexcept
 	this->length = new_size;
 }
 
-void sdizo::Heap::display() const noexcept
+int32_t sdizo::Heap::find(int32_t elem) const noexcept
 {
-  printf("{ ");
-  for(int32_t i = 0; i < this->size; ++i)
+  for(int32_t i = 0; i < this->ssize; ++i)
   {
-    printf("%i ", this->array[i]);
+    if(this->array[i] == elem)
+      return i;
   }
-  printf("}\n");
+
+  return -1;
+}
+
+bool sdizo::Heap::verify() const noexcept
+{
+  for(int32_t i = 0; i < this->ssize/2; ++i)
+  {
+    #ifdef DEBUG_PRINT_ON
+    printf("Veryfing index %i. ", i);
+    #endif
+
+    if(this->array[i] < this->array[LEFT(i)])
+      return false;
+
+    if(this->array[i] < this->array[RIGHT(i)])
+      return false;
+
+    #ifdef DEBUG_PRINT_ON
+    puts("OK");
+    #endif
+  }
+
+  return true;
 }

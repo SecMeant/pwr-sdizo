@@ -75,15 +75,11 @@ void test_heap()
 	using sdizo::Heap;
 	
 	Heap heap;
-	
-  std::random_device generator;
-  std::uniform_int_distribution<int32_t>
-   distribution(0, 20);
+	heap.generate(0, 20, 10);
+	heap.generate(0, 20, 10);
+	heap.remove(heap.at(7));
 
-  for(int32_t i = 0; i < 10; ++i)
-  {
-    heap.insert(distribution(generator));
-  }
+	heap.verify();
 }
 
 int main()
