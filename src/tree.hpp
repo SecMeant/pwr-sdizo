@@ -30,14 +30,11 @@ namespace sdizo{
 			// If tries to remove from empty tree, std::length_error is thrown.
       void remove(TreeNode *to_delete);
 
-      // Searches for element in container.
-      // Returns true if element is in container.
-      // False otherwise.
-      bool contains(int32_t element) const noexcept;
-
       // Randomly generates table.
       void generate(int32_t rand_range_begin, int32_t rand_range_end,
                     int32_t size) noexcept;
+
+			TreeNode *search(int32_t element) const noexcept;
 
       // Returns nullptr if there is no successor.
       // Otherwise valid poiter is returned.

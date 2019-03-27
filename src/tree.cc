@@ -79,6 +79,20 @@ void sdizo::Tree::remove(TreeNode *node)
 	delete to_delete;
 }
 
+TreeNode *sdizo::Tree::search(int32_t element) const noexcept
+{
+	TreeNode *current = this->root;
+	while(current != nullptr && current->value != element)
+	{
+		if(current->value < element)
+			current = current->right;
+		else
+			current = current->left;
+	}
+
+	return current;
+}
+
 TreeNode* sdizo::Tree::successor(TreeNode *root) noexcept
 {
   assert(root);
