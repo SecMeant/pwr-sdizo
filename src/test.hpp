@@ -1,18 +1,18 @@
 #pragma once
 
 namespace sdizo{
-	namespace tests{
-		bool run_array_tests();
-		bool run_list_tests();
-		bool run_heap_tests();
-		bool test_array();
-		bool test_list();
-		bool test_list2();
-		bool test_heap();
-		bool run_array_tests();
-		bool run_list_tests();
-		bool run_heap_tests();
-	}
+  namespace tests{
+    bool run_array_tests();
+    bool run_list_tests();
+    bool run_heap_tests();
+    bool test_array();
+    bool test_list();
+    bool test_list2();
+    bool test_heap();
+    bool run_array_tests();
+    bool run_list_tests();
+    bool run_heap_tests();
+  }
 }
 
 #define TEST(test_name, test) \

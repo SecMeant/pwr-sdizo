@@ -51,11 +51,11 @@ bool sdizo::tests::test_list()
     list.removeAt(2);
     list.removeAt(0);
 
-		try{
-			// should throw
-			list.removeAt(3000);
-			return false;
-		}catch(std::out_of_range &e){}
+    try{
+      // should throw
+      list.removeAt(3000);
+      return false;
+    }catch(std::out_of_range &e){}
 
     list.remove(12312321);
     list.remove(12);
