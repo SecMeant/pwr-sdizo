@@ -5,6 +5,9 @@
 #include "tree.hpp"
 #include <random>
 
+#define TEST_RETURN_ON_FALSE(test_func, ...) if(!test_func(__VA_ARGS__)) return false;
+#define TEST_RETURN_ON_TRUE(test_func, ...) if(test_func(__VA_ARGS__)) return false;
+
 // TODO(holz) make betters tests for array and list.
 bool sdizo::tests::test_array()
 {
@@ -111,19 +114,21 @@ bool sdizo::tests::test_bst()
 {
 	using sdizo::Tree;
 
-	#define VERIFY_TREE_RETURN_ON_FALSE(tree) if(!tree.verify()) return false;
-
 	Tree tree;
+	TEST_RETURN_ON_TRUE(tree.search, 2);
 	tree.insert(23);
-	VERIFY_TREE_RETURN_ON_FALSE(tree);
+	TEST_RETURN_ON_FALSE(tree.verify);
   tree.insert(123);
-	VERIFY_TREE_RETURN_ON_FALSE(tree);
+	TEST_RETURN_ON_FALSE(tree.verify);
   tree.insert(12);
-	VERIFY_TREE_RETURN_ON_FALSE(tree);
+	TEST_RETURN_ON_FALSE(tree.verify);
   tree.insert(1);
-	VERIFY_TREE_RETURN_ON_FALSE(tree);
+	TEST_RETURN_ON_FALSE(tree.verify);
   tree.insert(2);
-	VERIFY_TREE_RETURN_ON_FALSE(tree);
+	TEST_RETURN_ON_FALSE(tree.verify);
+	TEST_RETURN_ON_TRUE(tree.search, 1337);
+	tree.insert(1337);
+	TEST_RETURN_ON_FALSE(tree.search, 1337);
 
 	return true;
 }
