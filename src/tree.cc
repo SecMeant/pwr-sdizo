@@ -122,6 +122,28 @@ void sdizo::Tree::display() const noexcept
 	puts("===========================");
 }
 
+bool sdizo::Tree::verify() const noexcept
+{
+	return sdizo::Tree::verify_(this->root);
+}
+
+bool sdizo::Tree::verify_(TreeNode *root) noexcept
+{
+	if(root == nullptr)
+		return true;
+	
+	if(!(verify_(root->left) & verify_(root->right)))
+		return false;
+
+	if(root->right != nullptr && root->value > root->right->value)
+		return false;
+
+	if(root->left != nullptr && root->value <= root->left->value)
+		return false;
+
+	return true;
+}
+
 void sdizo::Tree::free(TreeNode *to_delete) noexcept
 {
   if(to_delete == nullptr)

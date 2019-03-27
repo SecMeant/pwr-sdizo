@@ -2,6 +2,7 @@
 #include "array.hpp"
 #include "list.hpp"
 #include "heap.hpp"
+#include "tree.hpp"
 #include <random>
 
 // TODO(holz) make betters tests for array and list.
@@ -106,6 +107,27 @@ bool sdizo::tests::test_heap()
   return heap.verify();
 }
 
+bool sdizo::tests::test_bst()
+{
+	using sdizo::Tree;
+
+	#define VERIFY_TREE_RETURN_ON_FALSE(tree) if(!tree.verify()) return false;
+
+	Tree tree;
+	tree.insert(23);
+	VERIFY_TREE_RETURN_ON_FALSE(tree);
+  tree.insert(123);
+	VERIFY_TREE_RETURN_ON_FALSE(tree);
+  tree.insert(12);
+	VERIFY_TREE_RETURN_ON_FALSE(tree);
+  tree.insert(1);
+	VERIFY_TREE_RETURN_ON_FALSE(tree);
+  tree.insert(2);
+	VERIFY_TREE_RETURN_ON_FALSE(tree);
+
+	return true;
+}
+
 bool sdizo::tests::run_array_tests()
 {
   if(!test_array())
@@ -131,4 +153,12 @@ bool sdizo::tests::run_heap_tests()
     return false;
 
   return true;
+}
+
+bool sdizo::tests::run_bst_tests()
+{
+	if(!test_bst())
+		return false;
+	
+	return true;
 }

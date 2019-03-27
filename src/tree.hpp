@@ -46,9 +46,12 @@ namespace sdizo{
       static TreeNode* max(TreeNode *root) noexcept;
 
       void display() const noexcept;
+	
+			bool verify() const noexcept;
 
     private:
       // Recursively free's node and its childs.
       static void free(TreeNode *to_delete) noexcept;
+			static bool verify_(TreeNode *root) noexcept;
     };
 }
