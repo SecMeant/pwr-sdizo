@@ -15,7 +15,7 @@ namespace sdizo{
 
   class Tree
   {
-    private:
+    public:
       TreeNode *root;
     
     public:
@@ -27,7 +27,8 @@ namespace sdizo{
       void insert(int32_t element) noexcept;
       void insert(TreeNode *node) noexcept;
 
-      void remove(TreeNode *to_delete) noexcept;
+			// If tries to remove from empty tree, std::length_error is thrown.
+      void remove(TreeNode *to_delete);
 
       // Searches for element in container.
       // Returns true if element is in container.

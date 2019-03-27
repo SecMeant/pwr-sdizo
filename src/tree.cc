@@ -2,6 +2,7 @@
 #include "treeprinter.hpp"
 #include <stdio.h>
 #include <cassert>
+#include <stdexcept>
 
 using sdizo::TreeNode;
 
@@ -42,12 +43,48 @@ void sdizo::Tree::insert(TreeNode *node) noexcept
     current_parent->right = node;
 }
 
+void sdizo::Tree::remove(TreeNode *node)
+{
+	assert(node);
+
+	if(this->root == nullptr)
+		throw std::length_error("Tried to remove from already empty tree.");
+
+	TreeNode *to_delete;
+	TreeNode *x;
+
+	if(node->left == nullptr || node->right == nullptr)
+		to_delete = node;
+	else
+		to_delete = sdizo::Tree::successor(node);
+	
+	if(to_delete->left != nullptr)
+		x = to_delete->left;
+	else
+		x = to_delete->right;
+	
+	if(x != nullptr)
+		x->parent = to_delete->parent;
+	
+	if(to_delete->parent == nullptr)
+		this->root = x;
+	else if(to_delete == to_delete->parent->left)
+		to_delete->parent->left = x;
+	else
+		to_delete->parent->right = x;
+	
+	if(to_delete != node)
+		node->value = to_delete->value;
+	
+	delete to_delete;
+}
+
 TreeNode* sdizo::Tree::successor(TreeNode *root) noexcept
 {
   assert(root);
 
   if(root->right != nullptr)
-    return min(root);
+    return min(root->right);
 
   TreeNode *current_parent = root->parent;
 
@@ -80,7 +117,9 @@ TreeNode* sdizo::Tree::max(TreeNode *root) noexcept
 
 void sdizo::Tree::display() const noexcept
 {
+	puts("===========================");
   print2DUtil(this->root, 0);
+	puts("===========================");
 }
 
 void sdizo::Tree::free(TreeNode *to_delete) noexcept

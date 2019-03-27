@@ -21,6 +21,8 @@ int main()
   tree.insert(1);
   tree.insert(2);
   tree.display();
+  tree.remove(tree.root->left->left->right);
+  tree.display();
 
   return 0;
 }
