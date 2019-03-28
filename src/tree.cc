@@ -45,52 +45,52 @@ void sdizo::Tree::insert(TreeNode *node) noexcept
 
 void sdizo::Tree::remove(TreeNode *node)
 {
-	assert(node);
+  assert(node);
 
-	if(this->root == nullptr)
-		throw std::length_error("Tried to remove from already empty tree.");
+  if(this->root == nullptr)
+    throw std::length_error("Tried to remove from already empty tree.");
 
-	TreeNode *to_delete;
-	TreeNode *x;
+  TreeNode *to_delete;
+  TreeNode *x;
 
-	if(node->left == nullptr || node->right == nullptr)
-		to_delete = node;
-	else
-		to_delete = sdizo::Tree::successor(node);
-	
-	if(to_delete->left != nullptr)
-		x = to_delete->left;
-	else
-		x = to_delete->right;
-	
-	if(x != nullptr)
-		x->parent = to_delete->parent;
-	
-	if(to_delete->parent == nullptr)
-		this->root = x;
-	else if(to_delete == to_delete->parent->left)
-		to_delete->parent->left = x;
-	else
-		to_delete->parent->right = x;
-	
-	if(to_delete != node)
-		node->value = to_delete->value;
-	
-	delete to_delete;
+  if(node->left == nullptr || node->right == nullptr)
+    to_delete = node;
+  else
+    to_delete = sdizo::Tree::successor(node);
+  
+  if(to_delete->left != nullptr)
+    x = to_delete->left;
+  else
+    x = to_delete->right;
+  
+  if(x != nullptr)
+    x->parent = to_delete->parent;
+  
+  if(to_delete->parent == nullptr)
+    this->root = x;
+  else if(to_delete == to_delete->parent->left)
+    to_delete->parent->left = x;
+  else
+    to_delete->parent->right = x;
+  
+  if(to_delete != node)
+    node->value = to_delete->value;
+  
+  delete to_delete;
 }
 
 TreeNode *sdizo::Tree::search(int32_t element) const noexcept
 {
-	TreeNode *current = this->root;
-	while(current != nullptr && current->value != element)
-	{
-		if(current->value < element)
-			current = current->right;
-		else
-			current = current->left;
-	}
+  TreeNode *current = this->root;
+  while(current != nullptr && current->value != element)
+  {
+    if(current->value < element)
+      current = current->right;
+    else
+      current = current->left;
+  }
 
-	return current;
+  return current;
 }
 
 TreeNode* sdizo::Tree::successor(TreeNode *root) noexcept
@@ -108,6 +108,26 @@ TreeNode* sdizo::Tree::successor(TreeNode *root) noexcept
   {
     root = current_parent;
     current_parent = root->parent; 
+  }
+
+  return current_parent;
+}
+
+TreeNode* sdizo::Tree::predecessor(TreeNode *node) noexcept
+{
+  assert(node);
+
+  if(node->left != nullptr)
+    return max(node->right);
+
+  TreeNode *current_parent = node->parent;
+
+  while
+  (current_parent != nullptr &&
+   node == current_parent->left)
+  {
+    node = current_parent;
+    current_parent = node->parent; 
   }
 
   return current_parent;
@@ -131,31 +151,31 @@ TreeNode* sdizo::Tree::max(TreeNode *root) noexcept
 
 void sdizo::Tree::display() const noexcept
 {
-	puts("===========================");
+  puts("===========================");
   print2DUtil(this->root, 0);
-	puts("===========================");
+  puts("===========================");
 }
 
 bool sdizo::Tree::verify() const noexcept
 {
-	return sdizo::Tree::verify_(this->root);
+  return sdizo::Tree::verify_(this->root);
 }
 
 bool sdizo::Tree::verify_(TreeNode *root) noexcept
 {
-	if(root == nullptr)
-		return true;
-	
-	if(!(verify_(root->left) & verify_(root->right)))
-		return false;
+  if(root == nullptr)
+    return true;
+  
+  if(!(verify_(root->left) & verify_(root->right)))
+    return false;
 
-	if(root->right != nullptr && root->value > root->right->value)
-		return false;
+  if(root->right != nullptr && root->value > root->right->value)
+    return false;
 
-	if(root->left != nullptr && root->value <= root->left->value)
-		return false;
+  if(root->left != nullptr && root->value <= root->left->value)
+    return false;
 
-	return true;
+  return true;
 }
 
 void sdizo::Tree::free(TreeNode *to_delete) noexcept

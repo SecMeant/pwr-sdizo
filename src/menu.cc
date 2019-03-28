@@ -13,7 +13,7 @@ int main()
   TEST("Array test", run_array_tests);
   TEST("List test", run_list_tests);
   TEST("Heap test", run_heap_tests);
-	TEST("BST test", run_bst_tests); 
+  TEST("BST test", run_bst_tests); 
 
   return 0;
 }

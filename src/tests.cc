@@ -7,6 +7,7 @@
 
 #define TEST_RETURN_ON_FALSE(test_func, ...) if(!test_func(__VA_ARGS__)) return false;
 #define TEST_RETURN_ON_TRUE(test_func, ...) if(test_func(__VA_ARGS__)) return false;
+#define TEST_ASSERT_EQ(a,b) if((a)!=(b)) return false;
 
 // TODO(holz) make betters tests for array and list.
 bool sdizo::tests::test_array()
@@ -112,25 +113,31 @@ bool sdizo::tests::test_heap()
 
 bool sdizo::tests::test_bst()
 {
-	using sdizo::Tree;
+  using sdizo::Tree;
 
-	Tree tree;
-	TEST_RETURN_ON_TRUE(tree.search, 2);
-	tree.insert(23);
-	TEST_RETURN_ON_FALSE(tree.verify);
+  Tree tree;
+  TEST_RETURN_ON_TRUE(tree.search, 2);
+  tree.insert(23);
+  TEST_RETURN_ON_FALSE(tree.verify);
   tree.insert(123);
-	TEST_RETURN_ON_FALSE(tree.verify);
+  TEST_RETURN_ON_FALSE(tree.verify);
   tree.insert(12);
-	TEST_RETURN_ON_FALSE(tree.verify);
+  TEST_RETURN_ON_FALSE(tree.verify);
   tree.insert(1);
-	TEST_RETURN_ON_FALSE(tree.verify);
+  TEST_RETURN_ON_FALSE(tree.verify);
   tree.insert(2);
-	TEST_RETURN_ON_FALSE(tree.verify);
-	TEST_RETURN_ON_TRUE(tree.search, 1337);
-	tree.insert(1337);
-	TEST_RETURN_ON_FALSE(tree.search, 1337);
+  TEST_RETURN_ON_FALSE(tree.verify);
+  TEST_RETURN_ON_TRUE(tree.search, 1337);
+  tree.insert(1337);
+  TEST_RETURN_ON_FALSE(tree.search, 1337);
 
-	return true;
+  auto pred = tree.predecessor(tree.search(2));
+  TEST_ASSERT_EQ(pred->value, 1);
+
+  pred = tree.predecessor(tree.search(1));
+  TEST_ASSERT_EQ(pred, nullptr);
+
+  return true;
 }
 
 bool sdizo::tests::run_array_tests()
@@ -162,8 +169,8 @@ bool sdizo::tests::run_heap_tests()
 
 bool sdizo::tests::run_bst_tests()
 {
-	if(!test_bst())
-		return false;
-	
-	return true;
+  if(!test_bst())
+    return false;
+  
+  return true;
 }
