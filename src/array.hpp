@@ -16,6 +16,10 @@ class Array
 
     int32_t loadFromFile() noexcept;
 
+		int32_t at(int32_t index) const;
+
+		void prepend(int32_t element) noexcept;
+
     // Inserts element at location given by index.
     // Throws std::out_of_range if index exceeds insert span of array,
     // TODO(holz) make it use malloc and realloc instead of new.
@@ -30,7 +34,7 @@ class Array
     void remove(int32_t element);
 
     // Overwrites value at index with given element.
-    void add(int32_t element, int32_t index);
+    void update(int32_t index, int32_t element);
   
     // Searches for element in container.
     // Returns true if element is in container.
@@ -42,6 +46,9 @@ class Array
                   int32_t size) noexcept;
 
     void display() const noexcept;
+
+		inline int32_t get_size() const noexcept
+		{return this->ssize;}
 
   private:
     // Checks if index is in range of array.

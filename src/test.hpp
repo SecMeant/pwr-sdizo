@@ -10,6 +10,7 @@ namespace sdizo{
     bool test_list2();
     bool test_heap();
     bool test_bst();
+		bool test_bst2();
     bool run_array_tests();
     bool run_list_tests();
     bool run_heap_tests();

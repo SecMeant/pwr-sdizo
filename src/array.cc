@@ -16,6 +16,19 @@ int32_t sdizo::Array::loadFromFile() noexcept
   return 0;
 }
 
+int32_t sdizo::Array::at(int32_t index) const
+{
+	if(index >= this->ssize || index < 0)
+		throw std::out_of_range("Referenced element out of range.");
+	
+	return this->data[index];
+}
+
+void sdizo::Array::prepend(int32_t element) noexcept
+{
+	this->insert(element, 0);
+}
+
 void sdizo::Array::insert(int32_t element, int32_t index)
 {
   if(!this->isIndexInInsertRange(index))
@@ -84,10 +97,10 @@ void sdizo::Array::remove(int32_t element)
   this->removeAt(index);
 }  
 
-void sdizo::Array::add(int32_t element, int32_t index)
+void sdizo::Array::update(int32_t index, int32_t element)
 {
   if(!this->isIndexInRange(index))
-    throw("Tried adding element at index out of array's span.");
+    throw("Tried updating element at index out of array's span.");
 
   this->data[index] = element;
 

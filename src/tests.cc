@@ -5,8 +5,10 @@
 #include "tree.hpp"
 #include <random>
 
-#define TEST_RETURN_ON_FALSE(test_func, ...) if(!test_func(__VA_ARGS__)) return false;
-#define TEST_RETURN_ON_TRUE(test_func, ...) if(test_func(__VA_ARGS__)) return false;
+#define TEST_INVOKE_ASSERT_TRUE(test_func, ...) if(!test_func(__VA_ARGS__)) return false;
+#define TEST_INVOKE_ASSERT_FALSE(test_func, ...) if(test_func(__VA_ARGS__)) return false;
+#define TEST_ASSERT_TRUE(statement) if(!(statement)) return false;
+#define TEST_ASSERT_FALSE(statement) if((statement)) return false;
 #define TEST_ASSERT_EQ(a,b) if((a)!=(b)) return false;
 
 // TODO(holz) make betters tests for array and list.
@@ -15,25 +17,34 @@ bool sdizo::tests::test_array()
   using sdizo::Array;
 
   Array array;
-  array.contains(2);
-  array.insert(1, 0);
-  array.contains(2);
-  array.insert(2, 1);
-  array.contains(2);
-  array.insert(3, 2);
-  array.insert(4, 1);
-  array.contains(2);
-  array.remove(3);
-  array.contains(2);
-  array.remove(0);
-  array.contains(2);
-  array.remove(0);
-  array.contains(2);
-  array.remove(0);
-  array.contains(2);
+	try{
+		TEST_ASSERT_FALSE(array.contains(2))
+		array.insert(1, 0);
+		TEST_ASSERT_FALSE(array.contains(2))
+		array.insert(2, 1);
+		TEST_ASSERT_TRUE(array.contains(2))
+		array.insert(3, 2);
+		array.insert(4, 1);
+		TEST_ASSERT_TRUE(array.contains(2))
+		array.remove(3);
+		TEST_ASSERT_TRUE(array.contains(2))
+		TEST_ASSERT_FALSE(array.contains(3))
+		array.remove(0);
+		TEST_ASSERT_TRUE(array.contains(2))
+		array.remove(0);
+		array.contains(2);
+		array.remove(0);
+		array.contains(2);
 
-  array.generate(-20, 74, 20);
-  array.add(1337, 0);
+		auto cur_size = array.get_size();
+		array.generate(-20, 74, 20);
+		TEST_ASSERT_TRUE(array.get_size() == cur_size + 20)
+
+		array.update(0, 1337);
+		TEST_ASSERT_TRUE(array.at(0) == 1337)
+	}catch(...){
+		return false;
+	}
 
   return true;
 }
@@ -116,20 +127,20 @@ bool sdizo::tests::test_bst()
   using sdizo::Tree;
 
   Tree tree;
-  TEST_RETURN_ON_TRUE(tree.search, 2);
+  TEST_INVOKE_ASSERT_FALSE(tree.search, 2);
   tree.insert(23);
-  TEST_RETURN_ON_FALSE(tree.verify);
+  TEST_INVOKE_ASSERT_TRUE(tree.verify_values);
   tree.insert(123);
-  TEST_RETURN_ON_FALSE(tree.verify);
+  TEST_INVOKE_ASSERT_TRUE(tree.verify_values);
   tree.insert(12);
-  TEST_RETURN_ON_FALSE(tree.verify);
+  TEST_INVOKE_ASSERT_TRUE(tree.verify_values);
   tree.insert(1);
-  TEST_RETURN_ON_FALSE(tree.verify);
+  TEST_INVOKE_ASSERT_TRUE(tree.verify_values);
   tree.insert(2);
-  TEST_RETURN_ON_FALSE(tree.verify);
-  TEST_RETURN_ON_TRUE(tree.search, 1337);
+  TEST_INVOKE_ASSERT_TRUE(tree.verify_values);
+  TEST_INVOKE_ASSERT_FALSE(tree.search, 1337);
   tree.insert(1337);
-  TEST_RETURN_ON_FALSE(tree.search, 1337);
+  TEST_INVOKE_ASSERT_TRUE(tree.search, 1337);
 
   auto pred = tree.predecessor(tree.search(2));
   TEST_ASSERT_EQ(pred->value, 1);
@@ -138,6 +149,22 @@ bool sdizo::tests::test_bst()
   TEST_ASSERT_EQ(pred, nullptr);
 
   return true;
+}
+
+bool sdizo::tests::test_bst2()
+{
+	sdizo::Tree tree;
+	tree.insert(10);
+	tree.insert(7);
+	tree.insert(13);
+	tree.insert(6);
+	tree.insert(1);
+	tree.insert(15);
+	tree.insert(14);
+	tree.dsw();
+	TEST_INVOKE_ASSERT_TRUE(tree.verify_connections);
+
+	return true;
 }
 
 bool sdizo::tests::run_array_tests()
@@ -171,6 +198,9 @@ bool sdizo::tests::run_bst_tests()
 {
   if(!test_bst())
     return false;
+
+	if(!test_bst2())
+		return false;
   
   return true;
 }
