@@ -14,11 +14,15 @@ class Array
 
     ~Array() noexcept;
 
-    int32_t loadFromFile() noexcept;
+    int32_t loadFromFile(const char *filename) noexcept;
 
 		int32_t at(int32_t index) const;
 
-		void prepend(int32_t element) noexcept;
+		inline void prepend(int32_t element) noexcept
+		{this->insert(element, 0);}
+
+		inline void append(int32_t element) noexcept
+		{this->insert(element, this->ssize);}
 
     // Inserts element at location given by index.
     // Throws std::out_of_range if index exceeds insert span of array,

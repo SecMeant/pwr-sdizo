@@ -1,6 +1,7 @@
 #include "array.hpp"
 #include <algorithm>
 #include <random>
+#include <fstream>
 
 sdizo::Array::Array() noexcept
 :data{nullptr}, ssize{0} {}
@@ -10,9 +11,15 @@ sdizo::Array::~Array() noexcept
   delete [] this->data;
 }
 
-int32_t sdizo::Array::loadFromFile() noexcept
-{
-  // TODO(holz)
+int32_t sdizo::Array::loadFromFile(const char *filename) noexcept
+{	
+	std::ifstream file(filename, std::ios_base::in);
+	int32_t num;
+
+	while(file >> num)
+	{
+	}
+
   return 0;
 }
 
@@ -22,11 +29,6 @@ int32_t sdizo::Array::at(int32_t index) const
 		throw std::out_of_range("Referenced element out of range.");
 	
 	return this->data[index];
-}
-
-void sdizo::Array::prepend(int32_t element) noexcept
-{
-	this->insert(element, 0);
 }
 
 void sdizo::Array::insert(int32_t element, int32_t index)
@@ -76,7 +78,7 @@ void sdizo::Array::removeAt(int32_t index)
   std::copy(this->data, this->data+index, new_data);
 
   // Copy right side of array.
-  std::copy(this->data+index+1, this->data+this->ssize, new_data+index+1);
+  std::copy(this->data+index+1, this->data+this->ssize, new_data+index);
 
   delete [] this->data;
   this->data = new_data;
