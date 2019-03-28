@@ -4,6 +4,11 @@
 #include "heap.hpp"
 #include "tree.hpp"
 #include <random>
+#if __cplusplus == 201703L
+#define TESTS_CPP_17 true
+#include <filesystem>
+#include <fstream>
+#endif
 
 #define TEST_INVOKE_ASSERT_TRUE(test_func, ...) if(!test_func(__VA_ARGS__)) return false;
 #define TEST_INVOKE_ASSERT_FALSE(test_func, ...) if(test_func(__VA_ARGS__)) return false;
@@ -17,36 +22,63 @@ bool sdizo::tests::test_array()
   using sdizo::Array;
 
   Array array;
-	try{
-		TEST_ASSERT_FALSE(array.contains(2))
-		array.insert(1, 0);
-		TEST_ASSERT_FALSE(array.contains(2))
-		array.insert(2, 1);
-		TEST_ASSERT_TRUE(array.contains(2))
-		array.insert(3, 2);
-		array.insert(4, 1);
-		TEST_ASSERT_TRUE(array.contains(2))
-		array.remove(3);
-		TEST_ASSERT_TRUE(array.contains(2))
-		TEST_ASSERT_FALSE(array.contains(3))
-		array.remove(0);
-		TEST_ASSERT_TRUE(array.contains(2))
-		array.remove(0);
-		array.contains(2);
-		array.remove(0);
-		array.contains(2);
+  try{
+    array.append(13);
+    TEST_ASSERT_TRUE(array.contains(13))
+    array.prepend(123123);
+    TEST_ASSERT_TRUE(array.at(0) == 123123)
+    TEST_ASSERT_FALSE(array.contains(2))
+    array.insert(1, 0);
+    TEST_ASSERT_FALSE(array.contains(2))
+    array.insert(2, 1);
+    TEST_ASSERT_TRUE(array.contains(2))
+    array.insert(3, 2);
+    array.insert(4, 1);
+    TEST_ASSERT_TRUE(array.contains(2))
+    array.remove(3);
+    TEST_ASSERT_TRUE(array.contains(2))
+    TEST_ASSERT_FALSE(array.contains(3))
+    array.remove(0);
+    TEST_ASSERT_TRUE(array.contains(2))
+    array.remove(0);
+    array.contains(2);
+    array.remove(0);
+    array.contains(2);
 
-		auto cur_size = array.get_size();
-		array.generate(-20, 74, 20);
-		TEST_ASSERT_TRUE(array.get_size() == cur_size + 20)
+    auto cur_size = array.get_size();
+    array.generate(-20, 74, 20);
+    TEST_ASSERT_TRUE(array.get_size() == cur_size + 20)
 
-		array.update(0, 1337);
-		TEST_ASSERT_TRUE(array.at(0) == 1337)
-	}catch(...){
-		return false;
-	}
+    array.update(0, 1337);
+    TEST_ASSERT_TRUE(array.at(0) == 1337)
+  }catch(...){
+    return false;
+  }
 
   return true;
+}
+
+bool sdizo::tests::test_array2()
+{
+  #if TESTS_CPP_17 == true
+    std::ofstream file("testfile");
+    file << 13 << '\n';
+    file << 5 << '\n';
+    file << 34 << '\n';
+    file.close();
+
+    sdizo::Array array;
+    array.loadFromFile("testfile");
+    TEST_ASSERT_TRUE(array.contains(13))
+    TEST_ASSERT_TRUE(array.contains(5))
+    TEST_ASSERT_TRUE(array.contains(34))
+    TEST_ASSERT_FALSE(array.contains(0))
+    TEST_ASSERT_TRUE(array.at(0) == 13)
+
+    return true;
+  #else
+    return true;
+  #endif
 }
 
 bool sdizo::tests::test_list()
@@ -153,18 +185,18 @@ bool sdizo::tests::test_bst()
 
 bool sdizo::tests::test_bst2()
 {
-	sdizo::Tree tree;
-	tree.insert(10);
-	tree.insert(7);
-	tree.insert(13);
-	tree.insert(6);
-	tree.insert(1);
-	tree.insert(15);
-	tree.insert(14);
-	tree.dsw();
-	TEST_INVOKE_ASSERT_TRUE(tree.verify_connections);
+  sdizo::Tree tree;
+  tree.insert(10);
+  tree.insert(7);
+  tree.insert(13);
+  tree.insert(6);
+  tree.insert(1);
+  tree.insert(15);
+  tree.insert(14);
+  tree.dsw();
+  TEST_INVOKE_ASSERT_TRUE(tree.verify_connections);
 
-	return true;
+  return true;
 }
 
 bool sdizo::tests::run_array_tests()
@@ -172,6 +204,9 @@ bool sdizo::tests::run_array_tests()
   if(!test_array())
     return false;
   
+  if(!test_array2())
+    return false;
+
   return true;
 }
 
@@ -199,8 +234,8 @@ bool sdizo::tests::run_bst_tests()
   if(!test_bst())
     return false;
 
-	if(!test_bst2())
-		return false;
+  if(!test_bst2())
+    return false;
   
   return true;
 }

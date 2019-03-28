@@ -16,13 +16,13 @@ class Array
 
     int32_t loadFromFile(const char *filename) noexcept;
 
-		int32_t at(int32_t index) const;
+    int32_t at(int32_t index) const;
 
-		inline void prepend(int32_t element) noexcept
-		{this->insert(element, 0);}
+    inline void prepend(int32_t element) noexcept
+    {this->insert(element, 0);}
 
-		inline void append(int32_t element) noexcept
-		{this->insert(element, this->ssize);}
+    inline void append(int32_t element) noexcept
+    {this->insert(element, this->ssize);}
 
     // Inserts element at location given by index.
     // Throws std::out_of_range if index exceeds insert span of array,
@@ -51,8 +51,8 @@ class Array
 
     void display() const noexcept;
 
-		inline int32_t get_size() const noexcept
-		{return this->ssize;}
+    inline int32_t get_size() const noexcept
+    {return this->ssize;}
 
   private:
     // Checks if index is in range of array.

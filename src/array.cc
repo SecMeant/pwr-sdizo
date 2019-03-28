@@ -12,23 +12,22 @@ sdizo::Array::~Array() noexcept
 }
 
 int32_t sdizo::Array::loadFromFile(const char *filename) noexcept
-{	
-	std::ifstream file(filename, std::ios_base::in);
-	int32_t num;
+{  
+  std::ifstream file(filename);
+  int32_t num;
 
-	while(file >> num)
-	{
-	}
+  while(file >> num)
+    this->append(num);
 
   return 0;
 }
 
 int32_t sdizo::Array::at(int32_t index) const
 {
-	if(index >= this->ssize || index < 0)
-		throw std::out_of_range("Referenced element out of range.");
-	
-	return this->data[index];
+  if(index >= this->ssize || index < 0)
+    throw std::out_of_range("Referenced element out of range.");
+  
+  return this->data[index];
 }
 
 void sdizo::Array::insert(int32_t element, int32_t index)
