@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <random>
 #include <cassert>
+#include <fstream>
 
 sdizo::Heap::Heap() noexcept
 :array{new int32_t[sdizo::Heap::expand_size]},
@@ -14,6 +15,17 @@ sdizo::Heap::Heap() noexcept
 sdizo::Heap::~Heap() noexcept
 {
   delete [] this->array;
+}
+
+int32_t sdizo::Heap::loadFromFile(const char *filename) noexcept
+{
+  std::ifstream file(filename);
+  int32_t num;
+
+  while(file >> num)
+    this->insert(num);
+
+  return 0;
 }
 
 int32_t sdizo::Heap::at(int32_t index) const

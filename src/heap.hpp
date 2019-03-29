@@ -22,7 +22,7 @@ class Heap
     Heap() noexcept;
     ~Heap() noexcept;
 
-    int32_t loadFromFile() noexcept;
+    int32_t loadFromFile(const char *filename) noexcept;
 
     // Returns element from given index.
     // Throws std::out_of_range if index exceeds read span of array.

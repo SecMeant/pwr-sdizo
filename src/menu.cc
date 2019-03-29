@@ -182,7 +182,7 @@ void menu_list(sdizo::List &list)
   } while (option != '0');
 }
 
-void menu_heap()
+void menu_heap(sdizo::Heap &heap)
 {
   using namespace std;
   char option;
@@ -191,14 +191,13 @@ void menu_heap()
 
   do
   {
-    puts("--- LISTA ---");
+    puts("--- KOPIEC ---");
     puts("1.Wczytaj z pliku");
     puts("2.Usun");
     puts("3.Wstaw");
-    puts("4.Wstaw na koniec");
-    puts("5.Wstaw na poczatek");
-    puts("6.Czy zawiera");
-    puts("7.Generuj");
+    puts("4.Czy zawiera");
+    puts("5.Generuj");
+    puts("6.Wyswietl");
     puts("0.Wyjdz");
 
     printf("Podaj opcje: ");
@@ -207,60 +206,45 @@ void menu_heap()
     switch (option)
     {
       case '1': 
-        printf(" Podaj nazwê zbioru:");
+        printf("Podaj nazwê zbioru:");
         cin >> fileName;
-        list.loadFromFile(fileName.c_str());
-        list.display();
+        heap.loadFromFile(fileName.c_str());
+        heap.display();
         break;
 
       case '2':
-        printf(" podaj index:");
+        printf("podaj element:");
         cin >> index;
-        list.removeAt(index);
-        list.display();
+        heap.removeAt(index);
+        heap.display();
         break;
 
       case '3':
-        printf(" podaj index:");
-        cin >> index;
-        printf(" podaj waertoæ:");
+        printf("podaj waertoæ:");
         cin >> value;
 
-        list.insert(value,index);
-        list.display();      
+        heap.insert(value);
+        heap.display();      
         break;
 
       case '4':
         printf(" podaj waertoæ:");
         cin >> value;
-
-        list.append(value);
-        list.display();      
-        break;
-
-      case '5':
-        printf(" podaj waertoæ:");
-        cin >> value;
-
-        list.prepend(value);
-        list.display();      
-        break;
-
-      case '6':
-        printf(" podaj waertoæ:");
-        cin >> value;
-        if (list.contains(value))
+        if (heap.contains(value))
           puts("poadana wartoc jest w tablicy");
         else
           puts("poadanej wartoci NIE ma w tablicy");
         break;
 
-      case '7':
+      case '5':
         printf("Podaj iloæ elementów tablicy:");
         cin >> value;
-        list.generate(0,100,value);
-        list.display();
+        heap.generate(0,100,value);
+        heap.display();
         break;
+
+      case '6':
+        heap.display();
     }
   } while (option != '0');
 }
@@ -271,6 +255,7 @@ int main()
 
   sdizo::Array array;
   sdizo::List list;
+  sdizo::Heap heap;
 
   char option;
   do
@@ -295,7 +280,7 @@ int main()
         break;
 
       case '3':
-        menu_heap();
+        menu_heap(heap);
         break;    
     }
 
