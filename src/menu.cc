@@ -249,7 +249,7 @@ void menu_heap(sdizo::Heap &heap)
   } while (option != '0');
 }
 
-int main()
+void menu()
 {
   using namespace std;
 
@@ -285,6 +285,10 @@ int main()
     }
 
   } while (option != '0');
+}
 
+int main()
+{
+  run_tests();
   return 0;
 }
