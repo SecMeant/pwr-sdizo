@@ -25,11 +25,17 @@ class List
     List() noexcept;
     ~List() noexcept;
 
-    int32_t loadFromFile() noexcept;
+    int32_t loadFromFile(const char *filename) noexcept;
 
     // Inserts element at location given by index.
     // Throws std::out_of_range if index exceeds insert span of container,
     void insert(int32_t element, int32_t index);
+
+    inline void prepend(int32_t element) noexcept
+    {this->insert(element, 0);}
+
+    inline void append(int32_t element) noexcept
+    {this->append(new ListNode(element));}
 
     // Throws std::out_of_range if index exceeds span of container.
     // Throws std::length_error if container is already empty.

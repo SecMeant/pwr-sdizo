@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <cassert>
 #include <random>
+#include <fstream>
 
 sdizo::List::List() noexcept
 :begin{nullptr}, end(nullptr)
@@ -17,9 +18,14 @@ sdizo::List::~List() noexcept
   }
 }
 
-int32_t sdizo::List::loadFromFile() noexcept
+int32_t sdizo::List::loadFromFile(const char *filename) noexcept
 {
-  // TODO(holz) implement this.
+  std::ifstream file(filename);
+  int32_t num;
+
+  while(file >> num)
+    this->append(num);
+
   return 0;
 }
 
