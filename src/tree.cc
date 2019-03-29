@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <cassert>
 #include <stdexcept>
+#include <cmath>
 
 using sdizo::TreeNode;
 
@@ -149,6 +150,101 @@ TreeNode* sdizo::Tree::max(TreeNode *root) noexcept
   return root;
 }
 
+void sdizo::Tree::rot_left(TreeNode *node) noexcept
+{
+  TreeNode *B = node->right;
+  TreeNode *p = node->parent;
+
+  if(B)
+  {
+    node->right = B->left;
+    if(node->right) node->right->parent = node;
+
+    B->left = node;
+    B->parent = p;
+    node->parent = B;
+
+    if(p)
+    {
+      if(p->left == node) p->left = B; else p->right = B;
+    }
+    else root = B;
+  }
+}
+
+void sdizo::Tree::rot_right(TreeNode *node) noexcept
+{
+  TreeNode *B = node->left;
+  TreeNode *p = node->parent;
+
+  if(B)
+  {
+    node->left = B->right;
+    if(node->left) node->left->parent = node;
+
+    B->right = node;
+    B->parent = p;
+    node->parent = B;
+
+    if(p)
+    {
+      if(p->left == node) p->left = B; else p->right = B;
+    }
+    else root = B;
+  }
+}
+
+unsigned sdizo::Tree::log2(unsigned x) noexcept
+{
+  unsigned y = 1;
+
+  while((x >>= 1) > 0) y <<= 1;
+
+  return y;
+}
+
+void sdizo::Tree::dsw() noexcept
+{
+  unsigned n,i,s;
+  TreeNode* p;
+
+  n = 0;
+  p = this->root;
+  while(p)
+    if(p->left)
+      {
+        rot_right(p);
+        p = p->parent;
+      }
+    else
+    {
+      n++;
+      p = p->right;
+    }
+
+  s = n + 1 - sdizo::Tree::log2(n + 1);
+
+  p = root;
+  for(i = 0; i < s; i++)
+  {
+    rot_left(p);
+    p = p->parent->right;
+  }
+
+  n = n - s;
+
+
+  while(n > 1)
+  {
+    n >>= 1;
+    p = root;
+    for(i = 0; i < n; i++)
+    {
+      rot_left(p);
+      p = p->parent->right;
+    }
+  }
+}
 void sdizo::Tree::display() const noexcept
 {
   puts("===========================");
@@ -156,7 +252,7 @@ void sdizo::Tree::display() const noexcept
   puts("===========================");
 }
 
-bool sdizo::Tree::verify() const noexcept
+bool sdizo::Tree::verify_values() const noexcept
 {
   return sdizo::Tree::verify_(this->root);
 }
@@ -176,6 +272,26 @@ bool sdizo::Tree::verify_(TreeNode *root) noexcept
     return false;
 
   return true;
+}
+
+bool sdizo::Tree::verify_connections() const noexcept
+{
+  return this->verify_connections(this->root) && this->root->parent == nullptr;
+}
+
+bool sdizo::Tree::verify_connections(TreeNode *node) noexcept
+{
+  if(node == nullptr)
+    return true;
+
+  if(node->left != nullptr && node->left->parent != node)
+    return false;
+
+  if(node->right != nullptr && node->right->parent != node)
+    return false;
+
+  return sdizo::Tree::verify_connections(node->left) && sdizo::Tree::verify_connections(node->right);
+
 }
 
 void sdizo::Tree::free(TreeNode *to_delete) noexcept

@@ -43,13 +43,21 @@ namespace sdizo{
       static TreeNode* min(TreeNode *root) noexcept;
       static TreeNode* max(TreeNode *root) noexcept;
 
+      void rot_left(TreeNode *node) noexcept;
+      void rot_right(TreeNode *node) noexcept;
+      static unsigned log2(unsigned x) noexcept;
+
+      void convert_to_vine() noexcept;
       void display() const noexcept;
+      void dsw() noexcept;
   
-      bool verify() const noexcept;
+      bool verify_values() const noexcept;
+      bool verify_connections() const noexcept;
 
     private:
       // Recursively free's node and its childs.
       static void free(TreeNode *to_delete) noexcept;
       static bool verify_(TreeNode *root) noexcept;
+      static bool verify_connections(TreeNode *node) noexcept;
     };
 }

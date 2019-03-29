@@ -61,19 +61,21 @@ bool sdizo::tests::test_array()
 bool sdizo::tests::test_array2()
 {
   #if TESTS_CPP_17 == true
-    std::ofstream file("testfile");
+    const char *filename = "testfile";
+    std::ofstream file(filename);
     file << 13 << '\n';
     file << 5 << '\n';
     file << 34 << '\n';
     file.close();
 
     sdizo::Array array;
-    array.loadFromFile("testfile");
+    array.loadFromFile(filename);
     TEST_ASSERT_TRUE(array.contains(13))
     TEST_ASSERT_TRUE(array.contains(5))
     TEST_ASSERT_TRUE(array.contains(34))
     TEST_ASSERT_FALSE(array.contains(0))
     TEST_ASSERT_TRUE(array.at(0) == 13)
+    std::filesystem::remove(filename);
 
     return true;
   #else
