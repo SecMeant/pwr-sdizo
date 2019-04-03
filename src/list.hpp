@@ -20,7 +20,7 @@ class List
     ListNode *begin;
     // Making appending easier.
     ListNode *end;
-    
+
   public:
     List() noexcept;
     ~List() noexcept;
@@ -47,7 +47,7 @@ class List
 
     // Overwrites value at index with given element.
     void add(int32_t element, int32_t index);
-  
+
     // Searches for element in container.
     // Returns true if element is in container.
     // False otherwise.
@@ -77,7 +77,7 @@ class List
 
     // Performs actual inserting without searching.
     void insert_(ListNode *node, ListNode *where);
-  
+
     // Appends element at the end of container.
     void append(ListNode *node) noexcept;
 

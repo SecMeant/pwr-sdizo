@@ -148,7 +148,7 @@ bool sdizo::tests::test_list2()
 bool sdizo::tests::test_heap()
 {
   using sdizo::Heap;
-  
+
   Heap heap;
   heap.generate(0, 20, 7);
   heap.generate(0, 20, 7);
@@ -205,7 +205,7 @@ bool sdizo::tests::run_array_tests()
 {
   if(!test_array())
     return false;
-  
+
   if(!test_array2())
     return false;
 
@@ -216,7 +216,7 @@ bool sdizo::tests::run_list_tests()
 {
   if(!test_list())
     return false;
-  
+
   if(!test_list2())
     return false;
 
@@ -238,6 +238,6 @@ bool sdizo::tests::run_bst_tests()
 
   if(!test_bst2())
     return false;
-  
+
   return true;
 }

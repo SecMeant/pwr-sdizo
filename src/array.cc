@@ -26,7 +26,7 @@ int32_t sdizo::Array::at(int32_t index) const
 {
   if(index >= this->ssize || index < 0)
     throw std::out_of_range("Referenced element out of range.");
-  
+
   return this->data[index];
 }
 
@@ -40,10 +40,10 @@ void sdizo::Array::insert(int32_t element, int32_t index)
 
   // Copy left side of array.
   std::copy(this->data, this->data+index, new_data);
-  
+
   // Insert element at index.
   new_data[index] = element;
-  
+
   // Copy right side of array.
   std::copy(this->data+index, this->data+this->ssize, new_data+index+1);
 
@@ -72,7 +72,7 @@ void sdizo::Array::removeAt(int32_t index)
 
   int32_t new_size = this->ssize-1;
   int32_t *new_data = new int[new_size];
-  
+
   // Copy left side of array.
   std::copy(this->data, this->data+index, new_data);
 
@@ -133,7 +133,7 @@ int32_t sdizo::Array::find(int32_t elem) const noexcept
   #ifdef DEBUG_PRINT_ON
   printf("Could not find element %i\n", elem);
   #endif
-  
+
   return -1;
 }
 

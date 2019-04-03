@@ -50,7 +50,7 @@ class Heap
 
     // Checks if container is proper heap,
     bool verify() const noexcept;
-  
+
   private:
     void heapify(int32_t index) noexcept;
 

@@ -39,7 +39,7 @@ class Array
 
     // Overwrites value at index with given element.
     void update(int32_t index, int32_t element);
-  
+
     // Searches for element in container.
     // Returns true if element is in container.
     // False otherwise.

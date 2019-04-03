@@ -8,7 +8,7 @@ namespace sdizo{
     TreeNode *left;
     TreeNode *right;
     TreeNode *parent;
-  
+
     TreeNode(int32_t element) noexcept
     :value{element}, left{nullptr}, right{nullptr}, parent{nullptr} {}
   };
@@ -17,11 +17,11 @@ namespace sdizo{
   {
     public:
       TreeNode *root;
-    
+
     public:
       Tree() noexcept;
       ~Tree() noexcept;
-      
+
       int32_t loadFromFile() noexcept;
 
       void insert(int32_t element) noexcept;
@@ -50,7 +50,7 @@ namespace sdizo{
       void convert_to_vine() noexcept;
       void display() const noexcept;
       void dsw() noexcept;
-  
+
       bool verify_values() const noexcept;
       bool verify_connections() const noexcept;
 

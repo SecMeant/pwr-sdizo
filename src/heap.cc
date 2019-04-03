@@ -40,7 +40,7 @@ void sdizo::Heap::insert(int32_t element)
 {
   if(this->ssize == this->length)
     this->expand();
-  
+
   auto i = this->ssize;
   auto parent = PARENT(i);
 
@@ -188,7 +188,7 @@ bool sdizo::Heap::verify() const noexcept
     #ifdef DEBUG_PRINT_ON
     printf("Veryfing index %i. ", i);
     #endif
-  
+
     auto left = LEFT(i);
     if(left < this->ssize && this->array[i] < this->array[left])
       return false;

@@ -79,7 +79,7 @@ void sdizo::List::add(int32_t element, int32_t index)
     throw std::out_of_range("Treid to update (add) element at index out of range.");
 
   ListNode *to_update = this->at(index);
-  
+
   if(to_update == nullptr)
     throw std::out_of_range("Treid to update (add) element at index out of range.");
 
@@ -176,7 +176,7 @@ void sdizo::List::insert_(ListNode *node, ListNode *where)
   // If there is no previous node, it means its begin
   else
     this->begin = node;
-  
+
   if(where != nullptr)
     where->prev = node;
 }

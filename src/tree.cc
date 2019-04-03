@@ -58,25 +58,25 @@ void sdizo::Tree::remove(TreeNode *node)
     to_delete = node;
   else
     to_delete = sdizo::Tree::successor(node);
-  
+
   if(to_delete->left != nullptr)
     x = to_delete->left;
   else
     x = to_delete->right;
-  
+
   if(x != nullptr)
     x->parent = to_delete->parent;
-  
+
   if(to_delete->parent == nullptr)
     this->root = x;
   else if(to_delete == to_delete->parent->left)
     to_delete->parent->left = x;
   else
     to_delete->parent->right = x;
-  
+
   if(to_delete != node)
     node->value = to_delete->value;
-  
+
   delete to_delete;
 }
 
@@ -261,7 +261,7 @@ bool sdizo::Tree::verify_(TreeNode *root) noexcept
 {
   if(root == nullptr)
     return true;
-  
+
   if(!(verify_(root->left) & verify_(root->right)))
     return false;
 
@@ -298,7 +298,7 @@ void sdizo::Tree::free(TreeNode *to_delete) noexcept
 {
   if(to_delete == nullptr)
     return;
-  
+
   sdizo::Tree::free(to_delete->left);
   sdizo::Tree::free(to_delete->right);
   delete to_delete;
