@@ -98,7 +98,7 @@ RedBlackNode* sdizo::RedBlackTree::successor(RedBlackNode *root) noexcept
    root == current_parent->right)
   {
     root = current_parent;
-    current_parent = root->parent; 
+    current_parent = root->parent;
   }
 
   return current_parent;
@@ -118,7 +118,7 @@ RedBlackNode* sdizo::RedBlackTree::predecessor(RedBlackNode *node) noexcept
    node == current_parent->left)
   {
     node = current_parent;
-    current_parent = node->parent; 
+    current_parent = node->parent;
   }
 
   return current_parent;

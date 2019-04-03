@@ -12,7 +12,7 @@ sdizo::Array::~Array() noexcept
 }
 
 int32_t sdizo::Array::loadFromFile(const char *filename) noexcept
-{  
+{
   std::ifstream file(filename);
   int32_t num;
 
@@ -59,7 +59,7 @@ void sdizo::Array::insert(int32_t element, int32_t index)
 void sdizo::Array::removeAt(int32_t index)
 {
   if(this->ssize == 0)
-  {  
+  {
     #ifdef SOFT_EXCEPTIONS
     return;
     #else
@@ -96,7 +96,7 @@ void sdizo::Array::remove(int32_t element)
     return;
 
   this->removeAt(index);
-}  
+}
 
 void sdizo::Array::update(int32_t index, int32_t element)
 {

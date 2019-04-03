@@ -12,7 +12,7 @@ void run_tests()
   TEST("Array test", run_array_tests);
   TEST("List test", run_list_tests);
   TEST("Heap test", run_heap_tests);
-  TEST("BST test", run_bst_tests); 
+  TEST("BST test", run_bst_tests);
 }
 
 void menu_array(sdizo::Array &array)
@@ -39,7 +39,7 @@ void menu_array(sdizo::Array &array)
 
     switch (option)
     {
-      case '1': 
+      case '1':
         printf(" Podaj nazwê zbioru:");
         cin >> fileName;
         array.loadFromFile(fileName.c_str());
@@ -60,7 +60,7 @@ void menu_array(sdizo::Array &array)
         cin >> value;
 
         array.insert(value,index);
-        array.display();      
+        array.display();
         break;
 
       case '4':
@@ -68,7 +68,7 @@ void menu_array(sdizo::Array &array)
         cin >> value;
 
         array.append(value);
-        array.display();      
+        array.display();
         break;
 
       case '5':
@@ -76,7 +76,7 @@ void menu_array(sdizo::Array &array)
         cin >> value;
 
         array.prepend(value);
-        array.display();      
+        array.display();
         break;
 
       case '6':
@@ -123,7 +123,7 @@ void menu_list(sdizo::List &list)
 
     switch (option)
     {
-      case '1': 
+      case '1':
         printf(" Podaj nazwê zbioru:");
         cin >> fileName;
         list.loadFromFile(fileName.c_str());
@@ -144,7 +144,7 @@ void menu_list(sdizo::List &list)
         cin >> value;
 
         list.insert(value,index);
-        list.display();      
+        list.display();
         break;
 
       case '4':
@@ -152,7 +152,7 @@ void menu_list(sdizo::List &list)
         cin >> value;
 
         list.append(value);
-        list.display();      
+        list.display();
         break;
 
       case '5':
@@ -160,7 +160,7 @@ void menu_list(sdizo::List &list)
         cin >> value;
 
         list.prepend(value);
-        list.display();      
+        list.display();
         break;
 
       case '6':
@@ -205,7 +205,7 @@ void menu_heap(sdizo::Heap &heap)
 
     switch (option)
     {
-      case '1': 
+      case '1':
         printf("Podaj nazwê zbioru:");
         cin >> fileName;
         heap.loadFromFile(fileName.c_str());
@@ -224,7 +224,7 @@ void menu_heap(sdizo::Heap &heap)
         cin >> value;
 
         heap.insert(value);
-        heap.display();      
+        heap.display();
         break;
 
       case '4':
@@ -281,7 +281,7 @@ void menu()
 
       case '3':
         menu_heap(heap);
-        break;    
+        break;
     }
 
   } while (option != '0');
