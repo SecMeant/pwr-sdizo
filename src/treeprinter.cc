@@ -1,11 +1,11 @@
 // C++ Program to print binary tree in 2D  
 #include <stdio.h>
 #include "tree.hpp"
-#include "blackredtree.hpp"
+#include "redblacktree.hpp"
 #define COUNT 10  
 
 using sdizo::TreeNode;
-using sdizo::BlackRedNode;
+using sdizo::RedBlackNode;
 
 // Function to print binary tree in 2D  
 // It does reverse inorder traversal  
@@ -41,5 +41,5 @@ void print2D(T *root) noexcept
 
 template void print2D<TreeNode>(TreeNode *root) noexcept;
 template void print2DUtil<TreeNode>(TreeNode *root, int space) noexcept;
-template void print2D<BlackRedNode>(BlackRedNode *root) noexcept;
-template void print2DUtil<BlackRedNode>(BlackRedNode *root, int space) noexcept;
+template void print2D<RedBlackNode>(RedBlackNode *root) noexcept;
+template void print2DUtil<RedBlackNode>(RedBlackNode *root, int space) noexcept;

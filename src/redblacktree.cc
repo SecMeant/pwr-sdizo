@@ -1,20 +1,20 @@
 #include "treeprinter.hpp"
-#include "blackredtree.hpp"
+#include "redblacktree.hpp"
 #include <cassert>
 #include <stdexcept>
 
-using sdizo::BlackRedNode;
+using sdizo::RedBlackNode;
 
-void sdizo::BlackRedTree::insert(int32_t element) noexcept
+void sdizo::RedBlackTree::insert(int32_t element) noexcept
 {
-  BlackRedNode *new_node = new BlackRedNode(element);
+  RedBlackNode *new_node = new RedBlackNode(element);
   this->insert(new_node);
 }
 
-void sdizo::BlackRedTree::insert(BlackRedNode *node) noexcept
+void sdizo::RedBlackTree::insert(RedBlackNode *node) noexcept
 {
-  BlackRedNode *current_parent = nullptr;
-  BlackRedNode *current_node = this->root;
+  RedBlackNode *current_parent = nullptr;
+  RedBlackNode *current_node = this->root;
   while(current_node != nullptr)
   {
     current_parent = current_node;
@@ -34,20 +34,20 @@ void sdizo::BlackRedTree::insert(BlackRedNode *node) noexcept
     current_parent->right = node;
 }
 
-void sdizo::BlackRedTree::remove(BlackRedNode *node)
+void sdizo::RedBlackTree::remove(RedBlackNode *node)
 {
   assert(node);
 
   if(this->root == nullptr)
     throw std::length_error("Tried to remove from already empty tree.");
 
-  BlackRedNode *to_delete;
-  BlackRedNode *x;
+  RedBlackNode *to_delete;
+  RedBlackNode *x;
 
   if(node->left == nullptr || node->right == nullptr)
     to_delete = node;
   else
-    to_delete = sdizo::BlackRedTree::successor(node);
+    to_delete = sdizo::RedBlackTree::successor(node);
 
   if(to_delete->left != nullptr)
     x = to_delete->left;
@@ -70,9 +70,9 @@ void sdizo::BlackRedTree::remove(BlackRedNode *node)
   delete to_delete;
 }
 
-BlackRedNode *sdizo::BlackRedTree::search(int32_t element) const noexcept
+RedBlackNode *sdizo::RedBlackTree::search(int32_t element) const noexcept
 {
-  BlackRedNode *current = this->root;
+  RedBlackNode *current = this->root;
   while(current != nullptr && current->value != element)
   {
     if(current->value < element)
@@ -84,14 +84,14 @@ BlackRedNode *sdizo::BlackRedTree::search(int32_t element) const noexcept
   return current;
 }
 
-BlackRedNode* sdizo::BlackRedTree::successor(BlackRedNode *root) noexcept
+RedBlackNode* sdizo::RedBlackTree::successor(RedBlackNode *root) noexcept
 {
   assert(root);
 
   if(root->right != nullptr)
     return min(root->right);
 
-  BlackRedNode *current_parent = root->parent;
+  RedBlackNode *current_parent = root->parent;
 
   while
   (current_parent != nullptr &&
@@ -104,14 +104,14 @@ BlackRedNode* sdizo::BlackRedTree::successor(BlackRedNode *root) noexcept
   return current_parent;
 }
 
-BlackRedNode* sdizo::BlackRedTree::predecessor(BlackRedNode *node) noexcept
+RedBlackNode* sdizo::RedBlackTree::predecessor(RedBlackNode *node) noexcept
 {
   assert(node);
 
   if(node->left != nullptr)
     return max(node->right);
 
-  BlackRedNode *current_parent = node->parent;
+  RedBlackNode *current_parent = node->parent;
 
   while
   (current_parent != nullptr &&
@@ -124,7 +124,7 @@ BlackRedNode* sdizo::BlackRedTree::predecessor(BlackRedNode *node) noexcept
   return current_parent;
 }
 
-BlackRedNode* sdizo::BlackRedTree::min(BlackRedNode *root) noexcept
+RedBlackNode* sdizo::RedBlackTree::min(RedBlackNode *root) noexcept
 {
   assert(root);
   while(root->left != nullptr)
@@ -132,7 +132,7 @@ BlackRedNode* sdizo::BlackRedTree::min(BlackRedNode *root) noexcept
   return root;
 }
 
-BlackRedNode* sdizo::BlackRedTree::max(BlackRedNode *root) noexcept
+RedBlackNode* sdizo::RedBlackTree::max(RedBlackNode *root) noexcept
 {
   assert(root);
   while(root->right != nullptr)
@@ -140,10 +140,10 @@ BlackRedNode* sdizo::BlackRedTree::max(BlackRedNode *root) noexcept
   return root;
 }
 
-void sdizo::BlackRedTree::rot_left(BlackRedNode *node) noexcept
+void sdizo::RedBlackTree::rot_left(RedBlackNode *node) noexcept
 {
-  BlackRedNode *B = node->right;
-  BlackRedNode *p = node->parent;
+  RedBlackNode *B = node->right;
+  RedBlackNode *p = node->parent;
 
   if(B)
   {
@@ -162,10 +162,10 @@ void sdizo::BlackRedTree::rot_left(BlackRedNode *node) noexcept
   }
 }
 
-void sdizo::BlackRedTree::rot_right(BlackRedNode *node) noexcept
+void sdizo::RedBlackTree::rot_right(RedBlackNode *node) noexcept
 {
-  BlackRedNode *B = node->left;
-  BlackRedNode *p = node->parent;
+  RedBlackNode *B = node->left;
+  RedBlackNode *p = node->parent;
 
   if(B)
   {
@@ -184,7 +184,7 @@ void sdizo::BlackRedTree::rot_right(BlackRedNode *node) noexcept
   }
 }
 
-unsigned sdizo::BlackRedTree::log2(unsigned x) noexcept
+unsigned sdizo::RedBlackTree::log2(unsigned x) noexcept
 {
   unsigned y = 1;
 
@@ -193,10 +193,10 @@ unsigned sdizo::BlackRedTree::log2(unsigned x) noexcept
   return y;
 }
 
-void sdizo::BlackRedTree::dsw() noexcept
+void sdizo::RedBlackTree::dsw() noexcept
 {
   unsigned n,i,s;
-  BlackRedNode* p;
+  RedBlackNode* p;
 
   n = 0;
   p = this->root;
@@ -212,7 +212,7 @@ void sdizo::BlackRedTree::dsw() noexcept
       p = p->right;
     }
 
-  s = n + 1 - sdizo::BlackRedTree::log2(n + 1);
+  s = n + 1 - sdizo::RedBlackTree::log2(n + 1);
 
   p = root;
   for(i = 0; i < s; i++)
@@ -235,19 +235,19 @@ void sdizo::BlackRedTree::dsw() noexcept
     }
   }
 }
-void sdizo::BlackRedTree::display() const noexcept
+void sdizo::RedBlackTree::display() const noexcept
 {
   puts("===========================");
   print2DUtil(this->root, 0);
   puts("===========================");
 }
 
-bool sdizo::BlackRedTree::verify_values() const noexcept
+bool sdizo::RedBlackTree::verify_values() const noexcept
 {
-  return sdizo::BlackRedTree::verify_(this->root);
+  return sdizo::RedBlackTree::verify_(this->root);
 }
 
-bool sdizo::BlackRedTree::verify_(BlackRedNode *root) noexcept
+bool sdizo::RedBlackTree::verify_(RedBlackNode *root) noexcept
 {
   if(root == nullptr)
     return true;
@@ -264,12 +264,12 @@ bool sdizo::BlackRedTree::verify_(BlackRedNode *root) noexcept
   return true;
 }
 
-bool sdizo::BlackRedTree::verify_connections() const noexcept
+bool sdizo::RedBlackTree::verify_connections() const noexcept
 {
   return this->verify_connections(this->root) && this->root->parent == nullptr;
 }
 
-bool sdizo::BlackRedTree::verify_connections(BlackRedNode *node) noexcept
+bool sdizo::RedBlackTree::verify_connections(RedBlackNode *node) noexcept
 {
   if(node == nullptr)
     return true;
@@ -280,16 +280,16 @@ bool sdizo::BlackRedTree::verify_connections(BlackRedNode *node) noexcept
   if(node->right != nullptr && node->right->parent != node)
     return false;
 
-  return sdizo::BlackRedTree::verify_connections(node->left) && sdizo::BlackRedTree::verify_connections(node->right);
+  return sdizo::RedBlackTree::verify_connections(node->left) && sdizo::RedBlackTree::verify_connections(node->right);
 
 }
 
-void sdizo::BlackRedTree::free(BlackRedNode *to_delete) noexcept
+void sdizo::RedBlackTree::free(RedBlackNode *to_delete) noexcept
 {
   if(to_delete == nullptr)
     return;
 
-  sdizo::BlackRedTree::free(to_delete->left);
-  sdizo::BlackRedTree::free(to_delete->right);
+  sdizo::RedBlackTree::free(to_delete->left);
+  sdizo::RedBlackTree::free(to_delete->right);
   delete to_delete;
 }
