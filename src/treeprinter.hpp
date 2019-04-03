@@ -1,5 +1,7 @@
 #pragma once
 #include "tree.hpp"
 
-void print2DUtil(sdizo::TreeNode *root, int space) noexcept;
-void print2D(sdizo::TreeNode *root) noexcept;
+template<typename T>
+void print2DUtil(T *root, int space) noexcept;
+template<typename T>
+void print2D(T *root) noexcept;
