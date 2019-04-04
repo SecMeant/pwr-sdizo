@@ -340,7 +340,8 @@ bool sdizo::RedBlackTree::verify_(RedBlackNode *root) noexcept
 
 bool sdizo::RedBlackTree::verify_connections() const noexcept
 {
-  return this->verify_connections(this->root) && this->root->parent == nullptr;
+  return this->verify_connections(this->root) &&
+         this->root->parent == nullptr;
 }
 
 bool sdizo::RedBlackTree::verify_connections(RedBlackNode *node) noexcept
@@ -354,7 +355,8 @@ bool sdizo::RedBlackTree::verify_connections(RedBlackNode *node) noexcept
   if(node->right != nullptr && node->right->parent != node)
     return false;
 
-  return sdizo::RedBlackTree::verify_connections(node->left) && sdizo::RedBlackTree::verify_connections(node->right);
+  return sdizo::RedBlackTree::verify_connections(node->left) &&
+         sdizo::RedBlackTree::verify_connections(node->right);
 
 }
 
