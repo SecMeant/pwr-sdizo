@@ -3,6 +3,7 @@
 #include "list.hpp"
 #include "heap.hpp"
 #include "tree.hpp"
+#include "redblacktree.hpp"
 #include <random>
 #if __cplusplus == 201703L
 #define TESTS_CPP_17 true
@@ -201,6 +202,14 @@ bool sdizo::tests::test_bst2()
   return true;
 }
 
+bool sdizo::tests::test_rbt()
+{
+  sdizo::RedBlackTree rbt;
+  rbt.generate(0,100,30);
+  rbt.display();
+  return true;
+}
+
 bool sdizo::tests::run_array_tests()
 {
   if(!test_array())
@@ -237,6 +246,14 @@ bool sdizo::tests::run_bst_tests()
     return false;
 
   if(!test_bst2())
+    return false;
+
+  return true;
+}
+
+bool sdizo::tests::run_rbt_tests()
+{
+  if(!test_rbt())
     return false;
 
   return true;

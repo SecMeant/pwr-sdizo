@@ -2,6 +2,7 @@
 #include "redblacktree.hpp"
 #include <cassert>
 #include <stdexcept>
+#include <random>
 
 using sdizo::RedBlackNode;
 
@@ -11,7 +12,7 @@ void sdizo::RedBlackTree::insert(int32_t element) noexcept
   this->insert(new_node);
 }
 
-void sdizo::RedBlackTree::insert(RedBlackNode *node) noexcept
+void sdizo::RedBlackTree::tree_insert(RedBlackNode *node) noexcept
 {
   RedBlackNode *current_parent = nullptr;
   RedBlackNode *current_node = this->root;
@@ -32,6 +33,79 @@ void sdizo::RedBlackTree::insert(RedBlackNode *node) noexcept
     current_parent->left = node;
   else
     current_parent->right = node;
+}
+
+void sdizo::RedBlackTree::insert(RedBlackNode *node) noexcept
+{
+  this->tree_insert(node);
+  node->color = NodeColor::red;
+
+  if(node == this->root)
+  {
+    puts("Root");
+    node->color = NodeColor::black;
+    return;
+  }
+
+  puts("not root");
+  this->fixRedBlackTree(node);
+}
+
+void sdizo::RedBlackTree::fixRedBlackTree(RedBlackNode *node) noexcept
+{
+  RedBlackNode *uncle_node;
+  while((node != root) && (node->parent->color == NodeColor::red))
+  {
+    if(node->parent == node->parent->parent->left)
+    {
+      uncle_node = node->parent->parent->right;
+
+      if(uncle_node && uncle_node->color == NodeColor::red)
+      {
+        node->parent->color = NodeColor::black;
+        uncle_node->color = NodeColor::black;
+        node->parent->parent->color = NodeColor::red;
+        node = node->parent->parent;
+        continue;
+      }
+
+      if(node == node->parent->right)
+      {
+        node = node->parent;
+        rot_left(node);
+      }
+
+      node->parent->color = NodeColor::black;
+      node->parent->parent->color = NodeColor::red;
+      rot_right(node->parent->parent);
+      break;
+    }
+    else
+    {
+      uncle_node = node->parent->parent->left;
+
+      if(uncle_node && uncle_node->color == NodeColor::red)
+      {
+        node->parent->color = NodeColor::black;
+        uncle_node->color = NodeColor::black;
+        node->parent->parent->color = NodeColor::red;
+        node = node->parent->parent;
+        continue;
+      }
+
+      if(node == node->parent->left)
+      {
+        node = node->parent;
+        rot_right(node);
+      }
+
+      node->parent->color = NodeColor::black;
+      node->parent->parent->color = NodeColor::red;
+      rot_left(node->parent->parent);
+      break;
+    }
+  }
+  root->color = NodeColor::black;
 }
 
 void sdizo::RedBlackTree::remove(RedBlackNode *node)
@@ -292,4 +366,17 @@ void sdizo::RedBlackTree::free(RedBlackNode *to_delete) noexcept
   sdizo::RedBlackTree::free(to_delete->left);
   sdizo::RedBlackTree::free(to_delete->right);
   delete to_delete;
+}
+
+void sdizo::RedBlackTree::generate
+(int32_t rand_range_begin, int32_t rand_range_end, int32_t size) noexcept
+{
+  std::random_device generator;
+  std::uniform_int_distribution<int32_t>
+   distribution(rand_range_begin, rand_range_end);
+
+  for(int32_t i = 0; i < size; ++i)
+  {
+    this->insert(distribution(generator));
+  }
 }

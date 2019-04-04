@@ -48,6 +48,8 @@ namespace sdizo{
       static RedBlackNode* min(RedBlackNode *root) noexcept;
       static RedBlackNode* max(RedBlackNode *root) noexcept;
 
+      void fixRedBlackTree(RedBlackNode *node) noexcept;
+
       void rot_left(RedBlackNode *node) noexcept;
       void rot_right(RedBlackNode *node) noexcept;
       static unsigned log2(unsigned x) noexcept;
@@ -64,5 +66,7 @@ namespace sdizo{
       static void free(RedBlackNode *to_delete) noexcept;
       static bool verify_(RedBlackNode *root) noexcept;
       static bool verify_connections(RedBlackNode *node) noexcept;
+
+      void tree_insert(RedBlackNode *node) noexcept;
   };
 }

@@ -12,10 +12,12 @@ namespace sdizo{
     bool test_heap();
     bool test_bst();
     bool test_bst2();
+    bool test_rbt();
     bool run_array_tests();
     bool run_list_tests();
     bool run_heap_tests();
     bool run_bst_tests();
+    bool run_rbt_tests();
   }
 }
 

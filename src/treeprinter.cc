@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include "tree.hpp"
 #include "redblacktree.hpp"
-#define COUNT 10
+
+static constexpr int shift_width = 10;
 
 using sdizo::TreeNode;
 using sdizo::RedBlackNode;
@@ -17,14 +18,14 @@ void print2DUtil(T *root, int space) noexcept
         return;
 
     // Increase distance between levels
-    space += COUNT;
+    space += shift_width;
 
     // Process right child first
     print2DUtil(root->right, space);
 
     // Print current node after space
     // count
-    printf("\n%*s%i\n", space - COUNT, " ", root->value);
+    printf("\n%*s%i\n", space - shift_width, " ", root->value);
 
     // Process left child
     print2DUtil(root->left, space);
