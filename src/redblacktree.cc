@@ -42,33 +42,36 @@ void sdizo::RedBlackTree::insert(RedBlackNode *node) noexcept
 
   if(node == this->root)
   {
-    puts("Root");
     node->color = NodeColor::black;
     return;
   }
 
-  puts("not root");
   this->fixRedBlackTree(node);
 }
 
 void sdizo::RedBlackTree::fixRedBlackTree(RedBlackNode *node) noexcept
 {
-  RedBlackNode *uncle_node;
+  using node_ptr = RedBlackNode*;
   while((node != root) && (node->parent->color == NodeColor::red))
   {
-    if(node->parent == node->parent->parent->left)
+    bool parent_is_left_child = node->parent == node->parent->parent->left;
+
+    node_ptr uncle_node = parent_is_left_child ? node->parent->parent->right
+                                               : node->parent->parent->left;
+
+    // If uncle not null, pass blackness down.
+    if(uncle_node && uncle_node->color == NodeColor::red)
     {
-      uncle_node = node->parent->parent->right;
+      node->parent->color = NodeColor::black;
+      uncle_node->color = NodeColor::black;
+      node->parent->parent->color = NodeColor::red;
+      node = node->parent->parent;
+      continue;
+    }
 
-      if(uncle_node && uncle_node->color == NodeColor::red)
-      {
-        node->parent->color = NodeColor::black;
-        uncle_node->color = NodeColor::black;
-        node->parent->parent->color = NodeColor::red;
-        node = node->parent->parent;
-        continue;
-      }
-
+    // Uncle is null, so rotate.
+    if(parent_is_left_child)
+    {
       if(node == node->parent->right)
       {
         node = node->parent;
@@ -82,17 +85,6 @@ void sdizo::RedBlackTree::fixRedBlackTree(RedBlackNode *node) noexcept
     }
     else
     {
-      uncle_node = node->parent->parent->left;
-
-      if(uncle_node && uncle_node->color == NodeColor::red)
-      {
-        node->parent->color = NodeColor::black;
-        uncle_node->color = NodeColor::black;
-        node->parent->parent->color = NodeColor::red;
-        node = node->parent->parent;
-        continue;
-      }
-
       if(node == node->parent->left)
       {
         node = node->parent;

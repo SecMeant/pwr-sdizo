@@ -13,6 +13,7 @@ void run_tests()
   TEST("List test", run_list_tests);
   TEST("Heap test", run_heap_tests);
   TEST("BST test", run_bst_tests);
+  TEST("RBT test", run_rbt_tests);
 }
 
 void menu_array(sdizo::Array &array)

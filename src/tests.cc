@@ -205,7 +205,10 @@ bool sdizo::tests::test_bst2()
 bool sdizo::tests::test_rbt()
 {
   sdizo::RedBlackTree rbt;
-  rbt.generate(0,100,30);
+  for(int i = 0; i < 10; ++i)
+  {
+    rbt.insert(i);
+  }
   rbt.display();
   return true;
 }
