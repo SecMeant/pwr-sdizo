@@ -46,12 +46,8 @@ void sdizo::RedBlackTree::insert(RedBlackNode *node) noexcept
     return;
   }
 
-  this->fixRedBlackTree(node);
-}
-
-void sdizo::RedBlackTree::fixRedBlackTree(RedBlackNode *node) noexcept
-{
   using node_ptr = RedBlackNode*;
+  // redblacktree structure fix
   while((node != root) && (node->parent->color == NodeColor::red))
   {
     bool parent_is_left_child = node->parent == node->parent->parent->left;
@@ -259,48 +255,6 @@ unsigned sdizo::RedBlackTree::log2(unsigned x) noexcept
   return y;
 }
 
-void sdizo::RedBlackTree::dsw() noexcept
-{
-  unsigned n,i,s;
-  RedBlackNode* p;
-
-  n = 0;
-  p = this->root;
-  while(p)
-    if(p->left)
-      {
-        rot_right(p);
-        p = p->parent;
-      }
-    else
-    {
-      n++;
-      p = p->right;
-    }
-
-  s = n + 1 - sdizo::RedBlackTree::log2(n + 1);
-
-  p = root;
-  for(i = 0; i < s; i++)
-  {
-    rot_left(p);
-    p = p->parent->right;
-  }
-
-  n = n - s;
-
-
-  while(n > 1)
-  {
-    n >>= 1;
-    p = root;
-    for(i = 0; i < n; i++)
-    {
-      rot_left(p);
-      p = p->parent->right;
-    }
-  }
-}
 void sdizo::RedBlackTree::display() const noexcept
 {
   puts("===========================");

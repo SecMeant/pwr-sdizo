@@ -48,15 +48,11 @@ namespace sdizo{
       static RedBlackNode* min(RedBlackNode *root) noexcept;
       static RedBlackNode* max(RedBlackNode *root) noexcept;
 
-      void fixRedBlackTree(RedBlackNode *node) noexcept;
-
       void rot_left(RedBlackNode *node) noexcept;
       void rot_right(RedBlackNode *node) noexcept;
       static unsigned log2(unsigned x) noexcept;
 
-      void convert_to_vine() noexcept;
       void display() const noexcept;
-      void dsw() noexcept;
 
       bool verify_values() const noexcept;
       bool verify_connections() const noexcept;

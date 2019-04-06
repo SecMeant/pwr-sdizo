@@ -210,6 +210,8 @@ bool sdizo::tests::test_rbt()
     rbt.insert(i);
   }
   rbt.display();
+  TEST_INVOKE_ASSERT_TRUE(rbt.verify_values);
+  TEST_INVOKE_ASSERT_TRUE(rbt.verify_connections);
   return true;
 }
 
