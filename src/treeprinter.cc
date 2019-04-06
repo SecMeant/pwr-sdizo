@@ -1,5 +1,6 @@
 // C++ Program to print binary tree in 2D
 #include <stdio.h>
+#include <type_traits>
 #include "tree.hpp"
 #include "redblacktree.hpp"
 
@@ -7,6 +8,7 @@ static constexpr int shift_width = 10;
 
 using sdizo::TreeNode;
 using sdizo::RedBlackNode;
+using sdizo::NodeColor;
 
 // Function to print binary tree in 2D
 // It does reverse inorder traversal
@@ -25,7 +27,18 @@ void print2DUtil(T *root, int space) noexcept
 
     // Print current node after space
     // count
+    if constexpr(std::is_same<T, sdizo::RedBlackNode>::value)
+    {
+      if(root->color == NodeColor::red)
+      {
+        printf("\u001b[31m");
+      }
+    }
+
     printf("\n%*s%i\n", space - shift_width, " ", root->value);
+
+    if constexpr(std::is_same<T, sdizo::RedBlackNode>::value)
+      printf("\u001b[0m");
 
     // Process left child
     print2DUtil(root->left, space);
