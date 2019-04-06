@@ -104,31 +104,47 @@ void sdizo::RedBlackTree::remove(RedBlackNode *node)
     throw std::length_error("Tried to remove from already empty tree.");
 
   RedBlackNode *to_delete;
-  RedBlackNode *x;
+  RedBlackNode *to_delete_child;
 
   if(node->left == nullptr || node->right == nullptr)
     to_delete = node;
   else
     to_delete = sdizo::RedBlackTree::successor(node);
 
-  if(to_delete->left != nullptr)
-    x = to_delete->left;
+  if(to_delete->left == nullptr)
+    to_delete_child = to_delete->right;
   else
-    x = to_delete->right;
+    to_delete_child = to_delete->left;
 
-  if(x != nullptr)
-    x->parent = to_delete->parent;
+  if(to_delete_child == nullptr)
+  {
+    to_delete_child = this->null_node;
+    this->null_node->parent = to_delete;
+  }
+
+  to_delete_child->parent = to_delete->parent;
 
   if(to_delete->parent == nullptr)
-    this->root = x;
+    this->root = to_delete_child;
   else if(to_delete == to_delete->parent->left)
-    to_delete->parent->left = x;
+    to_delete->parent->left = to_delete_child;
   else
-    to_delete->parent->right = x;
+    to_delete->parent->right = to_delete_child;
 
   if(to_delete != node)
+  {
     node->value = to_delete->value;
+  }
 
+  if(to_delete->color == NodeColor::black)
+    ;
+
+  to_delete->info();
+  if(null_node->parent->left == null_node)
+    null_node->parent->left = nullptr;
+  if(null_node->parent->right == null_node)
+    null_node->parent->right = nullptr;
+  null_node->info();
   delete to_delete;
 }
 
