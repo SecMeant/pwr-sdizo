@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <cstdio>
+#include <limits>
 
 namespace sdizo{
   enum class NodeColor
@@ -33,30 +34,31 @@ namespace sdizo{
 
     inline void info() const noexcept
     {
-      printf("This %p\n", this->left);
       auto value = this->value;
       auto color = this->color == NodeColor::black ? "black" : "red";
       auto left = this->left != nullptr ? this->left->value : -1;
       auto right = this->right != nullptr ? this->right->value : -1;
       auto parent = this->parent != nullptr ? this->parent->value : -1;
-      std::printf("Value: %i, Color: %s, Left: %i, Right: %i, Parent: %i\n",
-             value, color, left, right, parent);
+      std::printf("Value: %i, Color: %s, Left: %i, Right: %i,"
+                  "Parent: %i\n", value, color, left, right, parent);
     }
 
   };
 
   class RedBlackTree
   {
+    public:
+      static constexpr int32_t GUARD_VALUE =
+        std::numeric_limits<int32_t>::min();
+
     private:
       RedBlackNode *null_node;
       RedBlackNode *root;
 
     public:
       inline RedBlackTree() noexcept
-      :null_node{new RedBlackNode(0, NodeColor::black)},
-       root{this->null_node}
-      {
-      }
+      :null_node{new RedBlackNode(GUARD_VALUE, NodeColor::black)},
+       root{this->null_node} {}
 
       inline ~RedBlackTree() noexcept
       {this->free(this->root);delete this->null_node;}
@@ -94,7 +96,6 @@ namespace sdizo{
       void free(RedBlackNode *to_delete) noexcept;
       bool verify_(RedBlackNode *root) const noexcept;
       bool verify_connections(RedBlackNode *node) const noexcept;
-      void print2DUtil(RedBlackNode *root, int space) const noexcept;
 
       void tree_insert(RedBlackNode *node) noexcept;
   };

@@ -1,3 +1,4 @@
+#include "treeprinter.hpp"
 #include "redblacktree.hpp"
 #include <cassert>
 #include <stdexcept>
@@ -44,19 +45,23 @@ void sdizo::RedBlackTree::insert(RedBlackNode *node) noexcept
   // redblacktree structure fix
   while((node != root) && (node->parent->color == NodeColor::red))
   {
-    if(node->parent == node->parent->parent->left)
+    bool is_parent_left_child = 
+      node->parent == node->parent->parent->left;
+
+    uncle = is_parent_left_child ? node->parent->parent->right 
+                                 : node->parent->parent->left;
+
+    if(uncle->color == NodeColor::red)
     {
-      uncle = node->parent->parent->right;
+      node->parent->color = NodeColor::black;
+      uncle->color = NodeColor::black;
+      node->parent->parent->color = NodeColor::red;
+      node = node->parent->parent;
+      continue;
+    }
 
-      if(uncle->color == NodeColor::red)
-      {
-        node->parent->color = NodeColor::black;
-        uncle->color = NodeColor::black;
-        node->parent->parent->color = NodeColor::red;
-        node = node->parent->parent;
-        continue;
-      }
-
+    if(is_parent_left_child)
+    {
       if(node == node->parent->right)
       {
         node = node->parent;
@@ -70,17 +75,6 @@ void sdizo::RedBlackTree::insert(RedBlackNode *node) noexcept
     }
     else
     {
-      uncle = node->parent->parent->left;
-
-      if(uncle->color == NodeColor::red)
-      {
-        node->parent->color = NodeColor::black;
-        uncle->color = NodeColor::black;
-        node->parent->parent->color = NodeColor::red;
-        node = node->parent->parent;
-        continue;
-      }
-
       if(node == node->parent->left)
       {
         node = node->parent;
@@ -335,43 +329,10 @@ unsigned sdizo::RedBlackTree::log2(unsigned x) noexcept
   return y;
 }
 
-void sdizo::RedBlackTree::print2DUtil(RedBlackNode *root, int space)
-const noexcept
-{
-    static constexpr int shift_width = 10;
-
-    // Base case
-    if (root == nullptr)
-      return;
-
-    // Increase distance between levels
-    space += shift_width;
-
-    // Process right child first
-    print2DUtil(root->right, space);
-
-    // Print current node after space
-    // count
-    if(root->color == NodeColor::red)
-    {
-      printf("\u001b[31m");
-    }
-
-    if(root == this->null_node)
-      printf("\n%*s%c\n", space - shift_width, " ", 'N');
-    else
-      printf("\n%*s%i\n", space - shift_width, " ", root->value);
-
-    printf("\u001b[0m");
-
-    // Process left child
-    print2DUtil(root->left, space);
-}
-
 void sdizo::RedBlackTree::display() const noexcept
 {
   puts("===========================");
-  this->print2DUtil(this->root, 0);
+  print2DUtil(this->root, 0);
   puts("===========================");
 }
 
@@ -417,7 +378,6 @@ const noexcept
 
   return sdizo::RedBlackTree::verify_connections(node->left) &&
          sdizo::RedBlackTree::verify_connections(node->right);
-
 }
 
 void sdizo::RedBlackTree::free(RedBlackNode *to_delete) noexcept
