@@ -205,17 +205,31 @@ bool sdizo::tests::test_bst2()
 bool sdizo::tests::test_rbt()
 {
   sdizo::RedBlackTree rbt;
-  for(int i = 1; i < 10; ++i)
+  for(int i = 0; i < 10; ++i)
   {
     rbt.insert(i);
+    rbt.display();
   }
-  rbt.display();
-  rbt.remove(rbt.search(6));
-  rbt.display();
-  rbt.remove(rbt.search(5));
-  rbt.remove(rbt.search(8));
-  rbt.display();
-  rbt.remove(9);
+  for(int i = 0; i < 10; ++i)
+  {
+    rbt.remove(i);
+    rbt.display();
+  }
+  for(int i = 0; i < 10; ++i)
+  {
+    rbt.insert(i);
+    rbt.display();
+  }
+  for(int i = 0; i < 10; ++i)
+  {
+    rbt.remove(i);
+    rbt.display();
+  }
+  rbt.remove(123);
+  rbt.remove(123);
+  rbt.remove(123);
+  rbt.remove(123);
+  rbt.insert(123123);
   rbt.display();
   TEST_INVOKE_ASSERT_TRUE(rbt.verify_values);
   TEST_INVOKE_ASSERT_TRUE(rbt.verify_connections);

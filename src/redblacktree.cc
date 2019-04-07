@@ -1,4 +1,3 @@
-#include "treeprinter.hpp"
 #include "redblacktree.hpp"
 #include <cassert>
 #include <stdexcept>
@@ -9,14 +8,16 @@ using sdizo::RedBlackNode;
 void sdizo::RedBlackTree::insert(int32_t element) noexcept
 {
   RedBlackNode *new_node = new RedBlackNode(element);
+  new_node->right = this->null_node;
+  new_node->left = this->null_node;
   this->insert(new_node);
 }
 
 void sdizo::RedBlackTree::tree_insert(RedBlackNode *node) noexcept
 {
-  RedBlackNode *current_parent = nullptr;
+  RedBlackNode *current_parent = this->null_node;
   RedBlackNode *current_node = this->root;
-  while(current_node != nullptr)
+  while(current_node != this->null_node)
   {
     current_parent = current_node;
 
@@ -27,7 +28,7 @@ void sdizo::RedBlackTree::tree_insert(RedBlackNode *node) noexcept
   }
 
   node->parent = current_parent;
-  if(current_parent == nullptr)
+  if(current_parent == this->null_node)
     this->root = node;
   else if(node->value < current_parent->value)
     current_parent->left = node;
@@ -38,36 +39,24 @@ void sdizo::RedBlackTree::tree_insert(RedBlackNode *node) noexcept
 void sdizo::RedBlackTree::insert(RedBlackNode *node) noexcept
 {
   this->tree_insert(node);
-  node->color = NodeColor::red;
 
-  if(node == this->root)
-  {
-    node->color = NodeColor::black;
-    return;
-  }
-
-  using node_ptr = RedBlackNode*;
+  RedBlackNode *uncle;
   // redblacktree structure fix
   while((node != root) && (node->parent->color == NodeColor::red))
   {
-    bool parent_is_left_child = node->parent == node->parent->parent->left;
-
-    node_ptr uncle_node = parent_is_left_child ? node->parent->parent->right
-                                               : node->parent->parent->left;
-
-    // If uncle not null, pass blackness down.
-    if(uncle_node && uncle_node->color == NodeColor::red)
+    if(node->parent == node->parent->parent->left)
     {
-      node->parent->color = NodeColor::black;
-      uncle_node->color = NodeColor::black;
-      node->parent->parent->color = NodeColor::red;
-      node = node->parent->parent;
-      continue;
-    }
+      uncle = node->parent->parent->right;
 
-    // Uncle is null, so rotate.
-    if(parent_is_left_child)
-    {
+      if(uncle->color == NodeColor::red)
+      {
+        node->parent->color = NodeColor::black;
+        uncle->color = NodeColor::black;
+        node->parent->parent->color = NodeColor::red;
+        node = node->parent->parent;
+        continue;
+      }
+
       if(node == node->parent->right)
       {
         node = node->parent;
@@ -81,6 +70,17 @@ void sdizo::RedBlackTree::insert(RedBlackNode *node) noexcept
     }
     else
     {
+      uncle = node->parent->parent->left;
+
+      if(uncle->color == NodeColor::red)
+      {
+        node->parent->color = NodeColor::black;
+        uncle->color = NodeColor::black;
+        node->parent->parent->color = NodeColor::red;
+        node = node->parent->parent;
+        continue;
+      }
+
       if(node == node->parent->left)
       {
         node = node->parent;
@@ -99,138 +99,123 @@ void sdizo::RedBlackTree::insert(RedBlackNode *node) noexcept
 void sdizo::RedBlackTree::remove(int32_t element)
 {
   auto el = this->search(element);
-  if(el)
+  if(el != this->null_node)
     this->remove(el);
 }
 
 void sdizo::RedBlackTree::remove(RedBlackNode *node)
 {
-  assert(node);
-
-  if(this->root == nullptr)
-    throw std::length_error("Tried to remove from already empty tree.");
-
   RedBlackNode *to_delete;
   RedBlackNode *to_delete_child;
+  RedBlackNode *uncle;
 
-  if(node->left == nullptr || node->right == nullptr)
+  if ((node->left == this->null_node) || (node->right == this->null_node))
     to_delete = node;
   else
-    to_delete = sdizo::RedBlackTree::successor(node);
+    to_delete = this->successor(node);
 
-  if(to_delete->left == nullptr)
-    to_delete_child = to_delete->right;
-  else
+  if (to_delete->left != this->null_node)
     to_delete_child = to_delete->left;
-
-  if(to_delete_child == nullptr)
-  {
-    to_delete_child = this->null_node;
-    this->null_node->parent = to_delete;
-  }
+  else
+    to_delete_child = to_delete->right;
 
   to_delete_child->parent = to_delete->parent;
 
-  if(to_delete->parent == nullptr)
-    this->root = to_delete_child;
-  else if(to_delete == to_delete->parent->left)
-  {
+  if (to_delete->parent == this->null_node)
+    root = to_delete_child;
+  else if (to_delete == to_delete->parent->left)
     to_delete->parent->left = to_delete_child;
-  }
   else
-  {
     to_delete->parent->right = to_delete_child;
-  }
 
-  if(to_delete != node)
-  {
+  if (to_delete != node)
     node->value = to_delete->value;
-  }
 
-  if(to_delete->color == NodeColor::black)
+  // If removing black node, tree's black height needs to be fixed
+  if (to_delete->color == NodeColor::black)
   {
-    RedBlackNode *brother;
-    while(to_delete_child != this->root &&
-          to_delete_child->color == NodeColor::black)
+    while((to_delete_child != root) &&
+          (to_delete_child->color == NodeColor::black))
     {
-      puts("While");
-      to_delete_child->parent->info();
-      to_delete_child->info();
-      if(to_delete_child == to_delete_child->parent->left)
+      if (to_delete_child == to_delete_child->parent->left)
       {
-        brother = to_delete_child->parent->right;
-        if(brother->color == NodeColor::red)
+        uncle = to_delete_child->parent->right;
+
+        if (uncle->color == NodeColor::red)
         {
-          brother->color = NodeColor::black;
+          uncle->color = NodeColor::black;
           to_delete_child->parent->color = NodeColor::red;
           rot_left(to_delete_child->parent);
-          brother = to_delete_child->parent->right;
+          uncle = to_delete_child->parent->right;
         }
-        if(brother->left->color == NodeColor::black &&
-           brother->right->color == NodeColor::black)
+
+        if ((uncle->left->color == NodeColor::black) &&
+            (uncle->right->color == NodeColor::black))
         {
-          brother->color = NodeColor::red;
+          uncle->color = NodeColor::red;
           to_delete_child = to_delete_child->parent;
+          continue;
         }
-        else if(brother->right->color == NodeColor::black)
+
+        if (uncle->right->color == NodeColor::black)
         {
-          brother->left->color = NodeColor::black;
-          brother->color = NodeColor::red;
-          rot_right(brother);
-          brother = brother->parent->right;
+          uncle->left->color = NodeColor::black;
+          uncle->color = NodeColor::red;
+          rot_right(uncle);
+          uncle = to_delete_child->parent->right;
         }
-        brother->color = brother->parent->color;
+
+        uncle->color = to_delete_child->parent->color;
         to_delete_child->parent->color = NodeColor::black;
-        brother->right->color = NodeColor::black;
-        rot_left(brother->parent);
-        to_delete_child = this->root;
+        uncle->right->color = NodeColor::black;
+        rot_left(to_delete_child->parent);
+        to_delete_child = root;
       }
       else
       {
-        brother = to_delete_child->parent->left;
-        if(brother == nullptr)
-          brother = null_node;
-        if(brother->color == NodeColor::red)
+        uncle = to_delete_child->parent->left;
+
+        if (uncle->color == NodeColor::red)
         {
-          brother->color = NodeColor::black;
+          uncle->color = NodeColor::black;
           to_delete_child->parent->color = NodeColor::red;
           rot_right(to_delete_child->parent);
-          brother = to_delete_child->parent->left;
+          uncle = to_delete_child->parent->left;
         }
-        if(brother->left->color == NodeColor::black &&
-           brother->right->color == NodeColor::black)
+
+        if ((uncle->left->color == NodeColor::black) &&
+            (uncle->right->color == NodeColor::black))
         {
-          brother->color = NodeColor::red;
+          uncle->color = NodeColor::red;
           to_delete_child = to_delete_child->parent;
+          continue;
         }
-        else if(brother->left->color == NodeColor::black)
+
+        if (uncle->left->color == NodeColor::black)
         {
-          brother->right->color = NodeColor::black;
-          brother->color = NodeColor::red;
-          rot_left(brother);
-          brother = brother->parent->left;
+          uncle->right->color = NodeColor::black;
+          uncle->color = NodeColor::red;
+          rot_left(uncle);
+          uncle = to_delete_child->parent->left;
         }
-        brother->color = brother->parent->color;
+
+        uncle->color = to_delete_child->parent->color;
         to_delete_child->parent->color = NodeColor::black;
-        brother->left->color = NodeColor::black;
-        rot_right(brother->parent);
-        to_delete_child = this->root;
+        uncle->left->color = NodeColor::black;
+        rot_right(to_delete_child->parent);
+        to_delete_child = root;
       }
     }
-    to_delete_child->color = NodeColor::black;
   }
 
-  if(null_node->parent->left == null_node)
-    null_node->parent->left = nullptr;
-  if(null_node->parent->right == null_node)
-    null_node->parent->right = nullptr;
+  to_delete_child->color = NodeColor::black;
   delete to_delete;
 }
 
 RedBlackNode *sdizo::RedBlackTree::search(int32_t element) const noexcept
 {
   RedBlackNode *current = this->root;
-  while(current != nullptr && current->value != element)
+  while(current != this->null_node && current->value != element)
   {
     if(current->value < element)
       current = current->right;
@@ -245,13 +230,13 @@ RedBlackNode* sdizo::RedBlackTree::successor(RedBlackNode *root) noexcept
 {
   assert(root);
 
-  if(root->right != nullptr)
+  if(root->right != this->null_node)
     return min(root->right);
 
   RedBlackNode *current_parent = root->parent;
 
   while
-  (current_parent != nullptr &&
+  (current_parent != this->null_node &&
    root == current_parent->right)
   {
     root = current_parent;
@@ -265,13 +250,13 @@ RedBlackNode* sdizo::RedBlackTree::predecessor(RedBlackNode *node) noexcept
 {
   assert(node);
 
-  if(node->left != nullptr)
+  if(node->left != this->null_node)
     return max(node->right);
 
   RedBlackNode *current_parent = node->parent;
 
   while
-  (current_parent != nullptr &&
+  (current_parent != this->null_node &&
    node == current_parent->left)
   {
     node = current_parent;
@@ -284,7 +269,7 @@ RedBlackNode* sdizo::RedBlackTree::predecessor(RedBlackNode *node) noexcept
 RedBlackNode* sdizo::RedBlackTree::min(RedBlackNode *root) noexcept
 {
   assert(root);
-  while(root->left != nullptr)
+  while(root->left != this->null_node)
     root = root->left;
   return root;
 }
@@ -292,7 +277,7 @@ RedBlackNode* sdizo::RedBlackTree::min(RedBlackNode *root) noexcept
 RedBlackNode* sdizo::RedBlackTree::max(RedBlackNode *root) noexcept
 {
   assert(root);
-  while(root->right != nullptr)
+  while(root->right != this->null_node)
     root = root->right;
   return root;
 }
@@ -302,16 +287,16 @@ void sdizo::RedBlackTree::rot_left(RedBlackNode *node) noexcept
   RedBlackNode *B = node->right;
   RedBlackNode *p = node->parent;
 
-  if(B)
+  if(B != this->null_node)
   {
     node->right = B->left;
-    if(node->right) node->right->parent = node;
+    if(node->right != this->null_node) node->right->parent = node;
 
     B->left = node;
     B->parent = p;
     node->parent = B;
 
-    if(p)
+    if(p != this->null_node)
     {
       if(p->left == node) p->left = B; else p->right = B;
     }
@@ -324,16 +309,16 @@ void sdizo::RedBlackTree::rot_right(RedBlackNode *node) noexcept
   RedBlackNode *B = node->left;
   RedBlackNode *p = node->parent;
 
-  if(B)
+  if(B != this->null_node)
   {
     node->left = B->right;
-    if(node->left) node->left->parent = node;
+    if(node->left != this->null_node) node->left->parent = node;
 
     B->right = node;
     B->parent = p;
     node->parent = B;
 
-    if(p)
+    if(p != this->null_node)
     {
       if(p->left == node) p->left = B; else p->right = B;
     }
@@ -350,10 +335,43 @@ unsigned sdizo::RedBlackTree::log2(unsigned x) noexcept
   return y;
 }
 
+void sdizo::RedBlackTree::print2DUtil(RedBlackNode *root, int space)
+const noexcept
+{
+    static constexpr int shift_width = 10;
+
+    // Base case
+    if (root == nullptr)
+      return;
+
+    // Increase distance between levels
+    space += shift_width;
+
+    // Process right child first
+    print2DUtil(root->right, space);
+
+    // Print current node after space
+    // count
+    if(root->color == NodeColor::red)
+    {
+      printf("\u001b[31m");
+    }
+
+    if(root == this->null_node)
+      printf("\n%*s%c\n", space - shift_width, " ", 'N');
+    else
+      printf("\n%*s%i\n", space - shift_width, " ", root->value);
+
+    printf("\u001b[0m");
+
+    // Process left child
+    print2DUtil(root->left, space);
+}
+
 void sdizo::RedBlackTree::display() const noexcept
 {
   puts("===========================");
-  print2DUtil(this->root, 0);
+  this->print2DUtil(this->root, 0);
   puts("===========================");
 }
 
@@ -362,18 +380,18 @@ bool sdizo::RedBlackTree::verify_values() const noexcept
   return sdizo::RedBlackTree::verify_(this->root);
 }
 
-bool sdizo::RedBlackTree::verify_(RedBlackNode *root) noexcept
+bool sdizo::RedBlackTree::verify_(RedBlackNode *root) const noexcept
 {
-  if(root == nullptr)
+  if(root == this->null_node)
     return true;
 
   if(!(verify_(root->left) & verify_(root->right)))
     return false;
 
-  if(root->right != nullptr && root->value > root->right->value)
+  if(root->right != this->null_node && root->value > root->right->value)
     return false;
 
-  if(root->left != nullptr && root->value <= root->left->value)
+  if(root->left != this->null_node && root->value <= root->left->value)
     return false;
 
   return true;
@@ -382,18 +400,19 @@ bool sdizo::RedBlackTree::verify_(RedBlackNode *root) noexcept
 bool sdizo::RedBlackTree::verify_connections() const noexcept
 {
   return this->verify_connections(this->root) &&
-         this->root->parent == nullptr;
+         this->root->parent == this->null_node;
 }
 
-bool sdizo::RedBlackTree::verify_connections(RedBlackNode *node) noexcept
+bool sdizo::RedBlackTree::verify_connections(RedBlackNode *node)
+const noexcept
 {
-  if(node == nullptr)
+  if(node == this->null_node)
     return true;
 
-  if(node->left != nullptr && node->left->parent != node)
+  if(node->left != this->null_node && node->left->parent != node)
     return false;
 
-  if(node->right != nullptr && node->right->parent != node)
+  if(node->right != this->null_node && node->right->parent != node)
     return false;
 
   return sdizo::RedBlackTree::verify_connections(node->left) &&
@@ -403,7 +422,7 @@ bool sdizo::RedBlackTree::verify_connections(RedBlackNode *node) noexcept
 
 void sdizo::RedBlackTree::free(RedBlackNode *to_delete) noexcept
 {
-  if(to_delete == nullptr)
+  if(to_delete == this->null_node)
     return;
 
   sdizo::RedBlackTree::free(to_delete->left);

@@ -16,12 +16,24 @@ namespace sdizo{
     RedBlackNode *right;
     RedBlackNode *parent;
 
+    using node_t = RedBlackNode;
+
     RedBlackNode(int32_t value)
-      :value{value}, color{NodeColor::red}, left{nullptr}, right{nullptr},
-       parent{nullptr} {}
+      :value{value}, color{NodeColor::red}, left{nullptr},
+       right{nullptr}, parent{nullptr} {}
+
+    RedBlackNode(int32_t value, NodeColor color)
+      :value{value}, color{color}, left{nullptr}, right{nullptr},
+       parent{nullptr}{}
+
+    RedBlackNode(int32_t value, NodeColor color, node_t *left,
+                 node_t * right, node_t *parent)
+      :value{value}, color{color}, left{left}, right{right},
+       parent{parent}{}
 
     inline void info() const noexcept
     {
+      printf("This %p\n", this->left);
       auto value = this->value;
       auto color = this->color == NodeColor::black ? "black" : "red";
       auto left = this->left != nullptr ? this->left->value : -1;
@@ -36,12 +48,15 @@ namespace sdizo{
   class RedBlackTree
   {
     private:
-      RedBlackNode *root;
       RedBlackNode *null_node;
+      RedBlackNode *root;
 
     public:
       inline RedBlackTree() noexcept
-      :root{nullptr}, null_node{new RedBlackNode(0)}{}
+      :null_node{new RedBlackNode(0, NodeColor::black)},
+       root{this->null_node}
+      {
+      }
 
       inline ~RedBlackTree() noexcept
       {this->free(this->root);delete this->null_node;}
@@ -57,10 +72,10 @@ namespace sdizo{
 
       // Returns nullptr if no valid node were found.
       // Otherwise valid poiter is returned.
-      static RedBlackNode* successor(RedBlackNode *node) noexcept;
-      static RedBlackNode* predecessor(RedBlackNode *node) noexcept;
-      static RedBlackNode* min(RedBlackNode *root) noexcept;
-      static RedBlackNode* max(RedBlackNode *root) noexcept;
+      RedBlackNode* successor(RedBlackNode *node) noexcept;
+      RedBlackNode* predecessor(RedBlackNode *node) noexcept;
+      RedBlackNode* min(RedBlackNode *root) noexcept;
+      RedBlackNode* max(RedBlackNode *root) noexcept;
 
       void rot_left(RedBlackNode *node) noexcept;
       void rot_right(RedBlackNode *node) noexcept;
@@ -76,9 +91,10 @@ namespace sdizo{
 
     private:
       // Recursively free's node and its childs.
-      static void free(RedBlackNode *to_delete) noexcept;
-      static bool verify_(RedBlackNode *root) noexcept;
-      static bool verify_connections(RedBlackNode *node) noexcept;
+      void free(RedBlackNode *to_delete) noexcept;
+      bool verify_(RedBlackNode *root) const noexcept;
+      bool verify_connections(RedBlackNode *node) const noexcept;
+      void print2DUtil(RedBlackNode *root, int space) const noexcept;
 
       void tree_insert(RedBlackNode *node) noexcept;
   };
