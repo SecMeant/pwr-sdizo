@@ -3,8 +3,20 @@
 #include <cassert>
 #include <stdexcept>
 #include <random>
+#include <fstream>
 
 using sdizo::RedBlackNode;
+
+int32_t sdizo::RedBlackTree::loadFromFile(const char *filename) noexcept
+{
+  std::ifstream file(filename);
+  int32_t num;
+
+  while(file >> num)
+    this->insert(num);
+
+  return 0;
+}
 
 void sdizo::RedBlackTree::insert(int32_t element) noexcept
 {
@@ -218,6 +230,11 @@ RedBlackNode *sdizo::RedBlackTree::search(int32_t element) const noexcept
   }
 
   return current;
+}
+
+bool sdizo::RedBlackTree::contains(int32_t element) const noexcept
+{
+  return this->search(element) != this->null_node;
 }
 
 RedBlackNode* sdizo::RedBlackTree::successor(RedBlackNode *root) noexcept

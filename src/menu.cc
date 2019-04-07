@@ -3,8 +3,12 @@
 #include "list.hpp"
 #include "heap.hpp"
 #include "tree.hpp"
+#include "redblacktree.hpp"
 #include "test.hpp"
 #include <iostream>
+
+#define GET_OPTION(buffer) while(!scanf(" %c", &buffer))\
+                           while(getchar() != '\n');
 
 void run_tests()
 {
@@ -36,7 +40,7 @@ void menu_array(sdizo::Array &array)
     puts("0.Wyjdz");
 
     printf("Podaj opcje: ");
-    scanf(" %c", &option);
+    GET_OPTION(option);
 
     switch (option)
     {
@@ -120,7 +124,7 @@ void menu_list(sdizo::List &list)
     puts("0.Wyjdz");
 
     printf("Podaj opcje: ");
-    scanf(" %c", &option);
+    GET_OPTION(option);
 
     switch (option)
     {
@@ -202,7 +206,7 @@ void menu_heap(sdizo::Heap &heap)
     puts("0.Wyjdz");
 
     printf("Podaj opcje: ");
-    scanf(" %c", &option);
+    GET_OPTION(option);
 
     switch (option)
     {
@@ -250,6 +254,69 @@ void menu_heap(sdizo::Heap &heap)
   } while (option != '0');
 }
 
+void menu_redblacktree(sdizo::RedBlackTree &tree)
+{
+  using namespace std;
+  char option;
+  string fileName;
+  int32_t value;
+
+  do
+  {
+    puts("--- Drzewo czerwono czarne ---");
+    puts("1.Wczytaj z pliku");
+    puts("2.Usun");
+    puts("3.Wstaw");
+    puts("4.Czy zawiera");
+    puts("5.Generuj");
+    puts("0.Wyjdz");
+
+    printf("Podaj opcje: ");
+    GET_OPTION(option);
+
+    switch (option)
+    {
+      case '1':
+        printf(" Podaj nazwê zbioru:");
+        cin >> fileName;
+        tree.loadFromFile(fileName.c_str());
+        tree.display();
+        break;
+
+      case '2':
+        printf(" podaj element:");
+        cin >> value;
+        tree.remove(value);
+        tree.display();
+        break;
+
+      case '3':
+        printf(" podaj waertoæ:");
+        cin >> value;
+
+        tree.insert(value);
+        tree.display();
+        break;
+
+      case '4':
+        printf(" podaj waertoæ:");
+        cin >> value;
+        if (tree.contains(value))
+          puts("poadana wartoc jest w tablicy");
+        else
+          puts("poadanej wartoci NIE ma w tablicy");
+        break;
+
+      case '5':
+        printf("Podaj iloæ elementów tablicy:");
+        cin >> value;
+        tree.generate(0,100,value);
+        tree.display();
+        break;
+    }
+  } while (option != '0');
+}
+
 void menu()
 {
   using namespace std;
@@ -257,6 +324,7 @@ void menu()
   sdizo::Array array;
   sdizo::List list;
   sdizo::Heap heap;
+  sdizo::RedBlackTree tree;
 
   char option;
   do
@@ -266,9 +334,10 @@ void menu()
     puts("1.Tablica");
     puts("2.Lista");
     puts("3.Kopiec");
+    puts("4.Drzewo czerwono czarne");
     puts("0.Wyjscie");
     puts("Podaj opcje:");
-    scanf(" %c", &option);
+    GET_OPTION(option);
 
     switch (option)
     {
@@ -283,6 +352,10 @@ void menu()
       case '3':
         menu_heap(heap);
         break;
+
+      case '4':
+        menu_redblacktree(tree);
+        break;
     }
 
   } while (option != '0');
@@ -290,6 +363,6 @@ void menu()
 
 int main()
 {
-  run_tests();
+  menu();
   return 0;
 }

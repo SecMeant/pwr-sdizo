@@ -63,7 +63,7 @@ namespace sdizo{
       inline ~RedBlackTree() noexcept
       {this->free(this->root);delete this->null_node;}
 
-      int32_t loadFromFile() noexcept;
+      int32_t loadFromFile(const char *filename) noexcept;
       void insert(int32_t element) noexcept;
       void insert(RedBlackNode *node) noexcept;
       void remove(int32_t value);
@@ -71,6 +71,7 @@ namespace sdizo{
       void generate(int32_t rand_range_begin, int32_t rand_range_end,
                     int32_t size) noexcept;
       RedBlackNode* search(int32_t element) const noexcept;
+      bool contains(int32_t element) const noexcept;
 
       // Returns nullptr if no valid node were found.
       // Otherwise valid poiter is returned.
