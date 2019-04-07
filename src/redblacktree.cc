@@ -96,6 +96,13 @@ void sdizo::RedBlackTree::insert(RedBlackNode *node) noexcept
   root->color = NodeColor::black;
 }
 
+void sdizo::RedBlackTree::remove(int32_t element)
+{
+  auto el = this->search(element);
+  if(el)
+    this->remove(el);
+}
+
 void sdizo::RedBlackTree::remove(RedBlackNode *node)
 {
   assert(node);
@@ -127,9 +134,13 @@ void sdizo::RedBlackTree::remove(RedBlackNode *node)
   if(to_delete->parent == nullptr)
     this->root = to_delete_child;
   else if(to_delete == to_delete->parent->left)
+  {
     to_delete->parent->left = to_delete_child;
+  }
   else
+  {
     to_delete->parent->right = to_delete_child;
+  }
 
   if(to_delete != node)
   {
@@ -137,14 +148,82 @@ void sdizo::RedBlackTree::remove(RedBlackNode *node)
   }
 
   if(to_delete->color == NodeColor::black)
-    ;
+  {
+    RedBlackNode *brother;
+    while(to_delete_child != this->root &&
+          to_delete_child->color == NodeColor::black)
+    {
+      puts("While");
+      to_delete_child->parent->info();
+      to_delete_child->info();
+      if(to_delete_child == to_delete_child->parent->left)
+      {
+        brother = to_delete_child->parent->right;
+        if(brother->color == NodeColor::red)
+        {
+          brother->color = NodeColor::black;
+          to_delete_child->parent->color = NodeColor::red;
+          rot_left(to_delete_child->parent);
+          brother = to_delete_child->parent->right;
+        }
+        if(brother->left->color == NodeColor::black &&
+           brother->right->color == NodeColor::black)
+        {
+          brother->color = NodeColor::red;
+          to_delete_child = to_delete_child->parent;
+        }
+        else if(brother->right->color == NodeColor::black)
+        {
+          brother->left->color = NodeColor::black;
+          brother->color = NodeColor::red;
+          rot_right(brother);
+          brother = brother->parent->right;
+        }
+        brother->color = brother->parent->color;
+        to_delete_child->parent->color = NodeColor::black;
+        brother->right->color = NodeColor::black;
+        rot_left(brother->parent);
+        to_delete_child = this->root;
+      }
+      else
+      {
+        brother = to_delete_child->parent->left;
+        if(brother == nullptr)
+          brother = null_node;
+        if(brother->color == NodeColor::red)
+        {
+          brother->color = NodeColor::black;
+          to_delete_child->parent->color = NodeColor::red;
+          rot_right(to_delete_child->parent);
+          brother = to_delete_child->parent->left;
+        }
+        if(brother->left->color == NodeColor::black &&
+           brother->right->color == NodeColor::black)
+        {
+          brother->color = NodeColor::red;
+          to_delete_child = to_delete_child->parent;
+        }
+        else if(brother->left->color == NodeColor::black)
+        {
+          brother->right->color = NodeColor::black;
+          brother->color = NodeColor::red;
+          rot_left(brother);
+          brother = brother->parent->left;
+        }
+        brother->color = brother->parent->color;
+        to_delete_child->parent->color = NodeColor::black;
+        brother->left->color = NodeColor::black;
+        rot_right(brother->parent);
+        to_delete_child = this->root;
+      }
+    }
+    to_delete_child->color = NodeColor::black;
+  }
 
-  to_delete->info();
   if(null_node->parent->left == null_node)
     null_node->parent->left = nullptr;
   if(null_node->parent->right == null_node)
     null_node->parent->right = nullptr;
-  null_node->info();
   delete to_delete;
 }
 

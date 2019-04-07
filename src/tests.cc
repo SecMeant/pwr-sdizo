@@ -212,6 +212,11 @@ bool sdizo::tests::test_rbt()
   rbt.display();
   rbt.remove(rbt.search(6));
   rbt.display();
+  rbt.remove(rbt.search(5));
+  rbt.remove(rbt.search(8));
+  rbt.display();
+  rbt.remove(9);
+  rbt.display();
   TEST_INVOKE_ASSERT_TRUE(rbt.verify_values);
   TEST_INVOKE_ASSERT_TRUE(rbt.verify_connections);
   return true;

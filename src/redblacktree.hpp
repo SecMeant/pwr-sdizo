@@ -22,12 +22,6 @@ namespace sdizo{
 
     inline void info() const noexcept
     {
-      if(this == nullptr)
-      {
-        std::puts("NULL");
-        return;
-      }
-
       auto value = this->value;
       auto color = this->color == NodeColor::black ? "black" : "red";
       auto left = this->left != nullptr ? this->left->value : -1;
