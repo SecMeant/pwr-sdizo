@@ -64,6 +64,7 @@ bool sdizo::tests::test_array2()
   #if TESTS_CPP_17 == true
     const char *filename = "testfile";
     std::ofstream file(filename);
+    file << 3 << '\n';
     file << 13 << '\n';
     file << 5 << '\n';
     file << 34 << '\n';
@@ -208,29 +209,30 @@ bool sdizo::tests::test_rbt()
   for(int i = 0; i < 10; ++i)
   {
     rbt.insert(i);
-    rbt.display();
   }
+  TEST_INVOKE_ASSERT_TRUE(rbt.verify_values);
+  TEST_INVOKE_ASSERT_TRUE(rbt.verify_connections);
   for(int i = 0; i < 10; ++i)
   {
     rbt.remove(i);
-    rbt.display();
   }
+  TEST_INVOKE_ASSERT_TRUE(rbt.verify_values);
+  TEST_INVOKE_ASSERT_TRUE(rbt.verify_connections);
   for(int i = 0; i < 10; ++i)
   {
     rbt.insert(i);
-    rbt.display();
   }
+  TEST_INVOKE_ASSERT_TRUE(rbt.verify_values);
+  TEST_INVOKE_ASSERT_TRUE(rbt.verify_connections);
   for(int i = 0; i < 10; ++i)
   {
     rbt.remove(i);
-    rbt.display();
   }
   rbt.remove(123);
   rbt.remove(123);
   rbt.remove(123);
   rbt.remove(123);
   rbt.insert(123123);
-  rbt.display();
   TEST_INVOKE_ASSERT_TRUE(rbt.verify_values);
   TEST_INVOKE_ASSERT_TRUE(rbt.verify_connections);
   return true;

@@ -5,6 +5,9 @@
 #include "tree.hpp"
 #include "redblacktree.hpp"
 #include "test.hpp"
+#include "timeutils.hpp"
+#include <fmt/format.h>
+#include <unistd.h>
 #include <iostream>
 
 #define GET_OPTION(buffer) while(!scanf(" %c", &buffer))\
@@ -363,6 +366,13 @@ void menu()
 
 int main()
 {
-  menu();
+  run_tests();
+  return 0;
+
+  using nano_clock_t = std::chrono::high_resolution_clock::duration;
+  nano_clock_t res = measure_nano(sleep, 2);
+  fmt::print("It took: {}\n", res.count());
+
+  //menu();
   return 0;
 }

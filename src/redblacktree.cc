@@ -11,9 +11,15 @@ int32_t sdizo::RedBlackTree::loadFromFile(const char *filename) noexcept
 {
   std::ifstream file(filename);
   int32_t num;
+  int32_t count;
 
-  while(file >> num)
+  file >> count;
+
+  while(file >> num && count)
+  {
     this->insert(num);
+    --count;
+  }
 
   return 0;
 }
