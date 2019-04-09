@@ -51,14 +51,12 @@ void menu_array(sdizo::Array &array)
         printf(" Podaj nazwê zbioru:");
         cin >> fileName;
         array.loadFromFile(fileName.c_str());
-        array.display();
         break;
 
       case '2':
         printf(" podaj index:");
         cin >> index;
         array.removeAt(index);
-        array.display();
         break;
 
       case '3':
@@ -68,7 +66,6 @@ void menu_array(sdizo::Array &array)
         cin >> value;
 
         array.insert(value,index);
-        array.display();
         break;
 
       case '4':
@@ -76,7 +73,6 @@ void menu_array(sdizo::Array &array)
         cin >> value;
 
         array.append(value);
-        array.display();
         break;
 
       case '5':
@@ -84,7 +80,6 @@ void menu_array(sdizo::Array &array)
         cin >> value;
 
         array.prepend(value);
-        array.display();
         break;
 
       case '6':
@@ -100,10 +95,10 @@ void menu_array(sdizo::Array &array)
         printf("Podaj iloæ elementów tablicy:");
         cin >> value;
         array.generate(0,100,value);
-        array.display();
         break;
     }
 
+    array.display();
   } while (option != '0');
 }
 
@@ -135,14 +130,12 @@ void menu_list(sdizo::List &list)
         printf(" Podaj nazwê zbioru:");
         cin >> fileName;
         list.loadFromFile(fileName.c_str());
-        list.display();
         break;
 
       case '2':
         printf(" podaj index:");
         cin >> index;
         list.removeAt(index);
-        list.display();
         break;
 
       case '3':
@@ -152,7 +145,6 @@ void menu_list(sdizo::List &list)
         cin >> value;
 
         list.insert(value,index);
-        list.display();
         break;
 
       case '4':
@@ -160,7 +152,6 @@ void menu_list(sdizo::List &list)
         cin >> value;
 
         list.append(value);
-        list.display();
         break;
 
       case '5':
@@ -168,7 +159,6 @@ void menu_list(sdizo::List &list)
         cin >> value;
 
         list.prepend(value);
-        list.display();
         break;
 
       case '6':
@@ -184,9 +174,9 @@ void menu_list(sdizo::List &list)
         printf("Podaj iloæ elementów tablicy:");
         cin >> value;
         list.generate(0,100,value);
-        list.display();
         break;
     }
+    list.display();
   } while (option != '0');
 }
 
@@ -217,14 +207,12 @@ void menu_heap(sdizo::Heap &heap)
         printf("Podaj nazwê zbioru:");
         cin >> fileName;
         heap.loadFromFile(fileName.c_str());
-        heap.display();
         break;
 
       case '2':
         printf("podaj element:");
         cin >> index;
         heap.removeAt(index);
-        heap.display();
         break;
 
       case '3':
@@ -232,7 +220,6 @@ void menu_heap(sdizo::Heap &heap)
         cin >> value;
 
         heap.insert(value);
-        heap.display();
         break;
 
       case '4':
@@ -248,12 +235,13 @@ void menu_heap(sdizo::Heap &heap)
         printf("Podaj iloæ elementów tablicy:");
         cin >> value;
         heap.generate(0,100,value);
-        heap.display();
         break;
 
       case '6':
         heap.display();
+        break;
     }
+    heap.display();
   } while (option != '0');
 }
 
@@ -283,14 +271,12 @@ void menu_redblacktree(sdizo::RedBlackTree &tree)
         printf(" Podaj nazwê zbioru:");
         cin >> fileName;
         tree.loadFromFile(fileName.c_str());
-        tree.display();
         break;
 
       case '2':
         printf(" podaj element:");
         cin >> value;
         tree.remove(value);
-        tree.display();
         break;
 
       case '3':
@@ -298,7 +284,6 @@ void menu_redblacktree(sdizo::RedBlackTree &tree)
         cin >> value;
 
         tree.insert(value);
-        tree.display();
         break;
 
       case '4':
@@ -314,9 +299,9 @@ void menu_redblacktree(sdizo::RedBlackTree &tree)
         printf("Podaj iloæ elementów tablicy:");
         cin >> value;
         tree.generate(0,100,value);
-        tree.display();
         break;
     }
+    tree.display();
   } while (option != '0');
 }
 
@@ -366,13 +351,88 @@ void menu()
 
 int main()
 {
-  run_tests();
-  return 0;
+  using sdizo::measure_and_log;
+  const char *log_filename = "measurements.txt";
+  int32_t initial_size = 50;
 
-  using nano_clock_t = std::chrono::high_resolution_clock::duration;
-  nano_clock_t res = measure_nano(sleep, 2);
-  fmt::print("It took: {}\n", res.count());
+  // Array measurements
+  while (initial_size < 20000)
+  {
+    for(int i = 0; i < 500; ++i)
+    {
+      sdizo::Array array;
+      auto fm = fmt::format("Array;begin;{}", initial_size);
+      measure_and_log(fm.c_str(), log_filename, initial_size, array,
+                      &sdizo::Array::insert, 1337, 0);
+    }
+    initial_size *= 2;
+  }
 
-  //menu();
+  while (initial_size < 20000)
+  {
+    for(int i = 0; i < 500; ++i)
+    {
+      sdizo::Array array;
+      auto fm = fmt::format("Array;middle;{}", initial_size);
+      measure_and_log(fm.c_str(), log_filename, initial_size, array,
+                      &sdizo::Array::insert, 1337, initial_size / 2);
+    }
+    initial_size *= 2;
+  }
+
+  while (initial_size < 20000)
+  {
+    for(int i = 0; i < 500; ++i)
+    {
+      sdizo::Array array;
+      auto fm = fmt::format("Array;end;{}", initial_size);
+      measure_and_log(fm.c_str(), log_filename, initial_size, array,
+                      &sdizo::Array::insert, 1337, initial_size);
+    }
+    initial_size *= 2;
+  }
+
+  // List
+  initial_size = 50;
+  while (initial_size < 20000)
+  {
+    for(int i = 0; i < 500; ++i)
+    {
+      sdizo::List list;
+      auto fm = fmt::format("List;{}", initial_size);
+      measure_and_log(fm.c_str(), log_filename, initial_size, list,
+                      &sdizo::List::insert, 1337, initial_size / 2);
+    }
+    initial_size *= 2;
+  }
+
+  // Heap
+  initial_size = 50;
+  while (initial_size < 20000)
+  {
+    for(int i = 0; i < 500; ++i)
+    {
+      sdizo::Heap heap;
+      auto fm = fmt::format("Heap;{}", initial_size);
+      measure_and_log(fm.c_str(), log_filename, initial_size, heap,
+                      &sdizo::Heap::insert, 1337);
+    }
+    initial_size *= 2;
+  }
+
+  // RBT
+  initial_size = 50;
+  while (initial_size < 20000)
+  {
+    for(int i = 0; i < 500; ++i)
+    {
+      sdizo::RedBlackTree rbt;
+      auto fm = fmt::format("RBT;{}", initial_size);
+      measure_and_log(fm.c_str(), log_filename, initial_size, rbt,
+          &sdizo::RedBlackTree::insert, 13);
+    }
+    initial_size *= 2;
+  }
+
   return 0;
 }

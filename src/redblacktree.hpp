@@ -65,9 +65,7 @@ namespace sdizo{
 
       int32_t loadFromFile(const char *filename) noexcept;
       void insert(int32_t element) noexcept;
-      void insert(RedBlackNode *node) noexcept;
       void remove(int32_t value);
-      void remove(RedBlackNode *node);
       void generate(int32_t rand_range_begin, int32_t rand_range_end,
                     int32_t size) noexcept;
       RedBlackNode* search(int32_t element) const noexcept;
@@ -97,6 +95,8 @@ namespace sdizo{
       void free(RedBlackNode *to_delete) noexcept;
       bool verify_(RedBlackNode *root) const noexcept;
       bool verify_connections(RedBlackNode *node) const noexcept;
+      void insert_node(RedBlackNode *node) noexcept;
+      void remove_node(RedBlackNode *node);
 
       void tree_insert(RedBlackNode *node) noexcept;
   };

@@ -1,3 +1,4 @@
+#include "treeprinter.hpp"
 #include "heap.hpp"
 #include <stdexcept>
 #include <string.h>
