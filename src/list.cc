@@ -127,10 +127,21 @@ void sdizo::List::display() const noexcept
   }
 
   ListNode *current = this->begin;
-  while(current != nullptr)
+  while(1)
   {
-    printf("%i ", current->value);
+    printf("%i -> ", current->value);
+    if(current->next == nullptr)
+      break;
     current = current->next;
+  }
+  
+  puts("\nReversed:");
+  while(1)
+  {
+    printf("%i <- ", current->value);
+    if(current->prev == nullptr)
+      break;
+    current = current->prev;
   }
   puts("");
 }
