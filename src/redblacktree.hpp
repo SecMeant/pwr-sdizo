@@ -68,6 +68,9 @@ namespace sdizo{
       void remove(int32_t value);
       void generate(int32_t rand_range_begin, int32_t rand_range_end,
                     int32_t size) noexcept;
+      // Removes all elements
+      inline void clear() noexcept
+      {this->free(this->root); this->root = this->null_node;}
       RedBlackNode* search(int32_t element) const noexcept;
       bool contains(int32_t element) const noexcept;
 

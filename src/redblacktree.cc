@@ -420,6 +420,7 @@ void sdizo::RedBlackTree::generate
   std::uniform_int_distribution<int32_t>
    distribution(rand_range_begin, rand_range_end);
 
+  this->clear();
   for(int32_t i = 0; i < size; ++i)
   {
     this->insert(distribution(generator));

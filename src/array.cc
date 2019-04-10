@@ -3,14 +3,6 @@
 #include <random>
 #include <fstream>
 
-sdizo::Array::Array() noexcept
-:data{nullptr}, ssize{0} {}
-
-sdizo::Array::~Array() noexcept
-{
-  delete [] this->data;
-}
-
 int32_t sdizo::Array::loadFromFile(const char *filename) noexcept
 {
   std::ifstream file(filename);
@@ -104,6 +96,16 @@ void sdizo::Array::remove(int32_t element)
   this->removeAt(index);
 }
 
+void sdizo::Array::clear() noexcept
+{
+  if(this->ssize > 0)
+  {
+    delete [] this->data;
+    this->data = nullptr;
+    this->ssize = 0;
+  }
+}
+
 void sdizo::Array::update(int32_t index, int32_t element)
 {
   if(!this->isIndexInRange(index))
@@ -150,6 +152,7 @@ void sdizo::Array::generate
   std::uniform_int_distribution<int32_t>
    distribution(rand_range_begin, rand_range_end);
 
+  this->clear();
   for(int32_t i = 0; i < size; ++i)
   {
     this->insert(distribution(generator), 0);

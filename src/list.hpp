@@ -45,6 +45,9 @@ class List
     // If element is not present, nothing is done.
     void remove(int32_t element);
 
+    // Removes all elements.
+    void clear() noexcept;
+
     // Overwrites value at index with given element.
     void add(int32_t element, int32_t index);
 

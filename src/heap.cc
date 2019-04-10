@@ -104,6 +104,11 @@ void sdizo::Heap::remove(int32_t element) noexcept
   #endif
 }
 
+void sdizo::Heap::clear() noexcept
+{
+  this->ssize = 0;
+}
+
 bool sdizo::Heap::contains(int32_t element) const noexcept
 {
   for(int32_t i = 0; i < this->ssize; ++i)
@@ -122,6 +127,7 @@ void sdizo::Heap::generate
   std::uniform_int_distribution<int32_t>
    distribution(rand_range_begin, rand_range_end);
 
+  this->clear();
   for(int32_t i = 0; i < size; ++i)
   {
     this->insert(distribution(generator));

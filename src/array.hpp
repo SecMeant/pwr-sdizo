@@ -10,9 +10,11 @@ class Array
     int32_t ssize;
 
   public:
-    Array() noexcept;
+    inline Array() noexcept
+      :data{nullptr}, ssize{0} {}
 
-    ~Array() noexcept;
+    inline ~Array() noexcept
+    {delete [] this->data;}
 
     int32_t loadFromFile(const char *filename) noexcept;
 
@@ -36,6 +38,9 @@ class Array
     // Throws std::out_of_range if index exceeds span of array.
     // Throws std::length_error if array is already empty.
     void remove(int32_t element);
+
+    // Removes all elements.
+    void clear() noexcept;
 
     // Overwrites value at index with given element.
     void update(int32_t index, int32_t element);

@@ -37,6 +37,9 @@ class Heap
 
     void remove(int32_t element) noexcept;
 
+    // Removes all elements
+    void clear() noexcept;
+
     // Searches for element in container.
     // Returns true if element is in container.
     // False otherwise.

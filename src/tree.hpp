@@ -33,6 +33,8 @@ namespace sdizo{
       // Randomly generates table.
       void generate(int32_t rand_range_begin, int32_t rand_range_end,
                     int32_t size) noexcept;
+      inline void clear() noexcept
+      {this->free(this->root); this->root = nullptr;}
 
       TreeNode *search(int32_t element) const noexcept;
 

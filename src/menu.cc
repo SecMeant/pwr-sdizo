@@ -40,6 +40,7 @@ void menu_array(sdizo::Array &array)
     puts("5.Wstaw na poczatek");
     puts("6.Czy zawiera");
     puts("7.Generuj");
+    puts("8.Pokaz");
     puts("0.Wyjdz");
 
     printf("Podaj opcje: ");
@@ -96,6 +97,11 @@ void menu_array(sdizo::Array &array)
         cin >> value;
         array.generate(0,100,value);
         break;
+
+      case '8':
+        array.display();
+        break;
+
     }
 
     array.display();
@@ -119,6 +125,7 @@ void menu_list(sdizo::List &list)
     puts("5.Wstaw na poczatek");
     puts("6.Czy zawiera");
     puts("7.Generuj");
+    puts("8.Pokaz");
     puts("0.Wyjdz");
 
     printf("Podaj opcje: ");
@@ -175,6 +182,11 @@ void menu_list(sdizo::List &list)
         cin >> value;
         list.generate(0,100,value);
         break;
+
+      case '8':
+        list.display();
+        break;
+
     }
     list.display();
   } while (option != '0');
@@ -195,7 +207,7 @@ void menu_heap(sdizo::Heap &heap)
     puts("3.Wstaw");
     puts("4.Czy zawiera");
     puts("5.Generuj");
-    puts("6.Wyswietl");
+    puts("6.Pokaz");
     puts("0.Wyjdz");
 
     printf("Podaj opcje: ");
@@ -260,6 +272,7 @@ void menu_redblacktree(sdizo::RedBlackTree &tree)
     puts("3.Wstaw");
     puts("4.Czy zawiera");
     puts("5.Generuj");
+    puts("6.Pokaz");
     puts("0.Wyjdz");
 
     printf("Podaj opcje: ");
@@ -299,6 +312,10 @@ void menu_redblacktree(sdizo::RedBlackTree &tree)
         printf("Podaj iloæ elementów tablicy:");
         cin >> value;
         tree.generate(0,100,value);
+        break;
+
+      case '8':
+        tree.display();
         break;
     }
     tree.display();
