@@ -9,6 +9,7 @@
 #include <fmt/format.h>
 #include <unistd.h>
 #include <iostream>
+#include <random>
 
 #define GET_OPTION(buffer) while(!scanf(" %c", &buffer))\
                            while(getchar() != '\n');
@@ -368,92 +369,48 @@ void menu()
 
 int main()
 {
-  menu();
-  return 0;
-
-
   using sdizo::measure_and_log;
+  std::random_device generator;
+  std::uniform_int_distribution<int32_t>
+   distribution(0, 200);
   const char *log_filename = "measurements.txt";
+  constexpr int max_container_size = 100'001;
+  constexpr int avg_rep = 15;
+
   int32_t initial_size = 50;
-
-  // Array measurements
-  while (initial_size < 20000)
+  while (initial_size < 20'000)
   {
-    for(int i = 0; i < 500; ++i)
+    for(int i = 0; i < 650; ++i)
     {
-      sdizo::Array array;
-      auto fm = fmt::format("Array;begin;{}", initial_size);
+      sdizo::RedBlackTree array;
+      auto fm = fmt::format("RedBlackTree;begin;{}", initial_size);
       measure_and_log(fm.c_str(), log_filename, initial_size, array,
-                      &sdizo::Array::insert, 1337, 0);
+                      &sdizo::RedBlackTree::contains, distribution(generator));
     }
     initial_size *= 2;
   }
+  fmt::print("RedBlackTree begin test end.\n");
 
-  while (initial_size < 20000)
   {
-    for(int i = 0; i < 500; ++i)
+    FILE * f_out = fopen(log_filename, "w");
+    fclose(f_out);
+  }
+
+  initial_size = 10000;
+  while (initial_size < max_container_size)
+  {
+    for(int i = 0; i < avg_rep; ++i)
     {
-      sdizo::Array array;
-      auto fm = fmt::format("Array;middle;{}", initial_size);
+      sdizo::RedBlackTree array;
+      std::uniform_int_distribution<int32_t>
+       index_distribution(0, 100);
+      auto fm = fmt::format("RedBlackTree;random;{}", initial_size);
       measure_and_log(fm.c_str(), log_filename, initial_size, array,
-                      &sdizo::Array::insert, 1337, initial_size / 2);
+                      &sdizo::RedBlackTree::contains , distribution(generator));
     }
-    initial_size *= 2;
+    initial_size += 10000;
   }
-
-  while (initial_size < 20000)
-  {
-    for(int i = 0; i < 500; ++i)
-    {
-      sdizo::Array array;
-      auto fm = fmt::format("Array;end;{}", initial_size);
-      measure_and_log(fm.c_str(), log_filename, initial_size, array,
-                      &sdizo::Array::insert, 1337, initial_size);
-    }
-    initial_size *= 2;
-  }
-
-  // List
-  initial_size = 50;
-  while (initial_size < 20000)
-  {
-    for(int i = 0; i < 500; ++i)
-    {
-      sdizo::List list;
-      auto fm = fmt::format("List;{}", initial_size);
-      measure_and_log(fm.c_str(), log_filename, initial_size, list,
-                      &sdizo::List::insert, 1337, initial_size / 2);
-    }
-    initial_size *= 2;
-  }
-
-  // Heap
-  initial_size = 50;
-  while (initial_size < 20000)
-  {
-    for(int i = 0; i < 500; ++i)
-    {
-      sdizo::Heap heap;
-      auto fm = fmt::format("Heap;{}", initial_size);
-      measure_and_log(fm.c_str(), log_filename, initial_size, heap,
-                      &sdizo::Heap::insert, 1337);
-    }
-    initial_size *= 2;
-  }
-
-  // RBT
-  initial_size = 50;
-  while (initial_size < 20000)
-  {
-    for(int i = 0; i < 500; ++i)
-    {
-      sdizo::RedBlackTree rbt;
-      auto fm = fmt::format("RBT;{}", initial_size);
-      measure_and_log(fm.c_str(), log_filename, initial_size, rbt,
-          &sdizo::RedBlackTree::insert, 13);
-    }
-    initial_size *= 2;
-  }
+  fmt::print("RedBlackTree random test end.\n");
 
   return 0;
 }
