@@ -54,6 +54,9 @@ class Heap
     // Checks if container is proper heap,
     bool verify() const noexcept;
 
+    inline decltype(auto) get_ssize() const noexcept
+    {return this->ssize;}
+
   private:
     void heapify(int32_t index) noexcept;
 

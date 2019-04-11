@@ -142,12 +142,14 @@ void sdizo::Heap::display() const noexcept
     printf("%i ", this->array[i]);
   }
   printf("} SIZE: %i\n", this->ssize);
+
+  puts("===========================");
+  print2D(this);
+  puts("===========================");
 }
 
 void sdizo::Heap::heapify(int32_t index) noexcept
 {
-  assert(index < this->ssize);
-
   if(index >= this->ssize/2)
     return;
 

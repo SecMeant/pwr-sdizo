@@ -263,7 +263,7 @@ void sdizo::Tree::dsw() noexcept
 void sdizo::Tree::display() const noexcept
 {
   puts("===========================");
-  print2DUtil(this->root, 0);
+  printTree(this->root, 0);
   puts("===========================");
 }
 

@@ -355,7 +355,7 @@ unsigned sdizo::RedBlackTree::log2(unsigned x) noexcept
 void sdizo::RedBlackTree::display() const noexcept
 {
   puts("===========================");
-  print2DUtil(this->root, 0);
+  printTree(this->root, 0);
   puts("===========================");
 }
 

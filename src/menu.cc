@@ -197,13 +197,13 @@ void menu_heap(sdizo::Heap &heap)
   using namespace std;
   char option;
   string fileName;
-  int index, value;
+  int32_t value;
 
   do
   {
     puts("--- KOPIEC ---");
     puts("1.Wczytaj z pliku");
-    puts("2.Usun");
+    puts("2.Usun element");
     puts("3.Wstaw");
     puts("4.Czy zawiera");
     puts("5.Generuj");
@@ -223,8 +223,8 @@ void menu_heap(sdizo::Heap &heap)
 
       case '2':
         printf("podaj element:");
-        cin >> index;
-        heap.removeAt(index);
+        cin >> value;
+        heap.remove(value);
         break;
 
       case '3':
@@ -368,6 +368,10 @@ void menu()
 
 int main()
 {
+  menu();
+  return 0;
+
+
   using sdizo::measure_and_log;
   const char *log_filename = "measurements.txt";
   int32_t initial_size = 50;
