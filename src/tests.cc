@@ -118,7 +118,7 @@ bool sdizo::tests::test_list()
     list.removeAt(0);
     list.insert(1337, 0);
   }catch(...){
-    printf("[%s] Exception caught.\n", __PRETTY_FUNCTION__);
+    printf("[%s] Exception caught.\n", __func__);
     return false;
   }
 
@@ -141,7 +141,7 @@ bool sdizo::tests::test_list2()
     if(!list.contains(1337))
       return false;
   }catch(...){
-    printf("[%s] Exception caught.", __PRETTY_FUNCTION__);
+    printf("[%s] Exception caught.", __func__);
     return false;
   }
   return true;

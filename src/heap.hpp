@@ -12,7 +12,7 @@ class Heap
   public:
     // Each time heap expands in memory (need to be relocated)
     // it allocates memory of size given in expand_size * sizeof(remove_ptr(array_type)).
-    constexpr static std::size_t expand_size = 4;
+    constexpr static size_t expand_size = 4;
   private:
     int32_t *array;
     int32_t ssize;
