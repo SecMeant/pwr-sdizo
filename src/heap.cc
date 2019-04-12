@@ -6,6 +6,7 @@
 #include <random>
 #include <cassert>
 #include <fstream>
+#include <fmt/format.h>
 
 sdizo::Heap::Heap() noexcept
 :array{new int32_t[sdizo::Heap::expand_size]},
@@ -150,6 +151,7 @@ void sdizo::Heap::display() const noexcept
 
 void sdizo::Heap::heapify(int32_t index) noexcept
 {
+	fmt::print("Heapify for {}[{}]\n", index, this->array[index]); 
   if(index >= this->ssize/2)
     return;
 
@@ -157,10 +159,10 @@ void sdizo::Heap::heapify(int32_t index) noexcept
   auto right = RIGHT(index);
   auto largest = index;
 
-  if(left <= this->ssize && this->array[left] > this->array[index])
+  if(left < this->ssize && this->array[left] > this->array[index])
     largest = left;
 
-  if(right <= this->ssize && this->array[right]  > this->array[largest])
+  if(right < this->ssize && this->array[right]  > this->array[largest])
     largest = right;
 
   if(largest != index)
