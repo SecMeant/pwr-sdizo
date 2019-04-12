@@ -368,48 +368,6 @@ void menu()
 
 int main()
 {
-  using sdizo::measure_and_log;
-  std::random_device generator;
-  std::uniform_int_distribution<int32_t>
-   distribution(0, 200);
-  const char *log_filename = "measurements.txt";
-  constexpr int max_container_size = 100'001;
-  constexpr int avg_rep = 15;
-
-  int32_t initial_size = 50;
-  while (initial_size < 20'000)
-  {
-    for(int i = 0; i < 650; ++i)
-    {
-      sdizo::RedBlackTree array;
-      auto fm = fmt::format("RedBlackTree;begin;{}", initial_size);
-      measure_and_log(fm.c_str(), log_filename, initial_size, array,
-                      &sdizo::RedBlackTree::contains, distribution(generator));
-    }
-    initial_size *= 2;
-  }
-  fmt::print("RedBlackTree begin test end.\n");
-
-  {
-    FILE * f_out = fopen(log_filename, "w");
-    fclose(f_out);
-  }
-
-  initial_size = 10000;
-  while (initial_size < max_container_size)
-  {
-    for(int i = 0; i < avg_rep; ++i)
-    {
-      sdizo::RedBlackTree array;
-      std::uniform_int_distribution<int32_t>
-       index_distribution(0, 100);
-      auto fm = fmt::format("RedBlackTree;random;{}", initial_size);
-      measure_and_log(fm.c_str(), log_filename, initial_size, array,
-                      &sdizo::RedBlackTree::contains , distribution(generator));
-    }
-    initial_size += 10000;
-  }
-  fmt::print("RedBlackTree random test end.\n");
-
+  menu();
   return 0;
 }
