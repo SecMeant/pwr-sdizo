@@ -119,13 +119,14 @@ void menu_list(sdizo::List &list)
   {
     puts("--- LISTA ---");
     puts("1.Wczytaj z pliku");
-    puts("2.Usun");
-    puts("3.Wstaw");
-    puts("4.Wstaw na koniec");
-    puts("5.Wstaw na poczatek");
-    puts("6.Czy zawiera");
-    puts("7.Generuj");
-    puts("8.Pokaz");
+    puts("2.Usun z pozycji");
+    puts("3.Usun");
+    puts("4.Wstaw");
+    puts("5.Wstaw na koniec");
+    puts("6.Wstaw na poczatek");
+    puts("7.Czy zawiera");
+    puts("8.Generuj");
+    puts("9.Pokaz");
     puts("0.Wyjdz");
 
     printf("Podaj opcje: ");
@@ -146,6 +147,12 @@ void menu_list(sdizo::List &list)
         break;
 
       case '3':
+        printf(" podaj wartosc:");
+        cin >> value;
+        list.remove(value);
+        break;
+
+      case '4':
         printf(" podaj index:");
         cin >> index;
         printf(" podaj waertoæ:");
@@ -154,21 +161,21 @@ void menu_list(sdizo::List &list)
         list.insert(value,index);
         break;
 
-      case '4':
+      case '5':
         printf(" podaj waertoæ:");
         cin >> value;
 
         list.append(value);
         break;
 
-      case '5':
+      case '6':
         printf(" podaj waertoæ:");
         cin >> value;
 
         list.prepend(value);
         break;
 
-      case '6':
+      case '7':
         printf(" podaj waertoæ:");
         cin >> value;
         if (list.contains(value))
@@ -177,13 +184,13 @@ void menu_list(sdizo::List &list)
           puts("poadanej wartoci NIE ma w tablicy");
         break;
 
-      case '7':
+      case '8':
         printf("Podaj iloæ elementów tablicy:");
         cin >> value;
         list.generate(0,100,value);
         break;
 
-      case '8':
+      case '9':
         list.display();
         break;
 
