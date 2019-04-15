@@ -6,10 +6,40 @@
 
 #IncludeRegexTransform: 
 
+C:/Users/patry/Desktop/pwr-sdizo/src/array.cc
+array.hpp
+C:/Users/patry/Desktop/pwr-sdizo/src/array.hpp
+algorithm
+-
+random
+-
+fstream
+-
+
 C:/Users/patry/Desktop/pwr-sdizo/src/array.hpp
 cstdint
 -
 stdexcept
+-
+
+C:/Users/patry/Desktop/pwr-sdizo/src/heap.cc
+treeprinter.hpp
+C:/Users/patry/Desktop/pwr-sdizo/src/treeprinter.hpp
+heap.hpp
+C:/Users/patry/Desktop/pwr-sdizo/src/heap.hpp
+stdexcept
+-
+string.h
+-
+algorithm
+-
+random
+-
+cassert
+-
+fstream
+-
+fmt/format.h
 -
 
 C:/Users/patry/Desktop/pwr-sdizo/src/heap.hpp
@@ -58,6 +88,26 @@ limits
 
 C:/Users/patry/Desktop/pwr-sdizo/src/test.hpp
 
+C:/Users/patry/Desktop/pwr-sdizo/src/tests.cc
+test.hpp
+C:/Users/patry/Desktop/pwr-sdizo/src/test.hpp
+array.hpp
+C:/Users/patry/Desktop/pwr-sdizo/src/array.hpp
+list.hpp
+C:/Users/patry/Desktop/pwr-sdizo/src/list.hpp
+heap.hpp
+C:/Users/patry/Desktop/pwr-sdizo/src/heap.hpp
+tree.hpp
+C:/Users/patry/Desktop/pwr-sdizo/src/tree.hpp
+redblacktree.hpp
+C:/Users/patry/Desktop/pwr-sdizo/src/redblacktree.hpp
+random
+-
+filesystem
+-
+fstream
+-
+
 C:/Users/patry/Desktop/pwr-sdizo/src/timeutils.hpp
 chrono
 -
@@ -75,6 +125,10 @@ fmt/format.h
 C:/Users/patry/Desktop/pwr-sdizo/src/tree.hpp
 cstdint
 -
+
+C:/Users/patry/Desktop/pwr-sdizo/src/treeprinter.hpp
+tree.hpp
+C:/Users/patry/Desktop/pwr-sdizo/src/tree.hpp
 
 C:/Users/patry/Desktop/vcpkg/installed/x86-windows/include/fmt/core.h
 cassert

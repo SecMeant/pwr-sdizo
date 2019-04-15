@@ -9,6 +9,9 @@ CMakeFiles/sdizo.dir/src/heap.cc.obj
  C:/Users/patry/Desktop/pwr-sdizo/src/heap.hpp
  C:/Users/patry/Desktop/pwr-sdizo/src/tree.hpp
  C:/Users/patry/Desktop/pwr-sdizo/src/treeprinter.hpp
+ C:/Users/patry/Desktop/vcpkg/installed/x86-windows/include/fmt/core.h
+ C:/Users/patry/Desktop/vcpkg/installed/x86-windows/include/fmt/format-inl.h
+ C:/Users/patry/Desktop/vcpkg/installed/x86-windows/include/fmt/format.h
 CMakeFiles/sdizo.dir/src/list.cc.obj
  C:/Users/patry/Desktop/pwr-sdizo/src/list.cc
  C:/Users/patry/Desktop/pwr-sdizo/src/list.hpp

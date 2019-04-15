@@ -8,6 +8,9 @@ CMakeFiles\sdizo.dir\src\heap.cc.obj: ..\src\heap.cc
 CMakeFiles\sdizo.dir\src\heap.cc.obj: ..\src\heap.hpp
 CMakeFiles\sdizo.dir\src\heap.cc.obj: ..\src\tree.hpp
 CMakeFiles\sdizo.dir\src\heap.cc.obj: ..\src\treeprinter.hpp
+CMakeFiles\sdizo.dir\src\heap.cc.obj: C:\Users\patry\Desktop\vcpkg\installed\x86-windows\include\fmt\core.h
+CMakeFiles\sdizo.dir\src\heap.cc.obj: C:\Users\patry\Desktop\vcpkg\installed\x86-windows\include\fmt\format-inl.h
+CMakeFiles\sdizo.dir\src\heap.cc.obj: C:\Users\patry\Desktop\vcpkg\installed\x86-windows\include\fmt\format.h
 
 CMakeFiles\sdizo.dir\src\list.cc.obj: ..\src\list.cc
 CMakeFiles\sdizo.dir\src\list.cc.obj: ..\src\list.hpp

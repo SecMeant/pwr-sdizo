@@ -23,3 +23,5 @@ if(MSVC)
 target_link_libraries(${PROJECT_NAME} cppfs::cppfs fmt::fmt fmt::fmt-header-only)
 endif(MSVC)
 
+target_compile_options(${PROJECT_NAME} PRIVATE /MT)
+
