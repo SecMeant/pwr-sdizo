@@ -6,6 +6,7 @@
 #include <random>
 #include <cassert>
 #include <fstream>
+#include <fmt/format.h>
 
 sdizo::Heap::Heap() noexcept
 :array{new int32_t[sdizo::Heap::expand_size]},
@@ -98,6 +99,15 @@ void sdizo::Heap::remove(int32_t element) noexcept
   --this->ssize;
 
   this->heapify(index);
+  auto parent = PARENT(index);
+  fmt::print("Parent: {}, Index {}\n",parent, index);
+  while(parent > 0 && this->array[index] > this->array[parent])
+  {
+    fmt::print("Parent: {}, Index {}\n",parent, index);
+    std::swap(this->array[parent], this->array[index]);
+    index = parent;
+    parent = PARENT(parent);
+  }
 
   #ifdef DEBUG_PRINT_ON
   this->display();
