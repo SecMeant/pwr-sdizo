@@ -6,5 +6,5 @@ project(sdizo CXX)
 
 file(GLOB_RECURSE CXX_SOURCE src/*.cc)
 add_executable(${PROJECT_NAME} ${CXX_SOURCE})
-target_link_libraries(${PROJECT_NAME} stdc++fs)
+target_link_libraries(${PROJECT_NAME} stdc++fs fmt)
 
