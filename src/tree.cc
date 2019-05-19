@@ -4,6 +4,7 @@
 #include <cassert>
 #include <stdexcept>
 #include <cmath>
+#include <random>
 
 using sdizo::TreeNode;
 
@@ -78,6 +79,20 @@ void sdizo::Tree::remove(TreeNode *node)
     node->value = to_delete->value;
 
   delete to_delete;
+}
+
+void sdizo::Tree::generate
+(int32_t rand_range_begin, int32_t rand_range_end, int32_t size) noexcept
+{
+  std::random_device generator;
+  std::uniform_int_distribution<int32_t>
+   distribution(rand_range_begin, rand_range_end);
+
+  //this->clear();
+  for(int32_t i = 0; i < size; ++i)
+  {
+    this->insert(distribution(generator));
+  }
 }
 
 TreeNode *sdizo::Tree::search(int32_t element) const noexcept
@@ -248,7 +263,7 @@ void sdizo::Tree::dsw() noexcept
 void sdizo::Tree::display() const noexcept
 {
   puts("===========================");
-  print2DUtil(this->root, 0);
+  printTree(this->root, 0);
   puts("===========================");
 }
 

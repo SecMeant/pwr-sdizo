@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <cstddef>
 
 namespace sdizo{
 
@@ -12,7 +13,7 @@ class Heap
   public:
     // Each time heap expands in memory (need to be relocated)
     // it allocates memory of size given in expand_size * sizeof(remove_ptr(array_type)).
-    constexpr static std::size_t expand_size = 4;
+    constexpr static size_t expand_size = 4;
   private:
     int32_t *array;
     int32_t ssize;
@@ -37,6 +38,9 @@ class Heap
 
     void remove(int32_t element) noexcept;
 
+    // Removes all elements
+    void clear() noexcept;
+
     // Searches for element in container.
     // Returns true if element is in container.
     // False otherwise.
@@ -50,6 +54,9 @@ class Heap
 
     // Checks if container is proper heap,
     bool verify() const noexcept;
+
+    inline decltype(auto) get_ssize() const noexcept
+    {return this->ssize;}
 
   private:
     void heapify(int32_t index) noexcept;

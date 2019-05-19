@@ -29,7 +29,7 @@ void sdizo::RedBlackTree::insert(int32_t element) noexcept
   RedBlackNode *new_node = new RedBlackNode(element);
   new_node->right = this->null_node;
   new_node->left = this->null_node;
-  this->insert(new_node);
+  this->insert_node(new_node);
 }
 
 void sdizo::RedBlackTree::tree_insert(RedBlackNode *node) noexcept
@@ -55,7 +55,7 @@ void sdizo::RedBlackTree::tree_insert(RedBlackNode *node) noexcept
     current_parent->right = node;
 }
 
-void sdizo::RedBlackTree::insert(RedBlackNode *node) noexcept
+void sdizo::RedBlackTree::insert_node(RedBlackNode *node) noexcept
 {
   this->tree_insert(node);
 
@@ -112,10 +112,10 @@ void sdizo::RedBlackTree::remove(int32_t element)
 {
   auto el = this->search(element);
   if(el != this->null_node)
-    this->remove(el);
+    this->remove_node(el);
 }
 
-void sdizo::RedBlackTree::remove(RedBlackNode *node)
+void sdizo::RedBlackTree::remove_node(RedBlackNode *node)
 {
   RedBlackNode *to_delete;
   RedBlackNode *to_delete_child;
@@ -355,7 +355,7 @@ unsigned sdizo::RedBlackTree::log2(unsigned x) noexcept
 void sdizo::RedBlackTree::display() const noexcept
 {
   puts("===========================");
-  print2DUtil(this->root, 0);
+  printTree(this->root, 0);
   puts("===========================");
 }
 
@@ -420,6 +420,7 @@ void sdizo::RedBlackTree::generate
   std::uniform_int_distribution<int32_t>
    distribution(rand_range_begin, rand_range_end);
 
+  this->clear();
   for(int32_t i = 0; i < size; ++i)
   {
     this->insert(distribution(generator));

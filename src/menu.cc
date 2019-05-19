@@ -7,8 +7,8 @@
 #include "test.hpp"
 #include "timeutils.hpp"
 #include <fmt/format.h>
-#include <unistd.h>
 #include <iostream>
+#include <random>
 
 #define GET_OPTION(buffer) while(!scanf(" %c", &buffer))\
                            while(getchar() != '\n');
@@ -40,6 +40,7 @@ void menu_array(sdizo::Array &array)
     puts("5.Wstaw na poczatek");
     puts("6.Czy zawiera");
     puts("7.Generuj");
+    puts("8.Pokaz");
     puts("0.Wyjdz");
 
     printf("Podaj opcje: ");
@@ -51,14 +52,12 @@ void menu_array(sdizo::Array &array)
         printf(" Podaj nazwê zbioru:");
         cin >> fileName;
         array.loadFromFile(fileName.c_str());
-        array.display();
         break;
 
       case '2':
         printf(" podaj index:");
         cin >> index;
         array.removeAt(index);
-        array.display();
         break;
 
       case '3':
@@ -68,7 +67,6 @@ void menu_array(sdizo::Array &array)
         cin >> value;
 
         array.insert(value,index);
-        array.display();
         break;
 
       case '4':
@@ -76,7 +74,6 @@ void menu_array(sdizo::Array &array)
         cin >> value;
 
         array.append(value);
-        array.display();
         break;
 
       case '5':
@@ -84,7 +81,6 @@ void menu_array(sdizo::Array &array)
         cin >> value;
 
         array.prepend(value);
-        array.display();
         break;
 
       case '6':
@@ -100,10 +96,15 @@ void menu_array(sdizo::Array &array)
         printf("Podaj iloæ elementów tablicy:");
         cin >> value;
         array.generate(0,100,value);
+        break;
+
+      case '8':
         array.display();
         break;
+
     }
 
+    array.display();
   } while (option != '0');
 }
 
@@ -118,12 +119,14 @@ void menu_list(sdizo::List &list)
   {
     puts("--- LISTA ---");
     puts("1.Wczytaj z pliku");
-    puts("2.Usun");
-    puts("3.Wstaw");
-    puts("4.Wstaw na koniec");
-    puts("5.Wstaw na poczatek");
-    puts("6.Czy zawiera");
-    puts("7.Generuj");
+    puts("2.Usun z pozycji");
+    puts("3.Usun");
+    puts("4.Wstaw");
+    puts("5.Wstaw na koniec");
+    puts("6.Wstaw na poczatek");
+    puts("7.Czy zawiera");
+    puts("8.Generuj");
+    puts("9.Pokaz");
     puts("0.Wyjdz");
 
     printf("Podaj opcje: ");
@@ -135,43 +138,44 @@ void menu_list(sdizo::List &list)
         printf(" Podaj nazwê zbioru:");
         cin >> fileName;
         list.loadFromFile(fileName.c_str());
-        list.display();
         break;
 
       case '2':
         printf(" podaj index:");
         cin >> index;
         list.removeAt(index);
-        list.display();
         break;
 
       case '3':
+        printf(" podaj wartosc:");
+        cin >> value;
+        list.remove(value);
+        break;
+
+      case '4':
         printf(" podaj index:");
         cin >> index;
         printf(" podaj waertoæ:");
         cin >> value;
 
         list.insert(value,index);
-        list.display();
-        break;
-
-      case '4':
-        printf(" podaj waertoæ:");
-        cin >> value;
-
-        list.append(value);
-        list.display();
         break;
 
       case '5':
         printf(" podaj waertoæ:");
         cin >> value;
 
-        list.prepend(value);
-        list.display();
+        list.append(value);
         break;
 
       case '6':
+        printf(" podaj waertoæ:");
+        cin >> value;
+
+        list.prepend(value);
+        break;
+
+      case '7':
         printf(" podaj waertoæ:");
         cin >> value;
         if (list.contains(value))
@@ -180,13 +184,18 @@ void menu_list(sdizo::List &list)
           puts("poadanej wartoci NIE ma w tablicy");
         break;
 
-      case '7':
+      case '8':
         printf("Podaj iloæ elementów tablicy:");
         cin >> value;
         list.generate(0,100,value);
+        break;
+
+      case '9':
         list.display();
         break;
+
     }
+    list.display();
   } while (option != '0');
 }
 
@@ -195,17 +204,17 @@ void menu_heap(sdizo::Heap &heap)
   using namespace std;
   char option;
   string fileName;
-  int index, value;
+  int32_t value;
 
   do
   {
     puts("--- KOPIEC ---");
     puts("1.Wczytaj z pliku");
-    puts("2.Usun");
+    puts("2.Usun element");
     puts("3.Wstaw");
     puts("4.Czy zawiera");
     puts("5.Generuj");
-    puts("6.Wyswietl");
+    puts("6.Pokaz");
     puts("0.Wyjdz");
 
     printf("Podaj opcje: ");
@@ -217,14 +226,12 @@ void menu_heap(sdizo::Heap &heap)
         printf("Podaj nazwê zbioru:");
         cin >> fileName;
         heap.loadFromFile(fileName.c_str());
-        heap.display();
         break;
 
       case '2':
         printf("podaj element:");
-        cin >> index;
-        heap.removeAt(index);
-        heap.display();
+        cin >> value;
+        heap.remove(value);
         break;
 
       case '3':
@@ -232,7 +239,6 @@ void menu_heap(sdizo::Heap &heap)
         cin >> value;
 
         heap.insert(value);
-        heap.display();
         break;
 
       case '4':
@@ -248,12 +254,13 @@ void menu_heap(sdizo::Heap &heap)
         printf("Podaj iloæ elementów tablicy:");
         cin >> value;
         heap.generate(0,100,value);
-        heap.display();
         break;
 
       case '6':
         heap.display();
+        break;
     }
+    heap.display();
   } while (option != '0');
 }
 
@@ -272,6 +279,7 @@ void menu_redblacktree(sdizo::RedBlackTree &tree)
     puts("3.Wstaw");
     puts("4.Czy zawiera");
     puts("5.Generuj");
+    puts("6.Pokaz");
     puts("0.Wyjdz");
 
     printf("Podaj opcje: ");
@@ -283,14 +291,12 @@ void menu_redblacktree(sdizo::RedBlackTree &tree)
         printf(" Podaj nazwê zbioru:");
         cin >> fileName;
         tree.loadFromFile(fileName.c_str());
-        tree.display();
         break;
 
       case '2':
         printf(" podaj element:");
         cin >> value;
         tree.remove(value);
-        tree.display();
         break;
 
       case '3':
@@ -298,7 +304,6 @@ void menu_redblacktree(sdizo::RedBlackTree &tree)
         cin >> value;
 
         tree.insert(value);
-        tree.display();
         break;
 
       case '4':
@@ -314,9 +319,13 @@ void menu_redblacktree(sdizo::RedBlackTree &tree)
         printf("Podaj iloæ elementów tablicy:");
         cin >> value;
         tree.generate(0,100,value);
+        break;
+
+      case '8':
         tree.display();
         break;
     }
+    tree.display();
   } while (option != '0');
 }
 
@@ -366,13 +375,6 @@ void menu()
 
 int main()
 {
-  run_tests();
-  return 0;
-
-  using nano_clock_t = std::chrono::high_resolution_clock::duration;
-  nano_clock_t res = measure_nano(sleep, 2);
-  fmt::print("It took: {}\n", res.count());
-
-  //menu();
+  menu();
   return 0;
 }

@@ -2,6 +2,7 @@
 #include <type_traits>
 #include "tree.hpp"
 #include "redblacktree.hpp"
+#include "heap.hpp"
 
 static constexpr int shift_width = 10;
 
@@ -10,14 +11,14 @@ using sdizo::RedBlackNode;
 using sdizo::NodeColor;
 
 template<typename T>
-void print2DUtil(T *root, int space) noexcept
+void printTree(const T *root, int space) noexcept
 {
     if (root == nullptr)
         return;
 
     space += shift_width;
 
-    print2DUtil(root->right, space);
+    printTree(root->right, space);
 
     if constexpr(std::is_same<T, sdizo::RedBlackNode>::value)
     {
@@ -35,16 +36,37 @@ void print2DUtil(T *root, int space) noexcept
     if constexpr(std::is_same<T, sdizo::RedBlackNode>::value)
       printf("\u001b[0m");
 
-    print2DUtil(root->left, space);
+    printTree(root->left, space);
+}
+
+void printHeap(const sdizo::Heap *heap, int index, int space) noexcept
+{
+  if (index >= heap->get_ssize())
+    return;
+
+  space += shift_width;
+
+  printHeap(heap, RIGHT(index), space);
+
+
+  printf("\n%*s%i\n", space - shift_width, " ", heap->at(index));
+
+  printHeap(heap, LEFT(index), space);
 }
 
 template<typename T>
-void print2D(T *root) noexcept
+void print2D(const T *root) noexcept
 {
-    print2DUtil(root, 0);
+  printTree(root, 0);
 }
 
-template void print2D<TreeNode>(TreeNode *root) noexcept;
-template void print2DUtil<TreeNode>(TreeNode *root, int space) noexcept;
-template void print2D<RedBlackNode>(RedBlackNode *root) noexcept;
-template void print2DUtil<RedBlackNode>(RedBlackNode *root, int space) noexcept;
+template<>
+void print2D(const sdizo::Heap *heap) noexcept
+{
+  printHeap(heap, 0, 0);
+}
+
+template void print2D<const TreeNode>(const TreeNode *root) noexcept;
+template void printTree<const TreeNode>(const TreeNode *root, int space) noexcept;
+template void print2D<const RedBlackNode>(const RedBlackNode *root) noexcept;
+template void printTree<const RedBlackNode>(const RedBlackNode *root, int space) noexcept;

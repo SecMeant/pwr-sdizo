@@ -2,6 +2,6 @@
 #include "tree.hpp"
 
 template<typename T>
-void print2DUtil(T *root, int space) noexcept;
+void printTree(const T *root, int space) noexcept;
 template<typename T>
-void print2D(T *root) noexcept;
+void print2D(const T *root) noexcept;

@@ -1,3 +1,4 @@
+#include "treeprinter.hpp"
 #include "heap.hpp"
 #include <stdexcept>
 #include <string.h>
@@ -5,6 +6,7 @@
 #include <random>
 #include <cassert>
 #include <fstream>
+#include <fmt/format.h>
 
 sdizo::Heap::Heap() noexcept
 :array{new int32_t[sdizo::Heap::expand_size]},
@@ -97,10 +99,24 @@ void sdizo::Heap::remove(int32_t element) noexcept
   --this->ssize;
 
   this->heapify(index);
+  auto parent = PARENT(index);
+  fmt::print("Parent: {}, Index {}\n",parent, index);
+  while(parent > 0 && this->array[index] > this->array[parent])
+  {
+    fmt::print("Parent: {}, Index {}\n",parent, index);
+    std::swap(this->array[parent], this->array[index]);
+    index = parent;
+    parent = PARENT(parent);
+  }
 
   #ifdef DEBUG_PRINT_ON
   this->display();
   #endif
+}
+
+void sdizo::Heap::clear() noexcept
+{
+  this->ssize = 0;
 }
 
 bool sdizo::Heap::contains(int32_t element) const noexcept
@@ -121,6 +137,7 @@ void sdizo::Heap::generate
   std::uniform_int_distribution<int32_t>
    distribution(rand_range_begin, rand_range_end);
 
+  this->clear();
   for(int32_t i = 0; i < size; ++i)
   {
     this->insert(distribution(generator));
@@ -135,12 +152,14 @@ void sdizo::Heap::display() const noexcept
     printf("%i ", this->array[i]);
   }
   printf("} SIZE: %i\n", this->ssize);
+
+  puts("===========================");
+  print2D(this);
+  puts("===========================");
 }
 
 void sdizo::Heap::heapify(int32_t index) noexcept
 {
-  assert(index < this->ssize);
-
   if(index >= this->ssize/2)
     return;
 
@@ -148,10 +167,10 @@ void sdizo::Heap::heapify(int32_t index) noexcept
   auto right = RIGHT(index);
   auto largest = index;
 
-  if(left <= this->ssize && this->array[left] > this->array[index])
+  if(left < this->ssize && this->array[left] > this->array[index])
     largest = left;
 
-  if(right <= this->ssize && this->array[right]  > this->array[largest])
+  if(right < this->ssize && this->array[right]  > this->array[largest])
     largest = right;
 
   if(largest != index)

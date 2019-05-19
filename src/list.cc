@@ -79,6 +79,23 @@ void sdizo::List::remove(int32_t element)
   #endif
 }
 
+void sdizo::List::clear() noexcept
+{
+  if(this->isEmpty())
+    return;
+
+  auto current = this->begin;
+  while(current != nullptr)
+  {
+    auto next = current->next;
+    delete current;
+    current = next;
+  }
+
+  this->begin = nullptr;
+  this->end = nullptr;
+}
+
 void sdizo::List::add(int32_t element, int32_t index)
 {
   if(this->isEmpty())
@@ -108,6 +125,7 @@ void sdizo::List::generate
   std::uniform_int_distribution<int32_t>
    distribution(rand_range_begin, rand_range_end);
 
+  this->clear();
   for(int32_t i = 0; i < size; ++i)
   {
     this->append(new ListNode(distribution(generator)));
@@ -127,10 +145,21 @@ void sdizo::List::display() const noexcept
   }
 
   ListNode *current = this->begin;
-  while(current != nullptr)
+  while(1)
   {
-    printf("%i ", current->value);
+    printf("%i -> ", current->value);
+    if(current->next == nullptr)
+      break;
     current = current->next;
+  }
+  
+  puts("\nReversed:");
+  while(1)
+  {
+    printf("%i <- ", current->value);
+    if(current->prev == nullptr)
+      break;
+    current = current->prev;
   }
   puts("");
 }
