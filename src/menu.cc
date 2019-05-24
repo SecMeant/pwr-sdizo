@@ -199,7 +199,7 @@ void menu_list(sdizo::List &list)
   } while (option != '0');
 }
 
-void menu_heap(sdizo::Heap &heap)
+void menu_heap(sdizo::Heap<int32_t> &heap)
 {
   using namespace std;
   char option;
@@ -335,7 +335,7 @@ void menu()
 
   sdizo::Array array;
   sdizo::List list;
-  sdizo::Heap heap;
+  sdizo::Heap<int32_t> heap;
   sdizo::RedBlackTree tree;
 
   char option;
@@ -375,6 +375,6 @@ void menu()
 
 int main()
 {
-  menu();
+  run_tests();
   return 0;
 }

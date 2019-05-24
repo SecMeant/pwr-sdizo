@@ -8,6 +8,16 @@ namespace sdizo{
 #define LEFT(i) ((i<<1)+1)
 #define RIGHT(i) ((i+1)<<1)
 
+using heap_key_t = int32_t;
+
+template<typename ElemType>
+heap_key_t key(ElemType element)
+{return element.getKey();}
+
+template<>
+heap_key_t key(int32_t element);
+
+template<typename ElemType>
 class Heap
 {
   public:
@@ -15,9 +25,9 @@ class Heap
     // it allocates memory of size given in expand_size * sizeof(remove_ptr(array_type)).
     constexpr static size_t expand_size = 4;
   private:
-    int32_t *array;
-    int32_t ssize;
-    int32_t length;
+    ElemType *array;
+    ElemType ssize;
+    ElemType length;
 
   public:
     Heap() noexcept;
@@ -27,16 +37,16 @@ class Heap
 
     // Returns element from given index.
     // Throws std::out_of_range if index exceeds read span of array.
-    int32_t at(int32_t index) const;
+    ElemType at(int32_t index) const;
 
     // Inserts element at location given by index.
     // Throws std::out_of_range if index exceeds insert span of array,
-    void insert(int32_t element);
+    void insert(ElemType element);
 
     // Throws std::out_of_range if index exceeds span of array.
     void removeAt(int32_t index);
 
-    void remove(int32_t element) noexcept;
+    void remove(ElemType element) noexcept;
 
     // Removes all elements
     void clear() noexcept;
@@ -44,7 +54,7 @@ class Heap
     // Searches for element in container.
     // Returns true if element is in container.
     // False otherwise.
-    bool contains(int32_t element) const noexcept;
+    bool contains(ElemType element) const noexcept;
 
     // Randomly generates table.
     void generate(int32_t rand_range_begin, int32_t rand_range_end,
@@ -67,6 +77,8 @@ class Heap
 
     // Finds element in table.
     // If element is in the table, returns it's index, -1 otherwise.
-    int32_t find(int32_t elem) const noexcept;
+    int32_t find(ElemType elem) const noexcept;
 };
 } // namespace sdizo
+
+#include "heap.tcc"
