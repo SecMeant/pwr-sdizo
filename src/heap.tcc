@@ -84,10 +84,6 @@ void sdizo::Heap<ElemType, heap_t>::insert(ElemType element)
 
   this->array[i] = element;
   ++this->ssize;
-
-  #ifdef DEBUG_PRINT_ON
-  this->display();
-  #endif
 }
 
 template<typename ElemType, sdizo::HeapType heap_t>
@@ -103,10 +99,6 @@ void sdizo::Heap<ElemType, heap_t>::removeAt(int32_t index)
   --this->ssize;
 
   this->heapify(index);
-
-  #ifdef DEBUG_PRINT_ON
-  this->display();
-  #endif
 }
 
 template<typename ElemType, sdizo::HeapType heap_t>
@@ -133,10 +125,6 @@ void sdizo::Heap<ElemType, heap_t>::remove(ElemType element) noexcept
     index = parent;
     parent = PARENT(parent);
   }
-
-  #ifdef DEBUG_PRINT_ON
-  this->display();
-  #endif
 }
 
 template<typename ElemType, sdizo::HeapType heap_t>
@@ -268,10 +256,6 @@ bool sdizo::Heap<ElemType, heap_t>::verify() const noexcept
 {
   for(int32_t i = 0; i < this->ssize/2; ++i)
   {
-    #ifdef DEBUG_PRINT_ON
-    printf("Veryfing index %i. ", i);
-    #endif
-
     auto left = LEFT(i);
     if(left < this->ssize && this->array[i] < this->array[left])
       return false;
@@ -279,10 +263,6 @@ bool sdizo::Heap<ElemType, heap_t>::verify() const noexcept
     auto right = RIGHT(i);
     if(right < this->ssize && this->array[i] < this->array[right])
       return false;
-
-    #ifdef DEBUG_PRINT_ON
-    puts("OK");
-    #endif
   }
 
   return true;
