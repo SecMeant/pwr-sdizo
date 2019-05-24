@@ -46,9 +46,8 @@ bool sdizo::tests::test_array()
     array.remove(0);
     array.contains(2);
 
-    auto cur_size = array.get_size();
     array.generate(-20, 74, 20);
-    TEST_ASSERT_TRUE(array.get_size() == cur_size + 20)
+    TEST_ASSERT_TRUE(array.get_size() == 20)
 
     array.update(0, 1337);
     TEST_ASSERT_TRUE(array.at(0) == 1337)
@@ -149,7 +148,7 @@ bool sdizo::tests::test_list2()
 
 bool sdizo::tests::test_heap()
 {
-  using sdizo::Heap;
+  using Heap = sdizo::Heap<int32_t>;
 
   Heap heap;
   heap.generate(0, 20, 7);
