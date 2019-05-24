@@ -39,8 +39,9 @@ void printTree(const T *root, int space) noexcept
     printTree(root->left, space);
 }
 
-template<typename ElemType>
-void printHeap(const sdizo::Heap<ElemType> *heap, int index, int space)
+template<typename ElemType, sdizo::HeapType heap_t>
+void printHeap
+(const sdizo::Heap<ElemType, heap_t> *heap, int index, int space)
 noexcept
 {
   if (index >= heap->get_ssize())
@@ -63,8 +64,8 @@ void print2D(const T *root) noexcept
   printTree(root, 0);
 }
 
-template<typename ElemType>
-void print2D(const sdizo::Heap<ElemType> *heap) noexcept
+template<typename ElemType, sdizo::HeapType heap_t>
+void print2D(const sdizo::Heap<ElemType, heap_t> *heap) noexcept
 {
   printHeap(heap, 0, 0);
 }

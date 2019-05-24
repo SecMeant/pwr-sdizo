@@ -50,6 +50,9 @@ class Heap
     // Throws std::out_of_range if index exceeds span of array.
     void removeAt(int32_t index);
 
+    inline void pop()
+    {this->removeAt(0);}
+
     void remove(ElemType element) noexcept;
 
     // Removes all elements

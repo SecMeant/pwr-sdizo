@@ -23,7 +23,8 @@ sdizo::Heap<ElemType, heap_t>::~Heap() noexcept
 }
 
 template<typename ElemType, sdizo::HeapType heap_t>
-int32_t sdizo::Heap<ElemType, heap_t>::loadFromFile(const char *filename) noexcept
+int32_t sdizo::Heap<ElemType, heap_t>::loadFromFile(const char *filename)
+noexcept
 {
   std::ifstream file(filename);
   int32_t num;
@@ -58,8 +59,24 @@ void sdizo::Heap<ElemType, heap_t>::insert(ElemType element)
   auto i = this->ssize;
   auto parent = PARENT(i);
 
-  while(i > 0 && sdizo::key(this->array[parent]) < sdizo::key(element))
+  while(i > 0)
   {
+    bool heap_property_satisfied;
+
+    if constexpr (heap_t == sdizo::HeapType::max)
+    {
+      heap_property_satisfied = sdizo::key(this->array[parent]) >
+                                sdizo::key(element);
+    }
+    else
+    {
+      heap_property_satisfied = sdizo::key(this->array[parent]) <
+                                sdizo::key(element);
+    }
+
+    if (heap_property_satisfied)
+      break;
+
     this->array[i] = this->array[parent];
     i = parent;
     parent = PARENT(i);
@@ -129,7 +146,8 @@ void sdizo::Heap<ElemType, heap_t>::clear() noexcept
 }
 
 template<typename ElemType, sdizo::HeapType heap_t>
-bool sdizo::Heap<ElemType, heap_t>::contains(ElemType element) const noexcept
+bool sdizo::Heap<ElemType, heap_t>::contains(ElemType element)
+const noexcept
 {
   for(int32_t i = 0; i < this->ssize; ++i)
   {
@@ -158,6 +176,11 @@ void sdizo::Heap<ElemType, heap_t>::generate
 template<typename ElemType, sdizo::HeapType heap_t>
 void sdizo::Heap<ElemType, heap_t>::display() const noexcept
 {
+  if constexpr (heap_t == sdizo::HeapType::max)
+    puts("Max heap");
+  else
+    puts("Min heap");
+
   printf("{ ");
   for(int32_t i = 0; i < this->ssize; ++i)
   {
@@ -178,18 +201,36 @@ void sdizo::Heap<ElemType, heap_t>::heapify(int32_t index) noexcept
 
   auto left = LEFT(index);
   auto right = RIGHT(index);
-  auto largest = index;
 
-  if(left < this->ssize && this->array[left] > this->array[index])
-    largest = left;
+  // Largest of all if heap is max
+  // Smallest of all is heap is min
+  auto extreme = index;
 
-  if(right < this->ssize && this->array[right]  > this->array[largest])
-    largest = right;
-
-  if(largest != index)
+  if constexpr (heap_t == sdizo::HeapType::max)
   {
-    std::swap(this->array[largest], this->array[index]);
-    this->heapify(largest);
+    if(left < this->ssize &&
+       sdizo::key(this->array[left]) > sdizo::key(this->array[index]))
+      extreme = left;
+
+    if(right < this->ssize &&
+       sdizo::key(this->array[right]) > sdizo::key(this->array[extreme]))
+      extreme = right;
+  }
+  else
+  {
+    if(left < this->ssize &&
+       sdizo::key(this->array[left]) < sdizo::key(this->array[index]))
+      extreme = left;
+
+    if(right < this->ssize &&
+       sdizo::key(this->array[right]) < sdizo::key(this->array[extreme]))
+      extreme = right;
+  }
+
+  if(extreme != index)
+  {
+    std::swap(this->array[extreme], this->array[index]);
+    this->heapify(extreme);
   }
 
 }
@@ -197,7 +238,8 @@ void sdizo::Heap<ElemType, heap_t>::heapify(int32_t index) noexcept
 template<typename ElemType, sdizo::HeapType heap_t>
 void sdizo::Heap<ElemType, heap_t>::expand() noexcept
 {
-  int32_t new_size = this->length + sdizo::Heap<ElemType, heap_t>::expand_size;
+  int32_t new_size = this->length +
+                     sdizo::Heap<ElemType, heap_t>::expand_size;
   ElemType *new_array = new ElemType[new_size];
 
   // copy old part of heap

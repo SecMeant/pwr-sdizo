@@ -376,11 +376,20 @@ void menu()
 
 int main()
 {
-  sdizo::Heap<sdizo2::Edge> edge_heap;
-  edge_heap.insert({1,2});
-  edge_heap.insert({4,5});
-  edge_heap.insert({12,90});
-  edge_heap.display();
+  sdizo::Heap<sdizo2::Edge, sdizo::HeapType::max> edge_heap_max;
+  edge_heap_max.insert({1,2});
+  edge_heap_max.insert({4,5});
+  edge_heap_max.insert({12,90});
+  edge_heap_max.display();
+
+  sdizo::Heap<sdizo2::Edge, sdizo::HeapType::min> edge_heap_min;
+  edge_heap_min.insert({1,2});
+  edge_heap_min.insert({4,5});
+  edge_heap_min.insert({12,90});
+  edge_heap_min.display();
+  edge_heap_min.pop();
+  edge_heap_min.display();
+
   run_tests();
   return 0;
 }
