@@ -9,21 +9,21 @@
 #include <fstream>
 #include <fmt/format.h>
 
-template<typename ElemType>
-sdizo::Heap<ElemType>::Heap() noexcept
-:array{new ElemType[sdizo::Heap<ElemType>::expand_size]},
+template<typename ElemType, sdizo::HeapType heap_t>
+sdizo::Heap<ElemType, heap_t>::Heap() noexcept
+:array{new ElemType[sdizo::Heap<ElemType, heap_t>::expand_size]},
  ssize{0},
- length{sdizo::Heap<ElemType>::expand_size}
+ length{sdizo::Heap<ElemType, heap_t>::expand_size}
 {}
 
-template<typename ElemType>
-sdizo::Heap<ElemType>::~Heap() noexcept
+template<typename ElemType, sdizo::HeapType heap_t>
+sdizo::Heap<ElemType, heap_t>::~Heap() noexcept
 {
   delete [] this->array;
 }
 
-template<typename ElemType>
-int32_t sdizo::Heap<ElemType>::loadFromFile(const char *filename) noexcept
+template<typename ElemType, sdizo::HeapType heap_t>
+int32_t sdizo::Heap<ElemType, heap_t>::loadFromFile(const char *filename) noexcept
 {
   std::ifstream file(filename);
   int32_t num;
@@ -40,8 +40,8 @@ int32_t sdizo::Heap<ElemType>::loadFromFile(const char *filename) noexcept
   return 0;
 }
 
-template<typename ElemType>
-ElemType sdizo::Heap<ElemType>::at(int32_t index) const
+template<typename ElemType, sdizo::HeapType heap_t>
+ElemType sdizo::Heap<ElemType, heap_t>::at(int32_t index) const
 {
   if(index >= this->ssize)
     throw std::out_of_range("Cannot read from index exceeding span of heap.");
@@ -49,8 +49,8 @@ ElemType sdizo::Heap<ElemType>::at(int32_t index) const
   return this->array[index];
 }
 
-template<typename ElemType>
-void sdizo::Heap<ElemType>::insert(ElemType element)
+template<typename ElemType, sdizo::HeapType heap_t>
+void sdizo::Heap<ElemType, heap_t>::insert(ElemType element)
 {
   if(this->ssize == this->length)
     this->expand();
@@ -58,7 +58,7 @@ void sdizo::Heap<ElemType>::insert(ElemType element)
   auto i = this->ssize;
   auto parent = PARENT(i);
 
-  while(i > 0 && this->array[parent] < element)
+  while(i > 0 && sdizo::key(this->array[parent]) < sdizo::key(element))
   {
     this->array[i] = this->array[parent];
     i = parent;
@@ -73,8 +73,8 @@ void sdizo::Heap<ElemType>::insert(ElemType element)
   #endif
 }
 
-template<typename ElemType>
-void sdizo::Heap<ElemType>::removeAt(int32_t index)
+template<typename ElemType, sdizo::HeapType heap_t>
+void sdizo::Heap<ElemType, heap_t>::removeAt(int32_t index)
 {
   if(this->ssize <= 0)
     return;
@@ -92,8 +92,8 @@ void sdizo::Heap<ElemType>::removeAt(int32_t index)
   #endif
 }
 
-template<typename ElemType>
-void sdizo::Heap<ElemType>::remove(ElemType element) noexcept
+template<typename ElemType, sdizo::HeapType heap_t>
+void sdizo::Heap<ElemType, heap_t>::remove(ElemType element) noexcept
 {
   if(this->ssize <= 0)
     return;
@@ -122,14 +122,14 @@ void sdizo::Heap<ElemType>::remove(ElemType element) noexcept
   #endif
 }
 
-template<typename ElemType>
-void sdizo::Heap<ElemType>::clear() noexcept
+template<typename ElemType, sdizo::HeapType heap_t>
+void sdizo::Heap<ElemType, heap_t>::clear() noexcept
 {
   this->ssize = 0;
 }
 
-template<typename ElemType>
-bool sdizo::Heap<ElemType>::contains(ElemType element) const noexcept
+template<typename ElemType, sdizo::HeapType heap_t>
+bool sdizo::Heap<ElemType, heap_t>::contains(ElemType element) const noexcept
 {
   for(int32_t i = 0; i < this->ssize; ++i)
   {
@@ -140,8 +140,8 @@ bool sdizo::Heap<ElemType>::contains(ElemType element) const noexcept
   return false;
 }
 
-template<typename ElemType>
-void sdizo::Heap<ElemType>::generate
+template<typename ElemType, sdizo::HeapType heap_t>
+void sdizo::Heap<ElemType, heap_t>::generate
 (int32_t rand_range_begin, int32_t rand_range_end, int32_t size) noexcept
 {
   std::random_device generator;
@@ -155,13 +155,13 @@ void sdizo::Heap<ElemType>::generate
   }
 }
 
-template<typename ElemType>
-void sdizo::Heap<ElemType>::display() const noexcept
+template<typename ElemType, sdizo::HeapType heap_t>
+void sdizo::Heap<ElemType, heap_t>::display() const noexcept
 {
   printf("{ ");
   for(int32_t i = 0; i < this->ssize; ++i)
   {
-    printf("%i ", this->array[i]);
+    printf("%i ", sdizo::key(this->array[i]));
   }
   printf("} SIZE: %i\n", this->ssize);
 
@@ -170,8 +170,8 @@ void sdizo::Heap<ElemType>::display() const noexcept
   puts("===========================");
 }
 
-template<typename ElemType>
-void sdizo::Heap<ElemType>::heapify(int32_t index) noexcept
+template<typename ElemType, sdizo::HeapType heap_t>
+void sdizo::Heap<ElemType, heap_t>::heapify(int32_t index) noexcept
 {
   if(index >= this->ssize/2)
     return;
@@ -194,10 +194,10 @@ void sdizo::Heap<ElemType>::heapify(int32_t index) noexcept
 
 }
 
-template<typename ElemType>
-void sdizo::Heap<ElemType>::expand() noexcept
+template<typename ElemType, sdizo::HeapType heap_t>
+void sdizo::Heap<ElemType, heap_t>::expand() noexcept
 {
-  int32_t new_size = this->length + sdizo::Heap<ElemType>::expand_size;
+  int32_t new_size = this->length + sdizo::Heap<ElemType, heap_t>::expand_size;
   ElemType *new_array = new ElemType[new_size];
 
   // copy old part of heap
@@ -209,8 +209,8 @@ void sdizo::Heap<ElemType>::expand() noexcept
   this->length = new_size;
 }
 
-template<typename ElemType>
-int32_t sdizo::Heap<ElemType>::find(ElemType elem) const noexcept
+template<typename ElemType, sdizo::HeapType heap_t>
+int32_t sdizo::Heap<ElemType, heap_t>::find(ElemType elem) const noexcept
 {
   for(int32_t i = 0; i < this->ssize; ++i)
   {
@@ -221,8 +221,8 @@ int32_t sdizo::Heap<ElemType>::find(ElemType elem) const noexcept
   return -1;
 }
 
-template<typename ElemType>
-bool sdizo::Heap<ElemType>::verify() const noexcept
+template<typename ElemType, sdizo::HeapType heap_t>
+bool sdizo::Heap<ElemType, heap_t>::verify() const noexcept
 {
   for(int32_t i = 0; i < this->ssize/2; ++i)
   {
