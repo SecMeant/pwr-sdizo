@@ -17,17 +17,21 @@ heap_key_t key(ElemType element)
 template<>
 heap_key_t key(int32_t element);
 
-template<typename ElemType>
+enum class HeapType
+{min, max};
+
+template<typename ElemType, HeapType heap_t = HeapType::max>
 class Heap
 {
   public:
     // Each time heap expands in memory (need to be relocated)
     // it allocates memory of size given in expand_size * sizeof(remove_ptr(array_type)).
     constexpr static size_t expand_size = 4;
+    constexpr static HeapType heap_type = heap_t;
   private:
     ElemType *array;
-    ElemType ssize;
-    ElemType length;
+    int32_t ssize;
+    int32_t length;
 
   public:
     Heap() noexcept;

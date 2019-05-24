@@ -5,6 +5,7 @@
 #include "tree.hpp"
 #include "redblacktree.hpp"
 #include "test.hpp"
+#include "mst.hpp"
 #include "timeutils.hpp"
 #include <fmt/format.h>
 #include <iostream>
@@ -375,6 +376,11 @@ void menu()
 
 int main()
 {
+  sdizo::Heap<sdizo2::Edge> edge_heap;
+  edge_heap.insert({1,2});
+  edge_heap.insert({4,5});
+  edge_heap.insert({12,90});
+  edge_heap.display();
   run_tests();
   return 0;
 }
