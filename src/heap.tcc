@@ -116,11 +116,25 @@ void sdizo::Heap<ElemType, heap_t>::remove(ElemType element) noexcept
   --this->ssize;
 
   this->heapify(index);
+  
+  // Heapify up the tree
+  // TODO make it a procedure
   auto parent = PARENT(index);
-  fmt::print("Parent: {}, Index {}\n",parent, index);
-  while(parent > 0 && this->array[index] > this->array[parent])
+
+  bool heap_property_satisfied;
+
+  while(parent > 0)
   {
-    fmt::print("Parent: {}, Index {}\n",parent, index);
+    if constexpr (heap_t == sdizo::HeapType::max)
+      heap_property_satisfied = sdizo::key(this->array[index]) <
+                               sdizo::key(this->array[parent]);
+    else
+      heap_property_satisfied = sdizo::key(this->array[index]) >
+                               sdizo::key(this->array[parent]);
+
+    if (heap_property_satisfied)
+      break;
+
     std::swap(this->array[parent], this->array[index]);
     index = parent;
     parent = PARENT(parent);
@@ -257,12 +271,28 @@ bool sdizo::Heap<ElemType, heap_t>::verify() const noexcept
   for(int32_t i = 0; i < this->ssize/2; ++i)
   {
     auto left = LEFT(i);
-    if(left < this->ssize && this->array[i] < this->array[left])
-      return false;
-
     auto right = RIGHT(i);
-    if(right < this->ssize && this->array[i] < this->array[right])
-      return false;
+
+    if constexpr (heap_t == sdizo::HeapType::max)
+    {
+      if(left < this->ssize && sdizo::key(this->array[i]) <
+                               sdizo::key(this->array[left]))
+        return false;
+
+      if(right < this->ssize && sdizo::key(this->array[i]) <
+                                sdizo::key(this->array[right]))
+        return false;
+    }
+    else
+    {
+      if(left < this->ssize && sdizo::key(this->array[i]) >
+                               sdizo::key(this->array[left]))
+        return false;
+
+      if(right < this->ssize && sdizo::key(this->array[i]) >
+                                sdizo::key(this->array[right]))
+        return false;
+    }
   }
 
   return true;

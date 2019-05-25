@@ -13,5 +13,11 @@ namespace sdizo2{
 
     inline int32_t getKey()
     {return weight;}
+
+    inline bool operator==(const Edge& e)
+    {
+      return this->vertex == e.vertex &&
+             this->weight == e.weight;
+    }
   };
 };
