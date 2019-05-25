@@ -3,23 +3,27 @@
 #include <stdexcept>
 
 namespace sdizo{
+template<typename ValueType>
 struct ListNode
 {
-  ListNode *prev;
-  ListNode *next;
-  int32_t value;
+  using value_type = ValueType;
+  
+  ListNode<ValueType> *prev;
+  ListNode<ValueType> *next;
+  ValueType value;
 
   ListNode() = default;
-  explicit inline ListNode(int32_t val)
+  explicit inline ListNode(ValueType val)
   :value(val){}
 };
 
+template<typename NodeType>
 class List
 {
   private:
-    ListNode *begin;
+    NodeType *begin;
     // Making appending easier.
-    ListNode *end;
+    NodeType *end;
 
   public:
     List() noexcept;
@@ -35,7 +39,7 @@ class List
     {this->insert(element, 0);}
 
     inline void append(int32_t element) noexcept
-    {this->append(new ListNode(element));}
+    {this->append(new NodeType(element));}
 
     // Throws std::out_of_range if index exceeds span of container.
     // Throws std::length_error if container is already empty.
@@ -69,22 +73,24 @@ class List
     // Finds element in container.
     // If element is in the container, returns pointer to it,
     // nullptr otherwise.
-    ListNode* find(int32_t value) const noexcept;
+    NodeType* find(int32_t value) const noexcept;
 
     // INTERNAL USE ONLY -- DEPENDS ON FACT THAT ARRAY IS NOT EMPTY
     // Returns pointer to node under given index.
     // If index points to place for new element nullptr is returned.
     // If index exceeds span of the container std::out_of_range is thrown.
     // CAUTION: This function cannot be run on empty list!
-    ListNode* at(int32_t index) const;
+    NodeType* at(int32_t index) const;
 
     // Performs actual inserting without searching.
-    void insert_(ListNode *node, ListNode *where);
+    void insert_(NodeType *node, NodeType *where);
 
     // Appends element at the end of container.
-    void append(ListNode *node) noexcept;
+    void append(NodeType *node) noexcept;
 
     // Unlinks (removes) element from container.
-    void unlink(ListNode *node) noexcept;
+    void unlink(NodeType *node) noexcept;
 };
 } // namespace sdizo
+
+#include "list.tcc"

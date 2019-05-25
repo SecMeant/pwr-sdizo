@@ -89,7 +89,7 @@ bool sdizo::tests::test_list()
   using sdizo::List;
 
   try{
-    List list;
+    List<sdizo::ListNode<int32_t>> list;
     list.insert(12,0);
     list.insert(2,0);
     list.insert(3,0);
@@ -129,7 +129,7 @@ bool sdizo::tests::test_list2()
   using sdizo::List;
 
   try{
-    List list;
+    List<sdizo::ListNode<int32_t>> list;
     list.generate(-15, 23, 10);
 
     if(list.contains(1337))

@@ -109,7 +109,7 @@ void menu_array(sdizo::Array &array)
   } while (option != '0');
 }
 
-void menu_list(sdizo::List &list)
+void menu_list(sdizo::List<sdizo::ListNode<int32_t>> &list)
 {
   using namespace std;
   char option;
@@ -335,7 +335,7 @@ void menu()
   using namespace std;
 
   sdizo::Array array;
-  sdizo::List list;
+  sdizo::List<sdizo::ListNode<int32_t>> list;
   sdizo::Heap<int32_t> heap;
   sdizo::RedBlackTree tree;
 

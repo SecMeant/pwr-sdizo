@@ -4,21 +4,24 @@
 #include <random>
 #include <fstream>
 
-sdizo::List::List() noexcept
+template<typename NodeType>
+sdizo::List<NodeType>::List() noexcept
 :begin{nullptr}, end(nullptr)
 {}
 
-sdizo::List::~List() noexcept
+template<typename NodeType>
+sdizo::List<NodeType>::~List() noexcept
 {
   while(this->begin != nullptr)
   {
-    ListNode *next = this->begin->next;
+    NodeType *next = this->begin->next;
     delete this->begin;
     this->begin = next;
   }
 }
 
-int32_t sdizo::List::loadFromFile(const char *filename) noexcept
+template<typename NodeType>
+int32_t sdizo::List<NodeType>::loadFromFile(const char *filename) noexcept
 {
   std::ifstream file(filename);
   int32_t num;
@@ -35,10 +38,11 @@ int32_t sdizo::List::loadFromFile(const char *filename) noexcept
   return 0;
 }
 
-void sdizo::List::insert(int32_t element, int32_t index)
+template<typename NodeType>
+void sdizo::List<NodeType>::insert(int32_t element, int32_t index)
 {
-  ListNode *insert_node = this->at(index);
-  ListNode *new_node = new ListNode;
+  NodeType *insert_node = this->at(index);
+  NodeType *new_node = new NodeType;
   new_node->value = element;
 
   if(insert_node == nullptr)
@@ -51,9 +55,10 @@ void sdizo::List::insert(int32_t element, int32_t index)
   #endif
 }
 
-void sdizo::List::removeAt(int32_t index)
+template<typename NodeType>
+void sdizo::List<NodeType>::removeAt(int32_t index)
 {
-  ListNode *to_delete = this->at(index);
+  NodeType *to_delete = this->at(index);
 
   if(to_delete == nullptr)
     throw std::out_of_range("Tried to delete element of out range.");
@@ -65,9 +70,10 @@ void sdizo::List::removeAt(int32_t index)
   #endif
 }
 
-void sdizo::List::remove(int32_t element)
+template<typename NodeType>
+void sdizo::List<NodeType>::remove(int32_t element)
 {
-  ListNode *to_delete = this->find(element);
+  NodeType *to_delete = this->find(element);
 
   if(to_delete == nullptr)
     return;
@@ -79,7 +85,8 @@ void sdizo::List::remove(int32_t element)
   #endif
 }
 
-void sdizo::List::clear() noexcept
+template<typename NodeType>
+void sdizo::List<NodeType>::clear() noexcept
 {
   if(this->isEmpty())
     return;
@@ -96,12 +103,13 @@ void sdizo::List::clear() noexcept
   this->end = nullptr;
 }
 
-void sdizo::List::add(int32_t element, int32_t index)
+template<typename NodeType>
+void sdizo::List<NodeType>::add(int32_t element, int32_t index)
 {
   if(this->isEmpty())
     throw std::out_of_range("Treid to update (add) element at index out of range.");
 
-  ListNode *to_update = this->at(index);
+  NodeType *to_update = this->at(index);
 
   if(to_update == nullptr)
     throw std::out_of_range("Treid to update (add) element at index out of range.");
@@ -113,12 +121,14 @@ void sdizo::List::add(int32_t element, int32_t index)
   #endif
 }
 
-bool sdizo::List::contains(int32_t element) const noexcept
+template<typename NodeType>
+bool sdizo::List<NodeType>::contains(int32_t element) const noexcept
 {
   return static_cast<bool>(this->find(element));
 }
 
-void sdizo::List::generate
+template<typename NodeType>
+void sdizo::List<NodeType>::generate
 (int32_t rand_range_begin, int32_t rand_range_end, int32_t size) noexcept
 {
   std::random_device generator;
@@ -128,15 +138,15 @@ void sdizo::List::generate
   this->clear();
   for(int32_t i = 0; i < size; ++i)
   {
-    this->append(new ListNode(distribution(generator)));
+    this->append(new NodeType(distribution(generator)));
   }
 
   #ifdef DEBUG_PRINT_ON
   this->display();
   #endif
 }
-
-void sdizo::List::display() const noexcept
+template<typename NodeType>
+void sdizo::List<NodeType>::display() const noexcept
 {
   if(this->isEmpty())
   {
@@ -144,7 +154,7 @@ void sdizo::List::display() const noexcept
     return;
   }
 
-  ListNode *current = this->begin;
+  NodeType *current = this->begin;
   while(1)
   {
     printf("%i -> ", current->value);
@@ -164,9 +174,10 @@ void sdizo::List::display() const noexcept
   puts("");
 }
 
-sdizo::ListNode *sdizo::List::find(int32_t elem) const noexcept
+template<typename NodeType>
+NodeType *sdizo::List<NodeType>::find(int32_t elem) const noexcept
 {
-  ListNode *current = this->begin;
+  NodeType *current = this->begin;
   while(current != nullptr && current->value != elem)
   {
     current = current->next;
@@ -175,12 +186,13 @@ sdizo::ListNode *sdizo::List::find(int32_t elem) const noexcept
   return current;
 }
 
-sdizo::ListNode* sdizo::List::at(int32_t index) const
+template<typename NodeType>
+NodeType* sdizo::List<NodeType>::at(int32_t index) const
 {
   if(index < 0)
     throw std::out_of_range("List index out of range. (Negative)");
 
-  ListNode *current = this->begin;
+  NodeType *current = this->begin;
   for(int i = 0; i < index; ++i)
   {
     if(current == nullptr)
@@ -192,8 +204,8 @@ sdizo::ListNode* sdizo::List::at(int32_t index) const
   return current;
 }
 
-
-void sdizo::List::insert_(ListNode *node, ListNode *where)
+template<typename NodeType>
+void sdizo::List<NodeType>::insert_(NodeType *node, NodeType *where)
 {
   assert(node);
 
@@ -216,7 +228,8 @@ void sdizo::List::insert_(ListNode *node, ListNode *where)
     where->prev = node;
 }
 
-void sdizo::List::append(ListNode *node) noexcept
+template<typename NodeType>
+void sdizo::List<NodeType>::append(NodeType *node) noexcept
 {
   if(this->isEmpty())
   {
@@ -234,7 +247,8 @@ void sdizo::List::append(ListNode *node) noexcept
   }
 }
 
-void sdizo::List::unlink(ListNode *to_unlink) noexcept
+template<typename NodeType>
+void sdizo::List<NodeType>::unlink(NodeType *to_unlink) noexcept
 {
   if(to_unlink->prev != nullptr)
     to_unlink->prev->next = to_unlink->next;
