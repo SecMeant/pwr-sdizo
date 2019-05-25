@@ -1,4 +1,5 @@
 #include "list.hpp"
+#include "common.hpp"
 #include <cstdio>
 #include <cassert>
 #include <random>
@@ -39,7 +40,7 @@ int32_t sdizo::List<NodeType>::loadFromFile(const char *filename) noexcept
 }
 
 template<typename NodeType>
-void sdizo::List<NodeType>::insert(int32_t element, int32_t index)
+void sdizo::List<NodeType>::insert(value_type element, int32_t index)
 {
   NodeType *insert_node = this->at(index);
   NodeType *new_node = new NodeType;
@@ -49,10 +50,6 @@ void sdizo::List<NodeType>::insert(int32_t element, int32_t index)
     this->append(new_node);
   else
     this->insert_(new_node, insert_node);
-
-  #ifdef DEBUG_PRINT_ON
-  this->display();
-  #endif
 }
 
 template<typename NodeType>
@@ -64,14 +61,10 @@ void sdizo::List<NodeType>::removeAt(int32_t index)
     throw std::out_of_range("Tried to delete element of out range.");
 
   this->unlink(to_delete);
-
-  #ifdef DEBUG_PRINT_ON
-  this->display();
-  #endif
 }
 
 template<typename NodeType>
-void sdizo::List<NodeType>::remove(int32_t element)
+void sdizo::List<NodeType>::remove(value_type element)
 {
   NodeType *to_delete = this->find(element);
 
@@ -79,10 +72,6 @@ void sdizo::List<NodeType>::remove(int32_t element)
     return;
 
   this->unlink(to_delete);
-
-  #ifdef DEBUG_PRINT_ON
-  this->display();
-  #endif
 }
 
 template<typename NodeType>
@@ -104,7 +93,7 @@ void sdizo::List<NodeType>::clear() noexcept
 }
 
 template<typename NodeType>
-void sdizo::List<NodeType>::add(int32_t element, int32_t index)
+void sdizo::List<NodeType>::add(value_type element, int32_t index)
 {
   if(this->isEmpty())
     throw std::out_of_range("Treid to update (add) element at index out of range.");
@@ -115,14 +104,10 @@ void sdizo::List<NodeType>::add(int32_t element, int32_t index)
     throw std::out_of_range("Treid to update (add) element at index out of range.");
 
   to_update->value = element;
-
-  #ifdef DEBUG_PRINT_ON
-  this->display();
-  #endif
 }
 
 template<typename NodeType>
-bool sdizo::List<NodeType>::contains(int32_t element) const noexcept
+bool sdizo::List<NodeType>::contains(value_type element) const noexcept
 {
   return static_cast<bool>(this->find(element));
 }
@@ -140,10 +125,6 @@ void sdizo::List<NodeType>::generate
   {
     this->append(new NodeType(distribution(generator)));
   }
-
-  #ifdef DEBUG_PRINT_ON
-  this->display();
-  #endif
 }
 template<typename NodeType>
 void sdizo::List<NodeType>::display() const noexcept
@@ -155,9 +136,16 @@ void sdizo::List<NodeType>::display() const noexcept
   }
 
   NodeType *current = this->begin;
+
+  // TODO Printf wont work if underlaying value is not int
+  static_assert(
+    std::is_same<decltype(sdizo::key(current->value)),
+                 int32_t>::value
+  );
+
   while(1)
   {
-    printf("%i -> ", current->value);
+    printf("%i -> ", sdizo::key(current->value));
     if(current->next == nullptr)
       break;
     current = current->next;
@@ -166,7 +154,7 @@ void sdizo::List<NodeType>::display() const noexcept
   puts("\nReversed:");
   while(1)
   {
-    printf("%i <- ", current->value);
+    printf("%i <- ", sdizo::key(current->value));
     if(current->prev == nullptr)
       break;
     current = current->prev;
@@ -175,7 +163,7 @@ void sdizo::List<NodeType>::display() const noexcept
 }
 
 template<typename NodeType>
-NodeType *sdizo::List<NodeType>::find(int32_t elem) const noexcept
+NodeType *sdizo::List<NodeType>::find(value_type elem) const noexcept
 {
   NodeType *current = this->begin;
   while(current != nullptr && current->value != elem)

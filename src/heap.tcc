@@ -1,6 +1,7 @@
 #pragma once
 #include "treeprinter.hpp"
 #include "heap.hpp"
+#include "common.hpp"
 #include <stdexcept>
 #include <string.h>
 #include <algorithm>

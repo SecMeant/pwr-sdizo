@@ -19,5 +19,10 @@ namespace sdizo2{
       return this->vertex == e.vertex &&
              this->weight == e.weight;
     }
+
+    inline bool operator!=(const Edge& e)
+    {
+      return !(*this == e);
+    }
   };
 };

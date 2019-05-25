@@ -3,6 +3,7 @@
 #include "tree.hpp"
 #include "redblacktree.hpp"
 #include "heap.hpp"
+#include "common.hpp"
 
 static constexpr int shift_width = 10;
 

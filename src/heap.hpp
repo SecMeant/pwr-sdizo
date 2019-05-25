@@ -8,15 +8,6 @@ namespace sdizo{
 #define LEFT(i) ((i<<1)+1)
 #define RIGHT(i) ((i+1)<<1)
 
-using heap_key_t = int32_t;
-
-template<typename ElemType>
-heap_key_t key(ElemType element)
-{return element.getKey();}
-
-template<>
-heap_key_t key(int32_t element);
-
 enum class HeapType
 {min, max};
 
