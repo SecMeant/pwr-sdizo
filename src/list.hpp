@@ -1,7 +1,8 @@
 #pragma once
-#include "common.hpp"
 #include <cstdint>
 #include <stdexcept>
+#include <type_traits>
+#include "common.hpp"
 
 namespace sdizo{
 
@@ -19,6 +20,7 @@ struct ListNode
   :value(val){}
 };
 
+// TODO)holz) make enable_if T == ListNode<U>
 template<typename NodeType>
 class List
 {
@@ -74,6 +76,12 @@ class List
     inline bool isEmpty() const noexcept
     {return this->begin == nullptr;}
 
+    inline NodeType* get_begin() noexcept
+    {return this->begin;}
+
+    inline NodeType* get_end() noexcept
+    {return this->end;}
+
   private:
     // Finds element in container.
     // If element is in the container, returns pointer to it,
@@ -96,6 +104,7 @@ class List
     // Unlinks (removes) element from container.
     void unlink(NodeType *node) noexcept;
 };
-} // namespace sdizo
+
+}; // namespace sdizo
 
 #include "list.tcc"

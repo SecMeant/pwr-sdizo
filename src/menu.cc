@@ -418,7 +418,6 @@ int main()
   assert(edge_heap_min.verify());
   edge_heap_min.display();
 
-
   sdizo::List<sdizo::ListNode<sdizo2::Edge>> list;
   list.append({1,2,2});
   list.append({4,2,5});
@@ -435,6 +434,11 @@ int main()
   list.display();
   list.remove({12,14,90});
   list.display();
+
+  sdizo2::KruskalSolver ksolver;
+  ksolver.loadFromFile("../testfiles/dane_mst.txt");
+
+  ksolver.display();
 
   run_tests();
   return 0;
