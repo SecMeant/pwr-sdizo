@@ -4,6 +4,50 @@
 #include <iterator>
 #include <fmt/format.h>
 
+std::ostream& 
+operator<<(std::ostream& os, const sdizo::List<sdizo::ListNode<sdizo2::MSTListNode>>& list)
+{
+  auto begin = list.get_cbegin();
+  while(begin != nullptr)
+  {
+    os << "[" << begin->value.node << ", " << begin->value.weight << "], ";
+    begin = begin->next;
+  }
+
+  return os;
+}
+
+sdizo2::MSTList::MSTList(int32_t size) noexcept
+{
+  this->tree = new sdizo::List<sdizo::ListNode<sdizo2::MSTListNode>>[size];
+  this->weight = 0;
+  this->size = size;
+}
+
+sdizo2::MSTList::~MSTList()
+{
+  delete [] this->tree;
+}
+
+void sdizo2::MSTList::add(sdizo2::Edge edge) noexcept
+{
+  assert(edge.v1 < this->size);
+  assert(edge.v2 < this->size);
+
+  this->tree[edge.v1].append({edge.v2, edge.weight});
+  this->tree[edge.v2].append({edge.v1, edge.weight});
+
+  this->weight += edge.weight;
+}
+
+void sdizo2::MSTList::display() noexcept
+{
+  for(auto i = 0; i < this->size; ++i)
+  {
+    fmt::print("N[{}] -> {}\n", i, this->tree[i]);
+  }
+}
+
 void sdizo2::KruskalSolver::loadFromFile(const char *filename) noexcept
 {
   std::ifstream file(filename);

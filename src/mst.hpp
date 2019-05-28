@@ -111,6 +111,28 @@ inline DisjointSet make_set(DisjointNode head) noexcept
 
 };
 
+struct MSTListNode
+{
+  typedef int32_t value_type;
+
+  value_type node;
+  value_type weight;
+};
+
+class MSTList
+{
+public:
+  sdizo::List<sdizo::ListNode<MSTListNode>> *tree;
+  int32_t weight;
+  int32_t size;
+
+public:
+  MSTList(int32_t size) noexcept;
+  ~MSTList();
+  void add(Edge edge) noexcept;
+  void display() noexcept;
+};
+
 class KruskalSolver 
 {
 private:

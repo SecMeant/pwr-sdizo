@@ -34,6 +34,7 @@ class List
 
   public:
     List() noexcept;
+    List(const List& l) = delete;
     ~List() noexcept;
 
     int32_t loadFromFile(const char *filename) noexcept;
@@ -47,6 +48,9 @@ class List
 
     inline void append(value_type element) noexcept
     {this->append(new NodeType(element));}
+
+    inline void append(NodeType node) noexcept
+    {this->append(new NodeType(node));}
 
     // Throws std::out_of_range if index exceeds span of container.
     // Throws std::length_error if container is already empty.
@@ -77,6 +81,9 @@ class List
     {return this->begin == nullptr;}
 
     inline NodeType* get_begin() noexcept
+    {return this->begin;}
+
+    inline const NodeType* get_cbegin() const noexcept
     {return this->begin;}
 
     inline NodeType* get_end() noexcept

@@ -397,5 +397,9 @@ int main()
   ds.display();
   ds2.display();
 
+  sdizo2::MSTList ml(5);
+  ml.add({0,1,10});
+  ml.display();
+
   return 0;
 }
