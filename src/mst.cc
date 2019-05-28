@@ -58,11 +58,19 @@ sdizo2::disjoint_set::DisjointNode::DisjointNode(int32_t val, DisjointSet *paren
 
 void sdizo2::disjoint_set::DisjointSet::display() noexcept
 {
-  fmt::print("Head: {}, Tail: {}\n", (void*)this->head, (void*)this->tail);
+  auto head_val = this->head ? this->head->value : 0;
+  auto tail_val = this->tail ? this->tail->value : 0;
+
+  fmt::print("Head at: {}, with value: {}\n"
+             "Tail at: {}, with value: {}\n",
+             (void*)this->head, head_val,
+             (void*)this->tail, tail_val);
+
   auto node = this->head;
   while(node != nullptr)
   {
     fmt::print("{} -> ", node->value);
     node = node->next;
   }
+  putchar('\n');
 }

@@ -67,8 +67,10 @@ private:
   DisjointNode *tail;
 
 public:
-  DisjointSet(DisjointNode head) : head{new DisjointNode(head, this)} {}
-  DisjointSet(int32_t value) : head{new DisjointNode(value, this)} {}
+  DisjointSet(DisjointNode head)
+  : head{new DisjointNode(head, this)}, tail{this->head} {}
+  DisjointSet(int32_t value)
+  : head{new DisjointNode(value, this)}, tail{this->head} {}
   ~DisjointSet()
   {
     while(this->head != nullptr)
@@ -81,7 +83,14 @@ public:
 
   void union_to(DisjointSet& set) noexcept
   {
+    if(!this->head)
+      return;
+
+    if(!set.head)
+      set.tail = this->tail;
+
     this->tail->next = set.head;
+
     set.head = this->head;
 
     while(this->head != nullptr)

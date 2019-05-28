@@ -385,7 +385,17 @@ int main()
   puts("===");
 
   sdizo2::disjoint_set::DisjointSet ds(1337);
+  sdizo2::disjoint_set::DisjointSet ds2(1234);
+  sdizo2::disjoint_set::DisjointSet ds3(3798345);
+  ds.union_to(ds2);
   ds.display();
+  ds2.display();
+  ds3.union_to(ds);
+  ds.display();
+  ds3.display();
+  ds.union_to(ds2);
+  ds.display();
+  ds2.display();
 
   return 0;
 }
