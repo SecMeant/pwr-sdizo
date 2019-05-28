@@ -4,6 +4,7 @@
 #include "heap.hpp"
 #include "tree.hpp"
 #include "redblacktree.hpp"
+#include "mst.hpp"
 #include <random>
 #if __cplusplus == 201703L
 #define TESTS_CPP_17 true
@@ -237,6 +238,61 @@ bool sdizo::tests::test_rbt()
   return true;
 }
 
+bool sdizo::tests::templatize_test()
+{
+  sdizo::Heap<sdizo2::Edge, sdizo::HeapType::max> edge_heap_max;
+  edge_heap_max.insert({1,2,2});
+  edge_heap_max.insert({4,2,5});
+  edge_heap_max.insert({7,3,3});
+  edge_heap_max.insert({9,10,11});
+  edge_heap_max.insert({12,1,90});
+  TEST_INVOKE_ASSERT_TRUE(edge_heap_max.verify);
+  edge_heap_max.remove({12,23,90});
+  TEST_INVOKE_ASSERT_TRUE(edge_heap_max.verify);
+  edge_heap_max.insert({1,3,2});
+  edge_heap_max.insert({4,9,5});
+  edge_heap_max.insert({7,3,3});
+  edge_heap_max.insert({9,5,11});
+  edge_heap_max.insert({12,11,90});
+  TEST_INVOKE_ASSERT_TRUE(edge_heap_max.verify);
+  edge_heap_max.remove({12,14,90});
+  TEST_INVOKE_ASSERT_TRUE(edge_heap_max.verify);
+
+  sdizo::Heap<sdizo2::Edge, sdizo::HeapType::min> edge_heap_min;
+  edge_heap_min.insert({1,2,2});
+  edge_heap_min.insert({4,2,5});
+  edge_heap_min.insert({7,3,3});
+  edge_heap_min.insert({9,10,11});
+  edge_heap_min.insert({12,1,90});
+  TEST_INVOKE_ASSERT_TRUE(edge_heap_min.verify);
+  edge_heap_min.remove({12,23,90});
+  TEST_INVOKE_ASSERT_TRUE(edge_heap_min.verify);
+  edge_heap_min.insert({1,3,2});
+  edge_heap_min.insert({4,9,5});
+  edge_heap_min.insert({7,3,3});
+  edge_heap_min.insert({9,5,11});
+  edge_heap_min.insert({12,11,90});
+  TEST_INVOKE_ASSERT_TRUE(edge_heap_min.verify);
+  edge_heap_min.remove({12,14,90});
+  TEST_INVOKE_ASSERT_TRUE(edge_heap_min.verify);
+
+  sdizo::List<sdizo::ListNode<sdizo2::Edge>> list;
+  list.append({1,2,2});
+  list.append({4,2,5});
+  list.append({7,3,3});
+  list.append({9,10,11});
+  list.append({12,1,90});
+  list.remove({12,23,90});
+  list.append({1,3,2});
+  list.append({4,9,5});
+  list.append({7,3,3});
+  list.append({9,5,11});
+  list.append({12,11,90});
+  list.remove({12,14,90});
+
+  return true;
+}
+
 bool sdizo::tests::run_array_tests()
 {
   if(!test_array())
@@ -281,6 +337,14 @@ bool sdizo::tests::run_bst_tests()
 bool sdizo::tests::run_rbt_tests()
 {
   if(!test_rbt())
+    return false;
+
+  return true;
+}
+
+bool sdizo::tests::run_templatize_tests()
+{
+  if(!templatize_test())
     return false;
 
   return true;

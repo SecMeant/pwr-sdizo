@@ -41,8 +41,8 @@ class Heap
     // Throws std::out_of_range if index exceeds span of array.
     void removeAt(int32_t index);
 
-    inline void pop()
-    {this->removeAt(0);}
+    inline ElemType pop()
+    {ElemType ret = this->at(0); this->removeAt(0); return ret;}
 
     void remove(ElemType element) noexcept;
 
@@ -65,6 +65,9 @@ class Heap
 
     inline decltype(auto) get_ssize() const noexcept
     {return this->ssize;}
+
+    inline bool is_empty() const noexcept
+    {return this->ssize == 0;}
 
   private:
     void heapify(int32_t index) noexcept;

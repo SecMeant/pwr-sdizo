@@ -3,9 +3,10 @@
 #include <fmt/ostream.h>
 
 #include "list.hpp"
+#include "heap.hpp"
 
 namespace sdizo2{
-struct Edge
+struct  Edge
 {
   typedef int32_t base_type;
 
@@ -49,10 +50,16 @@ class KruskalSolver
 {
 private:
   sdizo::List<sdizo::ListNode<Edge>> edge_list;
+  sdizo::Heap<Edge, sdizo::HeapType::min> edge_heap;
 
 public:
   void loadFromFile(const char *filename) noexcept;
   void display() noexcept;
+  void solve() noexcept;
+
+private:
+  void prepare_heap() noexcept;
+
 };
 
 }; // namespace sdizo2

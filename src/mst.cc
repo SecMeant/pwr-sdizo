@@ -32,3 +32,23 @@ void sdizo2::KruskalSolver::display() noexcept
 
 }
 
+void sdizo2::KruskalSolver::solve() noexcept
+{
+  this->prepare_heap();
+
+  while(!this->edge_heap.is_empty())
+    fmt::print("{}\n", this->edge_heap.pop());
+}
+
+void sdizo2::KruskalSolver::prepare_heap() noexcept
+{
+  this->edge_heap.clear();
+
+  auto edge_node = this->edge_list.get_begin();
+
+  while(edge_node != nullptr)
+  {
+    this->edge_heap.insert(edge_node->value);
+    edge_node = edge_node->next;
+  }
+}

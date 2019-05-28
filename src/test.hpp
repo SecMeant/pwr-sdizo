@@ -18,6 +18,9 @@ namespace sdizo{
     bool run_heap_tests();
     bool run_bst_tests();
     bool run_rbt_tests();
+
+    bool templatize_test(); // Tests for templated versions of containers
+    bool run_templatize_tests();
   }
 }
 
