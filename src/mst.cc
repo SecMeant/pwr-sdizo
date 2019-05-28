@@ -52,3 +52,17 @@ void sdizo2::KruskalSolver::prepare_heap() noexcept
     edge_node = edge_node->next;
   }
 }
+
+sdizo2::disjoint_set::DisjointNode::DisjointNode(int32_t val, DisjointSet *parent_set)
+:value{val}, set{parent_set} {}
+
+void sdizo2::disjoint_set::DisjointSet::display() noexcept
+{
+  fmt::print("Head: {}, Tail: {}\n", (void*)this->head, (void*)this->tail);
+  auto node = this->head;
+  while(node != nullptr)
+  {
+    fmt::print("{} -> ", node->value);
+    node = node->next;
+  }
+}

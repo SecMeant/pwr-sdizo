@@ -382,6 +382,10 @@ int main()
   ksolver.display();
   puts("===");
   ksolver.solve();
+  puts("===");
+
+  sdizo2::disjoint_set::DisjointSet ds(1337);
+  ds.display();
 
   return 0;
 }

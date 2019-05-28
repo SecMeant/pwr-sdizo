@@ -46,6 +46,62 @@ struct  Edge
 
 };
 
+namespace disjoint_set{
+class DisjointSet;
+
+struct DisjointNode
+{
+  int32_t value;
+  DisjointNode *next = nullptr;
+  DisjointSet *set = nullptr;
+
+  DisjointNode(int32_t val, DisjointSet *parent_set);
+  inline DisjointNode(DisjointNode node, DisjointSet *parent_set)
+  :DisjointNode(node.value, parent_set) {}
+};
+
+class DisjointSet
+{
+private:
+  DisjointNode *head;
+  DisjointNode *tail;
+
+public:
+  DisjointSet(DisjointNode head) : head{new DisjointNode(head, this)} {}
+  DisjointSet(int32_t value) : head{new DisjointNode(value, this)} {}
+  ~DisjointSet()
+  {
+    while(this->head != nullptr)
+    {
+      auto next = this->head->next;
+      delete this->head;
+      this->head = next;
+    }
+  }
+
+  void union_to(DisjointSet& set) noexcept
+  {
+    this->tail->next = set.head;
+    set.head = this->head;
+
+    while(this->head != nullptr)
+    {
+      this->head->set = &set;
+      this->head = this->head->next;
+    }
+
+    this->tail = nullptr;
+  }
+
+  void display() noexcept;
+
+};
+
+inline DisjointSet make_set(DisjointNode head) noexcept
+{ return DisjointSet(head); }
+
+};
+
 class KruskalSolver 
 {
 private:
@@ -63,4 +119,3 @@ private:
 };
 
 }; // namespace sdizo2
-
