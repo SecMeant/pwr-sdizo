@@ -159,8 +159,22 @@ public:
 
   int32_t generate(int32_t node_count, double density) noexcept;
 
+  // Displaying solved results
   void display() noexcept;
 
+  inline void display_list() noexcept
+  {this->mst_list.display();}
+
+  inline void display_matrix() noexcept
+  {this->mst_matrix.display();}
+
+
+  // Displaying unsolved, fetched data
+  void display_buffer_matrix() noexcept;
+  void display_buffer_list() noexcept;
+
+
+  // Solving
   virtual void solve() noexcept;
 
 protected:

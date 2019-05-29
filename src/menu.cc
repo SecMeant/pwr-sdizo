@@ -392,7 +392,9 @@ void menu_kruskal(sdizo2::KruskalSolver& ksolver)
     puts("2.Rozwiaż");
     puts("3.Wyświetl wynik w postaci listy");
     puts("4.Wyświetl wynik w postaci macierzy");
-    puts("5.Generuj");
+    puts("5.Wyświetl wczytane dane (macierz)");
+    puts("6.Wyświetl wczytane dane (lista)");
+    puts("7.Generuj");
     puts("0.Wyjdz");
 
     printf("Podaj opcje: ");
@@ -417,14 +419,22 @@ void menu_kruskal(sdizo2::KruskalSolver& ksolver)
         break;
 
       case '3':
-        ksolver.display();
+        ksolver.display_list();
         break;
 
       case '4':
-        ksolver.display();
+        ksolver.display_matrix();
         break;
 
       case '5':
+        ksolver.display_buffer_matrix();
+        break;
+
+      case '6':
+        ksolver.display_buffer_list();
+        break;
+
+      case '7':
       {
         int32_t node_cnt;
         double density;
@@ -455,7 +465,9 @@ void menu_prim(sdizo2::PrimSolver& psolver)
     puts("2.Rozwiaż");
     puts("3.Wyświetl wynik w postaci listy");
     puts("4.Wyświetl wynik w postaci macierzy");
-    puts("5.Generuj");
+    puts("5.Wyświetl wczytane dane (macierz)");
+    puts("6.Wyświetl wczytane dane (lista)");
+    puts("7.Generuj");
     puts("0.Wyjdz");
 
     printf("Podaj opcje: ");
@@ -480,14 +492,22 @@ void menu_prim(sdizo2::PrimSolver& psolver)
         break;
 
       case '3':
-        psolver.display();
+        psolver.display_list();
         break;
 
       case '4':
-        psolver.display();
+        psolver.display_matrix();
         break;
 
       case '5':
+        psolver.display_buffer_matrix();
+        break;
+
+      case '6':
+        psolver.display_buffer_list();
+        break;
+
+      case '7':
       {
         int32_t node_cnt;
         double density;

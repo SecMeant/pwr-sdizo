@@ -291,6 +291,36 @@ void sdizo2::MSTSolver::prepareHeap() noexcept
   }
 }
 
+void sdizo2::MSTSolver::display_buffer_matrix() noexcept
+{
+  sdizo2::MSTMatrix matrix(this->size);
+
+  auto node = this->edge_list.get_cbegin();
+
+  while(node)
+  {
+    matrix.add(node->value);
+    node = node->next;
+  }
+
+  matrix.display();
+}
+
+void sdizo2::MSTSolver::display_buffer_list() noexcept
+{
+  sdizo2::MSTList list(this->size);
+
+  auto node = this->edge_list.get_cbegin();
+
+  while(node)
+  {
+    list.add(node->value);
+    node = node->next;
+  }
+
+  list.display();
+}
+
 void sdizo2::MSTSolver::solve() noexcept
 {}
 
