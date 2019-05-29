@@ -85,7 +85,7 @@ public:
 
   void display() noexcept;
 
-  void reset() noexcept;
+  void reset(int32_t current_size) noexcept;
 };
 
 }; // namespace disjoint_set
@@ -142,8 +142,7 @@ public:
 
 class MSTSolver
 {
-// TODO make private
-public:
+protected:
   sdizo::List<sdizo::ListNode<Edge>> edge_list;
   sdizo::Heap<Edge, sdizo::HeapType::min> edge_heap;
   MSTList mst_list;
@@ -154,9 +153,14 @@ public:
 public:
   MSTSolver(int32_t node_count);
   MSTSolver(MSTSolver&& solver) noexcept;
+
   static MSTSolver buildFromFile(const char *filename);
+  void loadFromFile(const char *filename);
+
   int32_t generate(int32_t node_count, double density) noexcept;
+
   void display() noexcept;
+
   virtual void solve() noexcept;
 
 protected:
@@ -170,7 +174,8 @@ protected:
   disjoint_set::DisjointSet ds;
 
 public:
-  KruskalSolver(int32_t node_count);
+  KruskalSolver() noexcept;
+  KruskalSolver(int32_t node_count) noexcept;
   KruskalSolver(KruskalSolver&& solver) noexcept;
   KruskalSolver(MSTSolver&& base_solver) noexcept;
   virtual void solve() noexcept override;
@@ -184,7 +189,8 @@ private:
 class PrimSolver :public MSTSolver
 {
 public:
-  PrimSolver(int32_t node_count);
+  PrimSolver() noexcept;
+  PrimSolver(int32_t node_count) noexcept;
   PrimSolver(PrimSolver&& solver) noexcept;
   PrimSolver(MSTSolver&& base_solver) noexcept;
   virtual void solve() noexcept override;

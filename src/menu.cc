@@ -26,6 +26,7 @@ void run_tests()
   TEST("Templatize tests", run_templatize_tests);
 }
 
+namespace sdizo{
 void menu_array(sdizo::Array &array)
 {
   using namespace std;
@@ -375,13 +376,173 @@ void menu()
 
   } while (option != '0');
 }
+}; // namespace sdizo
+
+namespace sdizo2{
+void menu_kruskal(sdizo2::KruskalSolver& ksolver)
+{
+  using namespace std;
+  char option;
+  string fileName;
+
+  do
+  {
+    puts("--- Algorytm Kruskala MST ---");
+    puts("1.Wczytaj z pliku");
+    puts("2.Rozwiaż");
+    puts("3.Wyświetl wynik w postaci listy");
+    puts("4.Wyświetl wynik w postaci macierzy");
+    puts("5.Generuj");
+    puts("0.Wyjdz");
+
+    printf("Podaj opcje: ");
+    GET_OPTION(option);
+
+    switch (option)
+    {
+      case '1':
+        printf(" Podaj nazwe pliku:");
+        cin >> fileName;
+
+        try{
+          ksolver.loadFromFile(fileName.c_str());
+        }catch(std::runtime_error& err){
+          err.what();
+        }
+
+        break;
+
+      case '2':
+        ksolver.solve();
+        break;
+
+      case '3':
+        ksolver.display();
+        break;
+
+      case '4':
+        ksolver.display();
+        break;
+
+      case '5':
+      {
+        int32_t node_cnt;
+        double density;
+
+        fmt::print("Podaj ilość wierzchołkóœ: ");
+        cin >> node_cnt;
+
+        fmt::print("Podaj gęstość: ");
+        cin >> density;
+
+        ksolver.generate(node_cnt, density);
+        break;
+      }
+    }
+  } while (option != '0');
+}
+
+void menu_prim(sdizo2::PrimSolver& psolver)
+{
+  using namespace std;
+  char option;
+  string fileName;
+
+  do
+  {
+    puts("--- Algorytm Prima MST ---");
+    puts("1.Wczytaj z pliku");
+    puts("2.Rozwiaż");
+    puts("3.Wyświetl wynik w postaci listy");
+    puts("4.Wyświetl wynik w postaci macierzy");
+    puts("5.Generuj");
+    puts("0.Wyjdz");
+
+    printf("Podaj opcje: ");
+    GET_OPTION(option);
+
+    switch (option)
+    {
+      case '1':
+        printf(" Podaj nazwe pliku:");
+        cin >> fileName;
+
+        try{
+          psolver.loadFromFile(fileName.c_str());
+        }catch(std::runtime_error& err){
+          err.what();
+        }
+
+        break;
+
+      case '2':
+        psolver.solve();
+        break;
+
+      case '3':
+        psolver.display();
+        break;
+
+      case '4':
+        psolver.display();
+        break;
+
+      case '5':
+      {
+        int32_t node_cnt;
+        double density;
+
+        fmt::print("Podaj ilość wierzchołkóœ: ");
+        cin >> node_cnt;
+
+        fmt::print("Podaj gęstość: ");
+        cin >> density;
+
+        psolver.generate(node_cnt, density);
+        break;
+      }
+    }
+  } while (option != '0');
+}
+
+void menu()
+{
+  using namespace std;
+
+  sdizo2::KruskalSolver ksolver;
+  sdizo2::PrimSolver psolver;
+
+  char option;
+  do
+  {
+    cout << endl;
+    puts("==== MENU GLOWNE ===");
+    puts("1.Kruskal solver");
+    puts("2.Prim solver");
+    puts("0.Wyjscie");
+    puts("Podaj opcje:");
+    GET_OPTION(option);
+
+    switch (option)
+    {
+      case '1':
+        menu_kruskal(ksolver);
+        break;
+
+      case '2':
+        menu_prim(psolver);
+        break;
+
+      default:
+        break;
+    }
+  } while (option != '0');
+}
+}; // namespace sdizo2
 
 int main()
 {
-  sdizo2::PrimSolver psolver(5);
-
-  psolver.generate(100, 0.99);
-  psolver.solve();
+  sdizo2::menu();
 
   return 0;
 }

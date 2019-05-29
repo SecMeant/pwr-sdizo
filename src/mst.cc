@@ -158,6 +158,30 @@ sdizo2::MSTSolver::MSTSolver(MSTSolver&& solver) noexcept
  size(solver.size)
 {}
 
+void sdizo2::MSTSolver::loadFromFile(const char *filename)
+{
+  std::ifstream file(filename);
+
+  if(!file.is_open())
+    throw std::runtime_error(fmt::format("Cant open file {}", filename));
+
+  int32_t edge_cnt;
+  int32_t node_cnt;
+
+  file >> edge_cnt;
+  file >> node_cnt;
+
+  this->resize(node_cnt);
+
+  Edge edge;
+
+  while(file >> edge && edge_cnt)
+  {
+    this->edge_list.append(edge);
+    --edge_cnt;
+  }
+}
+
 sdizo2::MSTSolver
 sdizo2::MSTSolver::buildFromFile(const char *filename)
 {
@@ -270,7 +294,10 @@ void sdizo2::MSTSolver::prepareHeap() noexcept
 void sdizo2::MSTSolver::solve() noexcept
 {}
 
-sdizo2::KruskalSolver::KruskalSolver(int32_t node_count)
+sdizo2::KruskalSolver::KruskalSolver() noexcept
+:KruskalSolver(0) {}
+
+sdizo2::KruskalSolver::KruskalSolver(int32_t node_count) noexcept
 :MSTSolver(node_count), ds(node_count) {}
 
 sdizo2::KruskalSolver::KruskalSolver(KruskalSolver&& solver) noexcept
@@ -281,10 +308,10 @@ sdizo2::KruskalSolver::KruskalSolver(MSTSolver&& base_solver) noexcept
 
 void sdizo2::KruskalSolver::solve() noexcept
 {
-  this->ds.reset();
+  this->ds.reset(this->size);
   this->list_solve();
 
-  this->ds.reset();
+  this->ds.reset(this->size);
   this->matrix_solve();
 }
 
@@ -322,7 +349,10 @@ void sdizo2::KruskalSolver::matrix_solve() noexcept
   }
 }
 
-sdizo2::PrimSolver::PrimSolver(int32_t node_count)
+sdizo2::PrimSolver::PrimSolver() noexcept
+:PrimSolver(0) {}
+
+sdizo2::PrimSolver::PrimSolver(int32_t node_count) noexcept
 :MSTSolver(node_count) {}
 
 sdizo2::PrimSolver::PrimSolver(PrimSolver&& solver) noexcept
@@ -527,8 +557,15 @@ void sdizo2::disjoint_set::DisjointSet::display() noexcept
 
 }
 
-void sdizo2::disjoint_set::DisjointSet::reset() noexcept
+void sdizo2::disjoint_set::DisjointSet::reset(int32_t current_size) noexcept
 {
+  if(this->size != current_size)
+  {
+    delete [] this->nodes;
+    this->nodes = new DisjointNode[current_size];
+    this->size = current_size;
+  }
+
   for(auto i = 0; i < this->size; ++i)
     this->makeSet(i);
 }
