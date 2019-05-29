@@ -247,7 +247,7 @@ sdizo2::PrimSolver::PrimSolver(int32_t node_count)
 sdizo2::PrimSolver::PrimSolver(PrimSolver&& solver) noexcept
 :MSTSolver(std::move(solver)) {}
 
-sdizo2::PrimSolver::PrimSolver(MSTSolver&& base_solver) noexcepint32_it
+sdizo2::PrimSolver::PrimSolver(MSTSolver&& base_solver) noexcept
 :MSTSolver(std::move(base_solver)) {}
 
 void sdizo2::PrimSolver::solve() noexcept
@@ -255,20 +255,75 @@ void sdizo2::PrimSolver::solve() noexcept
   this->list_solve();
   this->heap_solve();
 }
+std::ostream&
+operator<<(std::ostream& os, const sdizo::List<sdizo::ListNode<sdizo2::Edge>>& list)
+{
+  auto node = list.get_cbegin();
+
+  while(node != nullptr)
+  {
+    os << node->value << " -> ";
+    node = node->next;
+  }
+  os << '\n';
+
+  return os;
+}
 
 void sdizo2::PrimSolver::list_solve() noexcept
 {
-  auto node_cnt = 0;
+  // TODO move to MSTSovler?
+  auto *adj_list = new sdizo::List<sdizo::ListNode<sdizo2::MSTListNode>>[this->size];
+
+  // Prepare adjacency list
+  auto node = this->edge_list.get_begin();
+  while(node != nullptr)
+  {
+    adj_list[node->value.v1].append({node->value.v2, node->value.weight});
+    adj_list[node->value.v2].append({node->value.v1, node->value.weight});
+    node = node->next;
+  }
+
+  for(auto i = 0; i < this->size; ++i)
+  {
+    auto node = &adj_list[i];
+    fmt::print("{}\n", *node);
+  }
 
   bool *visited = new bool[this->size];
   std::fill(visited, visited+this->size, false);
 
-  while(node_cnt < this->size)
+  visited[0] = true;
+
+  auto v = 0;
+  for(auto i = 0; i < this->size-1; ++i)
   {
-    
+    auto node = adj_list[v].get_begin();
+    while(node != nullptr)
+    {
+      if(visited[node->value.node] == false)
+        this->edge_heap.insert({node->value.node, v, node->value.weight});
+
+      node = node->next;
+    }
+
+    this->edge_heap.display();
+
+    Edge e;
+    do
+    {
+      e = this->edge_heap.pop();
+    }while(visited[e.v1]);
+
+    this->mst_list.add(e);
+    visited[e.v1] = true;
+    v = e.v1;
+
+    this->mst_list.display();
   }
 
   delete [] visited;
+  delete [] adj_list;
 }
 
 void sdizo2::PrimSolver::heap_solve() noexcept

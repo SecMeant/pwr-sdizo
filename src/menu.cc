@@ -387,5 +387,7 @@ int main()
   sdizo2::PrimSolver psolver = 
     sdizo2::PrimSolver::buildFromFile("../testfiles/dane_mst.txt");
 
+  psolver.solve();
+
   return 0;
 }
