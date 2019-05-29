@@ -18,6 +18,15 @@ operator<<(std::ostream& os, const sdizo::List<sdizo::ListNode<sdizo2::MSTListNo
   return os;
 }
 
+std::ostream&
+operator<<(std::ostream& os, const sdizo2::disjoint_set::DisjointNode& node)
+{
+  os << "[Val: " << node.value << ", Rank: " << node.rank
+    << ", Parent: " << node.parent << "] ";
+
+  return os;
+}
+
 sdizo2::MSTList::MSTList(int32_t size) noexcept
 {
   this->tree = new sdizo::List<sdizo::ListNode<sdizo2::MSTListNode>>[size];
@@ -121,11 +130,12 @@ void sdizo2::MSTMatrix::display() noexcept
 }
 
 sdizo2::KruskalSolver::KruskalSolver(int32_t node_count)
-:mst_list(node_count), mst_matrix(node_count) {}
+:ds(node_count), mst_list(node_count), mst_matrix(node_count) {}
 
 sdizo2::KruskalSolver::KruskalSolver(KruskalSolver&& solver) noexcept
 :edge_list(std::move(solver.edge_list)), edge_heap(std::move(solver.edge_heap)),
- mst_list(std::move(solver.mst_list)), mst_matrix(std::move(solver.mst_matrix))
+ ds(std::move(solver.ds)), mst_list(std::move(solver.mst_list)),
+ mst_matrix(std::move(solver.mst_matrix)), size(solver.size)
 {}
 
 sdizo2::KruskalSolver
@@ -155,7 +165,7 @@ sdizo2::KruskalSolver::buildFromFile(const char *filename)
   return solver;
 }
 
-void sdizo2::KruskalSolver::loadFromFile(const char *filename) noexcept
+void sdizo2::KruskalSolver::loadFromFile(const char *filename)
 {
   std::ifstream file(filename);
   int edge_cnt;
@@ -163,6 +173,13 @@ void sdizo2::KruskalSolver::loadFromFile(const char *filename) noexcept
   Edge edge;
 
   file >> edge_cnt >> node_cnt;
+
+  if(node_cnt != this->size)
+  {
+    throw std::runtime_error(
+      fmt::format("KruskalSolver created for {} nodes, but file with {} nodes loaded.\n",
+                  this->size, node_cnt));
+  }
 
   while(file >> edge && edge_cnt)
   {
@@ -181,8 +198,20 @@ void sdizo2::KruskalSolver::solve() noexcept
 {
   this->prepare_heap();
 
-  while(!this->edge_heap.is_empty())
-    fmt::print("{}\n", this->edge_heap.pop());
+  this->list_solve();
+  this->heap_solve();
+}
+
+void sdizo2::KruskalSolver::list_solve() noexcept
+{
+  //TODO implement
+  assert(0);
+}
+
+void sdizo2::KruskalSolver::heap_solve() noexcept
+{
+  //TODO implement
+  assert(0);
 }
 
 void sdizo2::KruskalSolver::prepare_heap() noexcept
@@ -198,24 +227,74 @@ void sdizo2::KruskalSolver::prepare_heap() noexcept
   }
 }
 
-sdizo2::disjoint_set::DisjointNode::DisjointNode(int32_t val, DisjointSet *parent_set)
-:value{val}, set{parent_set} {}
+sdizo2::disjoint_set::DisjointNode::DisjointNode(int32_t val, DisjointNode *parent)
+:value{val}, parent{parent} {}
+
+sdizo2::disjoint_set::DisjointSet::DisjointSet(int32_t size) noexcept
+: nodes(new DisjointNode[size]), size(size)
+{
+  for( auto i = 0; i < size; ++i)
+  {
+    this->makeSet(i);
+  }
+}
+
+sdizo2::disjoint_set::DisjointSet::~DisjointSet() noexcept
+{
+  delete [] this->nodes;
+}
+
+void sdizo2::disjoint_set::DisjointSet::makeSet(int32_t i) noexcept
+{
+  assert(i < this->size);
+  assert(i >= 0);
+
+  this->nodes[i].value = i;
+  this->nodes[i].parent = &this->nodes[i];
+  this->nodes[i].rank = 0;
+}
+
+void sdizo2::disjoint_set::DisjointSet::unionSet
+(DisjointNode *n1, DisjointNode *n2) noexcept
+{
+  this->linkSet(this->findSet(n1), this->findSet(n2));
+}
+
+void sdizo2::disjoint_set::DisjointSet::linkSet
+(DisjointNode *n1, DisjointNode *n2) noexcept
+{
+  if(n1->rank > n2->rank)
+    n2->parent = n1;
+  else 
+  {
+    n1->parent = n2;
+    if(n1->rank == n2->rank)
+      n2->rank = n2->rank+1;
+  }
+
+}
+
+sdizo2::disjoint_set::DisjointNode *sdizo2::disjoint_set::DisjointSet::findSet
+(DisjointNode *n) noexcept
+{
+  if(n->parent != n)
+    n->parent = this->findSet(n->parent);
+  return n->parent;
+}
 
 void sdizo2::disjoint_set::DisjointSet::display() noexcept
 {
-  auto head_val = this->head ? this->head->value : 0;
-  auto tail_val = this->tail ? this->tail->value : 0;
-
-  fmt::print("Head at: {}, with value: {}\n"
-             "Tail at: {}, with value: {}\n",
-             (void*)this->head, head_val,
-             (void*)this->tail, tail_val);
-
-  auto node = this->head;
-  while(node != nullptr)
+  for( auto i = 0; i < this->size; ++i)
   {
-    fmt::print("{} -> ", node->value);
-    node = node->next;
+    auto node = &this->nodes[i];
+    fmt::print("{} -> ", *node);
+
+    while(node != node->parent)
+    {
+      node = node->parent;
+      fmt::print("{} -> ", *node);
+    }
+
+    fmt::print("self\n\n");
   }
-  putchar('\n');
 }

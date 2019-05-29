@@ -22,6 +22,8 @@ void run_tests()
   TEST("Heap test", run_heap_tests);
   TEST("BST test", run_bst_tests);
   TEST("RBT test", run_rbt_tests);
+  TEST("Disjoint sets test", run_disjoint_set_tests);
+  TEST("Templatize tests", run_templatize_tests);
 }
 
 void menu_array(sdizo::Array &array)
@@ -379,10 +381,15 @@ int main()
   sdizo2::KruskalSolver ksolver =
     sdizo2::KruskalSolver::buildFromFile("../testfiles/dane_mst.txt");
 
-  ksolver.display();
-  puts("===");
-  ksolver.solve();
-  puts("===");
 
+  sdizo2::disjoint_set::DisjointSet ds(5);
+  ds.display();
+
+  ds.unionSet(ds.get(0), ds.get(1));
+  ds.unionSet(ds.get(2), ds.get(3));
+  ds.unionSet(ds.get(1), ds.get(3));
+  ds.display();
+
+  run_tests();
   return 0;
 }

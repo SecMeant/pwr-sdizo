@@ -49,67 +49,43 @@ struct  Edge
 namespace disjoint_set{
 class DisjointSet;
 
-struct DisjointNode
+class DisjointNode
 {
+public:
   int32_t value;
-  DisjointNode *next = nullptr;
-  DisjointSet *set = nullptr;
+  int32_t rank;
+  DisjointNode *parent;
 
-  DisjointNode(int32_t val, DisjointSet *parent_set);
-  inline DisjointNode(DisjointNode node, DisjointSet *parent_set)
-  :DisjointNode(node.value, parent_set) {}
+  DisjointNode(int32_t val, DisjointNode *parent);
+
+private:
+  DisjointNode() = default;
+
+  friend class DisjointSet;
 };
 
 class DisjointSet
 {
 private:
-  DisjointNode *head;
-  DisjointNode *tail;
+  DisjointNode *nodes;
+  int32_t size;
 
 public:
-  DisjointSet(DisjointNode head)
-  : head{new DisjointNode(head, this)}, tail{this->head} {}
-  DisjointSet(int32_t value)
-  : head{new DisjointNode(value, this)}, tail{this->head} {}
-  ~DisjointSet()
-  {
-    while(this->head != nullptr)
-    {
-      auto next = this->head->next;
-      delete this->head;
-      this->head = next;
-    }
-  }
+  DisjointSet(int32_t size) noexcept;
+  ~DisjointSet() noexcept;
 
-  void union_to(DisjointSet& set) noexcept
-  {
-    if(!this->head)
-      return;
+  void makeSet(int32_t index) noexcept;
+  void unionSet(DisjointNode *n1, DisjointNode *n2) noexcept;
+  void linkSet(DisjointNode *n1, DisjointNode *n2) noexcept;
+  DisjointNode *findSet(DisjointNode *n) noexcept;
 
-    if(!set.head)
-      set.tail = this->tail;
-
-    this->tail->next = set.head;
-
-    set.head = this->head;
-
-    while(this->head != nullptr)
-    {
-      this->head->set = &set;
-      this->head = this->head->next;
-    }
-
-    this->tail = nullptr;
-  }
+  inline DisjointNode *get(int32_t index)
+  {assert(index < this->size); assert(index >= 0); return &this->nodes[index];}
 
   void display() noexcept;
-
 };
 
-inline DisjointSet make_set(DisjointNode head) noexcept
-{ return DisjointSet(head); }
-
-};
+}; // namespace disjoint_set
 
 struct MSTListNode
 {
@@ -156,19 +132,24 @@ class KruskalSolver
 private:
   sdizo::List<sdizo::ListNode<Edge>> edge_list;
   sdizo::Heap<Edge, sdizo::HeapType::min> edge_heap;
+  disjoint_set::DisjointSet ds;
   MSTList mst_list;
   MSTMatrix mst_matrix;
+
+  int32_t size;
 
 public:
   KruskalSolver(int32_t node_count);
   KruskalSolver(KruskalSolver&& solver) noexcept;
   static KruskalSolver buildFromFile(const char *filename);
-  void loadFromFile(const char *filename) noexcept;
+  void loadFromFile(const char *filename);
   void display() noexcept;
   void solve() noexcept;
 
 private:
   void prepare_heap() noexcept;
+  void list_solve() noexcept;
+  void heap_solve() noexcept;
 
 };
 

@@ -238,6 +238,19 @@ bool sdizo::tests::test_rbt()
   return true;
 }
 
+bool sdizo::tests::test_disjoint_set()
+{
+  int32_t dssize = 5;
+  sdizo2::disjoint_set::DisjointSet ds(dssize);
+
+  for(auto i = 0; i < dssize; ++i)
+  {
+    TEST_ASSERT_TRUE(ds.get(i) == ds.findSet(ds.get(i)));
+  }
+
+  return true;
+}
+
 bool sdizo::tests::templatize_test()
 {
   sdizo::Heap<sdizo2::Edge, sdizo::HeapType::max> edge_heap_max;
@@ -337,6 +350,14 @@ bool sdizo::tests::run_bst_tests()
 bool sdizo::tests::run_rbt_tests()
 {
   if(!test_rbt())
+    return false;
+
+  return true;
+}
+
+bool sdizo::tests::run_disjoint_set_tests()
+{
+  if(!test_disjoint_set())
     return false;
 
   return true;
