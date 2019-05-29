@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <iterator>
+#include <exception>
 #include <fmt/format.h>
 
 std::ostream& 
@@ -48,6 +49,88 @@ void sdizo2::MSTList::display() noexcept
   }
 }
 
+sdizo2::MSTMatrix::MSTMatrix(int32_t size) noexcept
+{
+  this->tree = new std::remove_pointer<decltype(this->tree)>::type[size*size];
+  this->weight = 0;
+  this->size = size;
+}
+
+sdizo2::MSTMatrix::~MSTMatrix()
+{
+  delete [] this->tree;
+}
+
+void sdizo2::MSTMatrix::add(sdizo2::Edge edge) noexcept
+{
+  assert(edge.v1 < this->size);
+  assert(edge.v2 < this->size);
+
+  
+
+  this->weight += edge.weight;
+}
+
+int32_t sdizo2::MSTMatrix::get(int32_t x, int32_t y)
+{
+  assert(x < this->size);
+  assert(x >= 0);
+  assert(y < this->size);
+  assert(y >= 0);
+
+  return this->tree[x + y * this->size];
+}
+
+void sdizo2::MSTMatrix::set(int32_t x, int32_t y, int32_t val)
+{
+  assert(x < this->size);
+  assert(x >= 0);
+  assert(y < this->size);
+  assert(y >= 0);
+
+  this->tree[x + y * this->size] = val;
+}
+
+void sdizo2::MSTMatrix::display() noexcept
+{
+  for(auto y = 0; y < this->size; ++y)
+  {
+    for(auto x = 0; x < this->size; ++x)
+    {
+      fmt::print("{} ", this->get(x,y));
+    }
+    putchar('\n');
+  }
+}
+
+sdizo2::KruskalSolver::KruskalSolver(int32_t node_count)
+:mst_list(node_count), mst_matrix(node_count) {}
+
+sdizo2::KruskalSolver
+sdizo2::KruskalSolver::buildFromFile(const char *filename)
+{
+  std::ifstream file(filename);
+
+  if(!file.is_open())
+    throw std::runtime_error(fmt::format("Cant open file {}", filename));
+
+  int32_t edge_cnt;
+  int32_t node_cnt;
+
+  file >> edge_cnt;
+  file >> node_cnt;
+
+  KruskalSolver solver(node_cnt);
+
+  Edge edge;
+
+  while(file >> edge && edge_cnt)
+  {
+    this->edge_list.append(edge);
+    --edge_cnt;
+  }
+}
+
 void sdizo2::KruskalSolver::loadFromFile(const char *filename) noexcept
 {
   std::ifstream file(filename);
@@ -66,14 +149,8 @@ void sdizo2::KruskalSolver::loadFromFile(const char *filename) noexcept
 
 void sdizo2::KruskalSolver::display() noexcept
 {
-  auto edge_begin = this->edge_list.get_begin();
-
-  while(edge_begin != nullptr)
-  {
-    fmt::print("{}\n", edge_begin->value);
-    edge_begin = edge_begin->next;
-  }
-
+  this->mst_list.display();
+  this->mst_matrix.display();
 }
 
 void sdizo2::KruskalSolver::solve() noexcept

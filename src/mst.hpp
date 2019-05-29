@@ -121,7 +121,7 @@ struct MSTListNode
 
 class MSTList
 {
-public:
+private:
   sdizo::List<sdizo::ListNode<MSTListNode>> *tree;
   int32_t weight;
   int32_t size;
@@ -133,13 +133,33 @@ public:
   void display() noexcept;
 };
 
+class MSTMatrix
+{
+private:
+  int32_t *tree;
+  int32_t weight;
+  int32_t size;
+
+public:
+  MSTMatrix(int32_t size) noexcept;
+  ~MSTMatrix();
+  void add(Edge edge) noexcept;
+  void display() noexcept;
+  int32_t get(int32_t x, int32_t y);
+  void set(int32_t x, int32_t y, int32_t val);
+};
+
 class KruskalSolver 
 {
 private:
   sdizo::List<sdizo::ListNode<Edge>> edge_list;
   sdizo::Heap<Edge, sdizo::HeapType::min> edge_heap;
+  MSTList mst_list;
+  MSTMatrix mst_matrix;
 
 public:
+  KruskalSolver(int32_t node_count);
+  static KruskalSolver buildFromFile(const char *filename);
   void loadFromFile(const char *filename) noexcept;
   void display() noexcept;
   void solve() noexcept;

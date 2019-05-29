@@ -376,30 +376,13 @@ void menu()
 
 int main()
 {
-  sdizo2::KruskalSolver ksolver;
-  ksolver.loadFromFile("../testfiles/dane_mst.txt");
+  sdizo2::KruskalSolver ksolver =
+    sdizo2::KruskalSolver::buildFromFile("../testfiles/dane_mst.txt");
 
   ksolver.display();
   puts("===");
   ksolver.solve();
   puts("===");
-
-  sdizo2::disjoint_set::DisjointSet ds(1337);
-  sdizo2::disjoint_set::DisjointSet ds2(1234);
-  sdizo2::disjoint_set::DisjointSet ds3(3798345);
-  ds.union_to(ds2);
-  ds.display();
-  ds2.display();
-  ds3.union_to(ds);
-  ds.display();
-  ds3.display();
-  ds.union_to(ds2);
-  ds.display();
-  ds2.display();
-
-  sdizo2::MSTList ml(5);
-  ml.add({0,1,10});
-  ml.display();
 
   return 0;
 }
