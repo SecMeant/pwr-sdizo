@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iterator>
 #include <exception>
+#include <random>
 #include <fmt/format.h>
 
 std::ostream& 
@@ -56,6 +57,14 @@ void sdizo2::MSTList::add(sdizo2::Edge edge) noexcept
   this->tree[edge.v2].append({edge.v1, edge.weight});
 
   this->weight += edge.weight;
+}
+
+void sdizo2::MSTList::resize(int32_t newsize) noexcept
+{
+  delete [] this->tree;
+  this->tree = new sdizo::List<sdizo::ListNode<MSTListNode>>[newsize];
+  this->size = newsize;
+  this->weight = 0;
 }
 
 void sdizo2::MSTList::display() noexcept
@@ -117,6 +126,15 @@ void sdizo2::MSTMatrix::set(int32_t x, int32_t y, int32_t val)
   assert(y >= 0);
 
   this->tree[x + y * this->size] = val;
+  this->tree[y + x * this->size] = val;
+}
+
+void sdizo2::MSTMatrix::resize(int32_t newsize) noexcept
+{
+  delete [] this->tree;
+  this->tree = new int32_t[newsize*newsize]();
+  this->size = newsize;
+  this->weight = 0;
 }
 
 void sdizo2::MSTMatrix::display() noexcept
@@ -125,7 +143,7 @@ void sdizo2::MSTMatrix::display() noexcept
   {
     for(auto x = 0; x < this->size; ++x)
     {
-      fmt::print("{} ", this->get(x,y));
+      fmt::print("{:<3} ", this->get(x,y));
     }
     putchar('\n');
   }
@@ -167,6 +185,69 @@ sdizo2::MSTSolver::buildFromFile(const char *filename)
   return solver;
 }
 
+int32_t sdizo2::MSTSolver::generate(int32_t node_count, double density) noexcept
+{
+  constexpr int32_t node_dist_range_begin = 0;
+  constexpr int32_t weight_dist_range_begin = 1;
+  constexpr int32_t weight_dist_range_end = 5;
+
+  if(density < 0.0 || density > 1.0)
+    return -1;
+
+  this->resize(node_count);
+
+  int32_t edges_to_gen = (node_count-1) * node_count / 2 * density;
+  MSTMatrix edge_matrix(node_count);
+
+  std::random_device generator;
+  std::uniform_int_distribution<int32_t>
+   node_dist(node_dist_range_begin, node_count-1);
+  std::uniform_int_distribution<int32_t>
+   weight_dist(weight_dist_range_begin, weight_dist_range_end);
+
+  this->edge_list.clear();
+
+  for(auto i = 0; i < node_count-1; ++i)
+  {
+    auto w = weight_dist(generator);
+    edge_matrix.set(i, i+1, w);
+    this->edge_list.append({i,i+1,w});
+  }
+
+  edges_to_gen -= node_count;
+  if(edges_to_gen <= 0)
+    return 0;
+
+  // TODO faster generation -- if density is for example 0.99,
+  // there will be a lot of misses until hitting edge that is not
+  // already in use.
+  for(int32_t curr_node_cnt = 0; curr_node_cnt < edges_to_gen;)
+  {
+    auto x = node_dist(generator);
+    auto y = node_dist(generator);
+
+    if(!!edge_matrix.get(x, y) || x == y)
+      continue;
+
+    auto weight = weight_dist(generator);
+
+    edge_matrix.set(x,y,weight);
+    this->edge_list.append({x,y,weight});
+    ++curr_node_cnt;
+  }
+
+  return 0;
+}
+
+void sdizo2::MSTSolver::resize(int32_t newsize) noexcept
+{
+  this->mst_list.resize(newsize);
+  this->mst_matrix.resize(newsize);
+  this->edge_list.clear();
+  this->edge_heap.clear();
+  this->size = newsize;
+}
+
 void sdizo2::MSTSolver::display() noexcept
 {
   this->mst_list.display();
@@ -204,7 +285,7 @@ void sdizo2::KruskalSolver::solve() noexcept
   this->list_solve();
 
   this->ds.reset();
-  this->heap_solve();
+  this->matrix_solve();
 }
 
 void sdizo2::KruskalSolver::list_solve() noexcept
@@ -224,7 +305,7 @@ void sdizo2::KruskalSolver::list_solve() noexcept
   }
 }
 
-void sdizo2::KruskalSolver::heap_solve() noexcept
+void sdizo2::KruskalSolver::matrix_solve() noexcept
 {
   this->prepareHeap();
 
@@ -253,7 +334,7 @@ sdizo2::PrimSolver::PrimSolver(MSTSolver&& base_solver) noexcept
 void sdizo2::PrimSolver::solve() noexcept
 {
   this->list_solve();
-  this->heap_solve();
+  this->matrix_solve();
 }
 std::ostream&
 operator<<(std::ostream& os, const sdizo::List<sdizo::ListNode<sdizo2::Edge>>& list)
@@ -284,12 +365,6 @@ void sdizo2::PrimSolver::list_solve() noexcept
     node = node->next;
   }
 
-  for(auto i = 0; i < this->size; ++i)
-  {
-    auto node = &adj_list[i];
-    fmt::print("{}\n", *node);
-  }
-
   bool *visited = new bool[this->size];
   std::fill(visited, visited+this->size, false);
 
@@ -307,9 +382,8 @@ void sdizo2::PrimSolver::list_solve() noexcept
       node = node->next;
     }
 
-    this->edge_heap.display();
-
     Edge e;
+
     do
     {
       e = this->edge_heap.pop();
@@ -318,15 +392,13 @@ void sdizo2::PrimSolver::list_solve() noexcept
     this->mst_list.add(e);
     visited[e.v1] = true;
     v = e.v1;
-
-    this->mst_list.display();
   }
 
   delete [] visited;
   delete [] adj_list;
 }
 
-void sdizo2::PrimSolver::heap_solve() noexcept
+void sdizo2::PrimSolver::matrix_solve() noexcept
 {
   // TODO move to MSTSovler?
   auto *adj_list = new sdizo::List<sdizo::ListNode<sdizo2::MSTListNode>>[this->size];
@@ -338,12 +410,6 @@ void sdizo2::PrimSolver::heap_solve() noexcept
     adj_list[node->value.v1].append({node->value.v2, node->value.weight});
     adj_list[node->value.v2].append({node->value.v1, node->value.weight});
     node = node->next;
-  }
-
-  for(auto i = 0; i < this->size; ++i)
-  {
-    auto node = &adj_list[i];
-    fmt::print("{}\n", *node);
   }
 
   bool *visited = new bool[this->size];

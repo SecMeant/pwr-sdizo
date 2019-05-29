@@ -378,17 +378,10 @@ void menu()
 
 int main()
 {
-  sdizo2::KruskalSolver ksolver =
-    sdizo2::KruskalSolver::buildFromFile("../testfiles/dane_mst.txt");
+  sdizo2::PrimSolver psolver(5);
 
-  ksolver.solve();
-  ksolver.display();
-
-  sdizo2::PrimSolver psolver = 
-    sdizo2::PrimSolver::buildFromFile("../testfiles/dane_mst2.txt");
-
+  psolver.generate(100, 0.99);
   psolver.solve();
-  psolver.display();
 
   return 0;
 }

@@ -109,7 +109,11 @@ public:
   MSTList(int32_t size) noexcept;
   MSTList(MSTList &&ml) noexcept;
   ~MSTList();
+
   void add(Edge edge) noexcept;
+
+  void resize(int32_t newsize) noexcept;
+
   void display() noexcept;
 };
 
@@ -124,15 +128,22 @@ public:
   MSTMatrix(int32_t size) noexcept;
   MSTMatrix(MSTMatrix &&mm) noexcept;
   ~MSTMatrix();
+
   void add(Edge edge) noexcept;
-  void display() noexcept;
+
   int32_t get(int32_t x, int32_t y);
   void set(int32_t x, int32_t y, int32_t val);
+
+  // Clears and resizes matrix
+  void resize(int32_t newsize) noexcept;
+
+  void display() noexcept;
 };
 
 class MSTSolver
 {
-protected:
+// TODO make private
+public:
   sdizo::List<sdizo::ListNode<Edge>> edge_list;
   sdizo::Heap<Edge, sdizo::HeapType::min> edge_heap;
   MSTList mst_list;
@@ -144,11 +155,13 @@ public:
   MSTSolver(int32_t node_count);
   MSTSolver(MSTSolver&& solver) noexcept;
   static MSTSolver buildFromFile(const char *filename);
+  int32_t generate(int32_t node_count, double density) noexcept;
   void display() noexcept;
   virtual void solve() noexcept;
 
 protected:
   void prepareHeap() noexcept;
+  void resize(int32_t) noexcept;
 };
 
 class KruskalSolver :public MSTSolver
@@ -164,7 +177,7 @@ public:
 
 private:
   void list_solve() noexcept;
-  void heap_solve() noexcept;
+  void matrix_solve() noexcept;
 
 };
 
@@ -178,7 +191,7 @@ public:
 
 private:
   void list_solve() noexcept;
-  void heap_solve() noexcept;
+  void matrix_solve() noexcept;
 };
 
 }; // namespace sdizo2

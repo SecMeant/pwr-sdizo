@@ -134,6 +134,7 @@ void sdizo::List<NodeType>::generate
     this->append(new NodeType(distribution(generator)));
   }
 }
+
 template<typename NodeType>
 void sdizo::List<NodeType>::display() const noexcept
 {
