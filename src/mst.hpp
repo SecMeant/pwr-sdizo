@@ -84,6 +84,8 @@ public:
   {assert(index < this->size); assert(index >= 0); return &this->nodes[index];}
 
   void display() noexcept;
+
+  void reset() noexcept;
 };
 
 }; // namespace disjoint_set

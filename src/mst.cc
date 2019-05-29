@@ -71,6 +71,8 @@ sdizo2::MSTMatrix::MSTMatrix(int32_t size) noexcept
   this->tree = new std::remove_pointer<decltype(this->tree)>::type[size*size];
   this->weight = 0;
   this->size = size;
+
+  std::fill(this->tree, this->tree+(size*size), 0);
 }
 
 sdizo2::MSTMatrix::MSTMatrix(MSTMatrix &&mm) noexcept
@@ -91,8 +93,8 @@ void sdizo2::MSTMatrix::add(sdizo2::Edge edge) noexcept
   assert(edge.v1 < this->size);
   assert(edge.v2 < this->size);
 
-  // TODO add adding
-  assert(false);
+  this->set(edge.v1, edge.v2, edge.weight);
+  this->set(edge.v2, edge.v1, edge.weight);
 
   this->weight += edge.weight;
 }
@@ -196,7 +198,10 @@ void sdizo2::KruskalSolver::display() noexcept
 
 void sdizo2::KruskalSolver::solve() noexcept
 {
+  this->ds.reset();
   this->list_solve();
+
+  this->ds.reset();
   this->heap_solve();
 }
 
@@ -219,8 +224,19 @@ void sdizo2::KruskalSolver::list_solve() noexcept
 
 void sdizo2::KruskalSolver::heap_solve() noexcept
 {
-  //TODO implement
-  //assert(0);
+  this->prepare_heap();
+
+  auto node_cnt = 0;
+
+  while(node_cnt != this->size && !this->edge_heap.is_empty())
+  {
+    auto edge = this->edge_heap.pop();
+    if(ds.findSet(edge.v1) == ds.findSet(edge.v2))
+      continue;
+
+    mst_matrix.add(edge);
+    ds.unionSet(ds.get(edge.v1), ds.get(edge.v2));
+  }
 }
 
 void sdizo2::KruskalSolver::prepare_heap() noexcept
@@ -317,4 +333,10 @@ void sdizo2::disjoint_set::DisjointSet::display() noexcept
     fmt::print("self\n\n");
   }
 
+}
+
+void sdizo2::disjoint_set::DisjointSet::reset() noexcept
+{
+  for(auto i = 0; i < this->size; ++i)
+    this->makeSet(i);
 }
