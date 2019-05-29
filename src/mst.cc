@@ -328,6 +328,54 @@ void sdizo2::PrimSolver::list_solve() noexcept
 
 void sdizo2::PrimSolver::heap_solve() noexcept
 {
+  // TODO move to MSTSovler?
+  auto *adj_list = new sdizo::List<sdizo::ListNode<sdizo2::MSTListNode>>[this->size];
+
+  // Prepare adjacency list
+  auto node = this->edge_list.get_begin();
+  while(node != nullptr)
+  {
+    adj_list[node->value.v1].append({node->value.v2, node->value.weight});
+    adj_list[node->value.v2].append({node->value.v1, node->value.weight});
+    node = node->next;
+  }
+
+  for(auto i = 0; i < this->size; ++i)
+  {
+    auto node = &adj_list[i];
+    fmt::print("{}\n", *node);
+  }
+
+  bool *visited = new bool[this->size];
+  std::fill(visited, visited+this->size, false);
+
+  visited[0] = true;
+
+  auto v = 0;
+  for(auto i = 0; i < this->size-1; ++i)
+  {
+    auto node = adj_list[v].get_begin();
+    while(node != nullptr)
+    {
+      if(visited[node->value.node] == false)
+        this->edge_heap.insert({node->value.node, v, node->value.weight});
+
+      node = node->next;
+    }
+
+    Edge e;
+    do
+    {
+      e = this->edge_heap.pop();
+    }while(visited[e.v1]);
+
+    this->mst_matrix.add(e);
+    visited[e.v1] = true;
+    v = e.v1;
+  }
+
+  delete [] visited;
+  delete [] adj_list;
 }
 
 sdizo2::disjoint_set::DisjointNode::DisjointNode(int32_t val, DisjointNode *parent)
