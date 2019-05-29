@@ -196,22 +196,31 @@ void sdizo2::KruskalSolver::display() noexcept
 
 void sdizo2::KruskalSolver::solve() noexcept
 {
-  this->prepare_heap();
-
   this->list_solve();
   this->heap_solve();
 }
 
 void sdizo2::KruskalSolver::list_solve() noexcept
 {
-  //TODO implement
-  assert(0);
+  this->prepare_heap();
+
+  auto node_cnt = 0;
+
+  while(node_cnt != this->size && !this->edge_heap.is_empty())
+  {
+    auto edge = this->edge_heap.pop();
+    if(ds.findSet(edge.v1) == ds.findSet(edge.v2))
+      continue;
+
+    mst_list.add(edge);
+    ds.unionSet(ds.get(edge.v1), ds.get(edge.v2));
+  }
 }
 
 void sdizo2::KruskalSolver::heap_solve() noexcept
 {
   //TODO implement
-  assert(0);
+  //assert(0);
 }
 
 void sdizo2::KruskalSolver::prepare_heap() noexcept
@@ -282,6 +291,16 @@ sdizo2::disjoint_set::DisjointNode *sdizo2::disjoint_set::DisjointSet::findSet
   return n->parent;
 }
 
+sdizo2::disjoint_set::DisjointNode *sdizo2::disjoint_set::DisjointSet::findSet
+(int32_t idx) noexcept
+{
+  auto n = this->get(idx);
+
+  if(n->parent != n)
+    n->parent = this->findSet(n->parent);
+  return n->parent;
+}
+
 void sdizo2::disjoint_set::DisjointSet::display() noexcept
 {
   for( auto i = 0; i < this->size; ++i)
@@ -297,4 +316,5 @@ void sdizo2::disjoint_set::DisjointSet::display() noexcept
 
     fmt::print("self\n\n");
   }
+
 }

@@ -382,14 +382,8 @@ int main()
     sdizo2::KruskalSolver::buildFromFile("../testfiles/dane_mst.txt");
 
 
-  sdizo2::disjoint_set::DisjointSet ds(5);
-  ds.display();
+  ksolver.solve();
+  ksolver.display();
 
-  ds.unionSet(ds.get(0), ds.get(1));
-  ds.unionSet(ds.get(2), ds.get(3));
-  ds.unionSet(ds.get(1), ds.get(3));
-  ds.display();
-
-  run_tests();
   return 0;
 }

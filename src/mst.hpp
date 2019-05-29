@@ -78,6 +78,7 @@ public:
   void unionSet(DisjointNode *n1, DisjointNode *n2) noexcept;
   void linkSet(DisjointNode *n1, DisjointNode *n2) noexcept;
   DisjointNode *findSet(DisjointNode *n) noexcept;
+  DisjointNode *findSet(int32_t index) noexcept;
 
   inline DisjointNode *get(int32_t index)
   {assert(index < this->size); assert(index >= 0); return &this->nodes[index];}
