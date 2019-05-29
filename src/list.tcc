@@ -22,6 +22,14 @@ sdizo::List<NodeType>::~List() noexcept
 }
 
 template<typename NodeType>
+sdizo::List<NodeType>::List(List<NodeType>&& l)
+: begin(l.begin), end(l.end)
+{
+  l.begin = nullptr;
+  l.end = nullptr;
+}
+
+template<typename NodeType>
 int32_t sdizo::List<NodeType>::loadFromFile(const char *filename) noexcept
 {
   std::ifstream file(filename);

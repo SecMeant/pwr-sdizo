@@ -26,6 +26,7 @@ class Heap
 
   public:
     Heap() noexcept;
+    Heap(Heap&& h) noexcept;
     ~Heap() noexcept;
 
     int32_t loadFromFile(const char *filename) noexcept;

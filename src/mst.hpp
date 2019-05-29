@@ -128,6 +128,7 @@ private:
 
 public:
   MSTList(int32_t size) noexcept;
+  MSTList(MSTList &&ml) noexcept;
   ~MSTList();
   void add(Edge edge) noexcept;
   void display() noexcept;
@@ -142,6 +143,7 @@ private:
 
 public:
   MSTMatrix(int32_t size) noexcept;
+  MSTMatrix(MSTMatrix &&mm) noexcept;
   ~MSTMatrix();
   void add(Edge edge) noexcept;
   void display() noexcept;
@@ -159,6 +161,7 @@ private:
 
 public:
   KruskalSolver(int32_t node_count);
+  KruskalSolver(KruskalSolver&& solver) noexcept;
   static KruskalSolver buildFromFile(const char *filename);
   void loadFromFile(const char *filename) noexcept;
   void display() noexcept;

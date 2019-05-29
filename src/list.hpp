@@ -35,6 +35,7 @@ class List
   public:
     List() noexcept;
     List(const List& l) = delete;
+    List(List&& l);
     ~List() noexcept;
 
     int32_t loadFromFile(const char *filename) noexcept;

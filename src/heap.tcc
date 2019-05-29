@@ -18,6 +18,15 @@ sdizo::Heap<ElemType, heap_t>::Heap() noexcept
 {}
 
 template<typename ElemType, sdizo::HeapType heap_t>
+sdizo::Heap<ElemType, heap_t>::Heap(Heap<ElemType, heap_t>&& h) noexcept
+:array(h.array), ssize(h.ssize), length(h.length)
+{
+  h.array = nullptr;
+  h.ssize = 0;
+  h.length = 0;
+}
+
+template<typename ElemType, sdizo::HeapType heap_t>
 sdizo::Heap<ElemType, heap_t>::~Heap() noexcept
 {
   delete [] this->array;

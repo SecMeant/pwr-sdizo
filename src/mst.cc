@@ -25,6 +25,14 @@ sdizo2::MSTList::MSTList(int32_t size) noexcept
   this->size = size;
 }
 
+sdizo2::MSTList::MSTList(MSTList &&ml) noexcept
+:tree(ml.tree), weight(ml.weight), size(ml.size)
+{
+  ml.tree = nullptr;
+  ml.weight = 0;
+  ml.size = 0;
+}
+
 sdizo2::MSTList::~MSTList()
 {
   delete [] this->tree;
@@ -56,6 +64,14 @@ sdizo2::MSTMatrix::MSTMatrix(int32_t size) noexcept
   this->size = size;
 }
 
+sdizo2::MSTMatrix::MSTMatrix(MSTMatrix &&mm) noexcept
+:tree(mm.tree), weight(mm.weight), size(mm.size)
+{
+  mm.tree = nullptr;
+  mm.weight = 0;
+  mm.size = 0;
+}
+
 sdizo2::MSTMatrix::~MSTMatrix()
 {
   delete [] this->tree;
@@ -66,7 +82,8 @@ void sdizo2::MSTMatrix::add(sdizo2::Edge edge) noexcept
   assert(edge.v1 < this->size);
   assert(edge.v2 < this->size);
 
-  
+  // TODO add adding
+  assert(false);
 
   this->weight += edge.weight;
 }
@@ -106,6 +123,11 @@ void sdizo2::MSTMatrix::display() noexcept
 sdizo2::KruskalSolver::KruskalSolver(int32_t node_count)
 :mst_list(node_count), mst_matrix(node_count) {}
 
+sdizo2::KruskalSolver::KruskalSolver(KruskalSolver&& solver) noexcept
+:edge_list(std::move(solver.edge_list)), edge_heap(std::move(solver.edge_heap)),
+ mst_list(std::move(solver.mst_list)), mst_matrix(std::move(solver.mst_matrix))
+{}
+
 sdizo2::KruskalSolver
 sdizo2::KruskalSolver::buildFromFile(const char *filename)
 {
@@ -126,9 +148,11 @@ sdizo2::KruskalSolver::buildFromFile(const char *filename)
 
   while(file >> edge && edge_cnt)
   {
-    this->edge_list.append(edge);
+    solver.edge_list.append(edge);
     --edge_cnt;
   }
+
+  return solver;
 }
 
 void sdizo2::KruskalSolver::loadFromFile(const char *filename) noexcept
