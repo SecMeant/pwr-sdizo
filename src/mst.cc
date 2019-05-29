@@ -131,17 +131,17 @@ void sdizo2::MSTMatrix::display() noexcept
   }
 }
 
-sdizo2::KruskalSolver::KruskalSolver(int32_t node_count)
-:ds(node_count), mst_list(node_count), mst_matrix(node_count) {}
+sdizo2::MSTSolver::MSTSolver(int32_t node_count)
+:mst_list(node_count), mst_matrix(node_count), size(node_count) {}
 
-sdizo2::KruskalSolver::KruskalSolver(KruskalSolver&& solver) noexcept
+sdizo2::MSTSolver::MSTSolver(MSTSolver&& solver) noexcept
 :edge_list(std::move(solver.edge_list)), edge_heap(std::move(solver.edge_heap)),
- ds(std::move(solver.ds)), mst_list(std::move(solver.mst_list)),
- mst_matrix(std::move(solver.mst_matrix)), size(solver.size)
+ mst_list(std::move(solver.mst_list)), mst_matrix(std::move(solver.mst_matrix)),
+ size(solver.size)
 {}
 
-sdizo2::KruskalSolver
-sdizo2::KruskalSolver::buildFromFile(const char *filename)
+sdizo2::MSTSolver
+sdizo2::MSTSolver::buildFromFile(const char *filename)
 {
   std::ifstream file(filename);
 
@@ -154,7 +154,7 @@ sdizo2::KruskalSolver::buildFromFile(const char *filename)
   file >> edge_cnt;
   file >> node_cnt;
 
-  KruskalSolver solver(node_cnt);
+  MSTSolver solver(node_cnt);
 
   Edge edge;
 
@@ -167,34 +167,36 @@ sdizo2::KruskalSolver::buildFromFile(const char *filename)
   return solver;
 }
 
-void sdizo2::KruskalSolver::loadFromFile(const char *filename)
-{
-  std::ifstream file(filename);
-  int edge_cnt;
-  int node_cnt;
-  Edge edge;
-
-  file >> edge_cnt >> node_cnt;
-
-  if(node_cnt != this->size)
-  {
-    throw std::runtime_error(
-      fmt::format("KruskalSolver created for {} nodes, but file with {} nodes loaded.\n",
-                  this->size, node_cnt));
-  }
-
-  while(file >> edge && edge_cnt)
-  {
-    this->edge_list.append(edge);
-    --edge_cnt;
-  }
-};
-
-void sdizo2::KruskalSolver::display() noexcept
+void sdizo2::MSTSolver::display() noexcept
 {
   this->mst_list.display();
   this->mst_matrix.display();
 }
+
+void sdizo2::MSTSolver::prepareHeap() noexcept
+{
+  this->edge_heap.clear();
+
+  auto edge_node = this->edge_list.get_begin();
+
+  while(edge_node != nullptr)
+  {
+    this->edge_heap.insert(edge_node->value);
+    edge_node = edge_node->next;
+  }
+}
+
+void sdizo2::MSTSolver::solve() noexcept
+{}
+
+sdizo2::KruskalSolver::KruskalSolver(int32_t node_count)
+:MSTSolver(node_count), ds(node_count) {}
+
+sdizo2::KruskalSolver::KruskalSolver(KruskalSolver&& solver) noexcept
+:MSTSolver(std::move(solver)), ds(std::move(solver.ds)) {}
+
+sdizo2::KruskalSolver::KruskalSolver(MSTSolver&& base_solver) noexcept
+:MSTSolver(std::move(base_solver)), ds(this->size) {}
 
 void sdizo2::KruskalSolver::solve() noexcept
 {
@@ -207,7 +209,7 @@ void sdizo2::KruskalSolver::solve() noexcept
 
 void sdizo2::KruskalSolver::list_solve() noexcept
 {
-  this->prepare_heap();
+  this->prepareHeap();
 
   auto node_cnt = 0;
 
@@ -224,7 +226,7 @@ void sdizo2::KruskalSolver::list_solve() noexcept
 
 void sdizo2::KruskalSolver::heap_solve() noexcept
 {
-  this->prepare_heap();
+  this->prepareHeap();
 
   auto node_cnt = 0;
 
@@ -239,17 +241,38 @@ void sdizo2::KruskalSolver::heap_solve() noexcept
   }
 }
 
-void sdizo2::KruskalSolver::prepare_heap() noexcept
+sdizo2::PrimSolver::PrimSolver(int32_t node_count)
+:MSTSolver(node_count) {}
+
+sdizo2::PrimSolver::PrimSolver(PrimSolver&& solver) noexcept
+:MSTSolver(std::move(solver)) {}
+
+sdizo2::PrimSolver::PrimSolver(MSTSolver&& base_solver) noexcepint32_it
+:MSTSolver(std::move(base_solver)) {}
+
+void sdizo2::PrimSolver::solve() noexcept
 {
-  this->edge_heap.clear();
+  this->list_solve();
+  this->heap_solve();
+}
 
-  auto edge_node = this->edge_list.get_begin();
+void sdizo2::PrimSolver::list_solve() noexcept
+{
+  auto node_cnt = 0;
 
-  while(edge_node != nullptr)
+  bool *visited = new bool[this->size];
+  std::fill(visited, visited+this->size, false);
+
+  while(node_cnt < this->size)
   {
-    this->edge_heap.insert(edge_node->value);
-    edge_node = edge_node->next;
+    
   }
+
+  delete [] visited;
+}
+
+void sdizo2::PrimSolver::heap_solve() noexcept
+{
 }
 
 sdizo2::disjoint_set::DisjointNode::DisjointNode(int32_t val, DisjointNode *parent)

@@ -130,30 +130,55 @@ public:
   void set(int32_t x, int32_t y, int32_t val);
 };
 
-class KruskalSolver 
+class MSTSolver
 {
-private:
+protected:
   sdizo::List<sdizo::ListNode<Edge>> edge_list;
   sdizo::Heap<Edge, sdizo::HeapType::min> edge_heap;
-  disjoint_set::DisjointSet ds;
   MSTList mst_list;
   MSTMatrix mst_matrix;
 
   int32_t size;
 
 public:
+  MSTSolver(int32_t node_count);
+  MSTSolver(MSTSolver&& solver) noexcept;
+  static MSTSolver buildFromFile(const char *filename);
+  void display() noexcept;
+  virtual void solve() noexcept;
+
+protected:
+  void prepareHeap() noexcept;
+};
+
+class KruskalSolver :public MSTSolver
+{
+protected:
+  disjoint_set::DisjointSet ds;
+
+public:
   KruskalSolver(int32_t node_count);
   KruskalSolver(KruskalSolver&& solver) noexcept;
-  static KruskalSolver buildFromFile(const char *filename);
-  void loadFromFile(const char *filename);
-  void display() noexcept;
-  void solve() noexcept;
+  KruskalSolver(MSTSolver&& base_solver) noexcept;
+  virtual void solve() noexcept override;
 
 private:
-  void prepare_heap() noexcept;
   void list_solve() noexcept;
   void heap_solve() noexcept;
 
+};
+
+class PrimSolver :public MSTSolver
+{
+public:
+  PrimSolver(int32_t node_count);
+  PrimSolver(PrimSolver&& solver) noexcept;
+  PrimSolver(MSTSolver&& base_solver) noexcept;
+  virtual void solve() noexcept override;
+
+private:
+  void list_solve() noexcept;
+  void heap_solve() noexcept;
 };
 
 }; // namespace sdizo2

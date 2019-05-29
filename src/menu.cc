@@ -381,9 +381,11 @@ int main()
   sdizo2::KruskalSolver ksolver =
     sdizo2::KruskalSolver::buildFromFile("../testfiles/dane_mst.txt");
 
-
   ksolver.solve();
   ksolver.display();
+
+  sdizo2::PrimSolver psolver = 
+    sdizo2::PrimSolver::buildFromFile("../testfiles/dane_mst.txt");
 
   return 0;
 }
