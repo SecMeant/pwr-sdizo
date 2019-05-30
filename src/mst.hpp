@@ -129,6 +129,7 @@ public:
   MSTMatrix(MSTMatrix &&mm) noexcept;
   ~MSTMatrix();
 
+  void add_single(Edge edge) noexcept;
   void add(Edge edge) noexcept;
 
   int32_t get(int32_t x, int32_t y);

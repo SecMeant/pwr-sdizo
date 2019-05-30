@@ -6,6 +6,7 @@
 #include "redblacktree.hpp"
 #include "test.hpp"
 #include "mst.hpp"
+#include "dijkstra.hpp"
 #include "timeutils.hpp"
 #include <fmt/format.h>
 #include <iostream>
@@ -562,7 +563,13 @@ void menu()
 
 int main()
 {
-  sdizo2::menu();
+  sdizo2::dijkstra::DijkstraSolver dsolver(10);
+  dsolver.node_list[0].append({1,2});
+  dsolver.display();
+
+  dsolver.resize(15);
+  dsolver.display();
+
 
   return 0;
 }

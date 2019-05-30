@@ -1,32 +1,11 @@
 #include "mst.hpp"
+#include "fmt_custom.hpp"
 #include <fstream>
 #include <iostream>
 #include <iterator>
 #include <exception>
 #include <random>
 #include <fmt/format.h>
-
-std::ostream& 
-operator<<(std::ostream& os, const sdizo::List<sdizo::ListNode<sdizo2::MSTListNode>>& list)
-{
-  auto begin = list.get_cbegin();
-  while(begin != nullptr)
-  {
-    os << "[" << begin->value.node << ", " << begin->value.weight << "], ";
-    begin = begin->next;
-  }
-
-  return os;
-}
-
-std::ostream&
-operator<<(std::ostream& os, const sdizo2::disjoint_set::DisjointNode& node)
-{
-  os << "[Val: " << node.value << ", Rank: " << node.rank
-    << ", Parent: " << node.parent << "] ";
-
-  return os;
-}
 
 sdizo2::MSTList::MSTList(int32_t size) noexcept
 {
@@ -96,6 +75,16 @@ sdizo2::MSTMatrix::MSTMatrix(MSTMatrix &&mm) noexcept
 sdizo2::MSTMatrix::~MSTMatrix()
 {
   delete [] this->tree;
+}
+
+void sdizo2::MSTMatrix::add_single(sdizo2::Edge edge) noexcept
+{
+  assert(edge.v1 < this->size);
+  assert(edge.v2 < this->size);
+
+  this->set(edge.v1, edge.v2, edge.weight);
+
+  this->weight += edge.weight;
 }
 
 void sdizo2::MSTMatrix::add(sdizo2::Edge edge) noexcept
