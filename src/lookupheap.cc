@@ -157,6 +157,12 @@ void sdizo2::dijkstra::LookupHeap::display() const noexcept
 
 void sdizo2::dijkstra::LookupHeap::heapify(int32_t index) noexcept
 {
+  this->heapify_down(index);
+  this->heapify_up(index);
+}
+
+void sdizo2::dijkstra::LookupHeap::heapify_down(int32_t index) noexcept
+{
   if(index >= this->ssize/2)
     return;
 
@@ -178,9 +184,29 @@ void sdizo2::dijkstra::LookupHeap::heapify(int32_t index) noexcept
   if(extreme != index)
   {
     std::swap(this->array[extreme], this->array[index]);
-    this->heapify(extreme);
+    this->heapify_down(extreme);
   }
 
+}
+
+void sdizo2::dijkstra::LookupHeap::heapify_up(int32_t index) noexcept
+{
+  auto parent = PARENT(index);
+
+  bool heap_property_satisfied;
+
+  while(parent > 0)
+  {
+    heap_property_satisfied = sdizo::key(this->array[index]) >
+                             sdizo::key(this->array[parent]);
+
+    if (heap_property_satisfied)
+      break;
+
+    std::swap(this->array[parent], this->array[index]);
+    index = parent;
+    parent = PARENT(parent);
+  }
 }
 
 void sdizo2::dijkstra::LookupHeap::expand() noexcept

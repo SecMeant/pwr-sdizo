@@ -133,29 +133,6 @@ void sdizo::Heap<ElemType, heap_t>::remove(ElemType element) noexcept
   --this->ssize;
 
   this->heapify(index);
-
-  // Heapify up the tree
-  // TODO make it a procedure
-  auto parent = PARENT(index);
-
-  bool heap_property_satisfied;
-
-  while(parent > 0)
-  {
-    if constexpr (heap_t == sdizo::HeapType::max)
-      heap_property_satisfied = sdizo::key(this->array[index]) <
-                               sdizo::key(this->array[parent]);
-    else
-      heap_property_satisfied = sdizo::key(this->array[index]) >
-                               sdizo::key(this->array[parent]);
-
-    if (heap_property_satisfied)
-      break;
-
-    std::swap(this->array[parent], this->array[index]);
-    index = parent;
-    parent = PARENT(parent);
-  }
 }
 
 template<typename ElemType, sdizo::HeapType heap_t>
@@ -215,6 +192,13 @@ void sdizo::Heap<ElemType, heap_t>::display() const noexcept
 template<typename ElemType, sdizo::HeapType heap_t>
 void sdizo::Heap<ElemType, heap_t>::heapify(int32_t index) noexcept
 {
+  this->heapify_down(index);
+  this->heapify_up(index);
+}
+
+template<typename ElemType, sdizo::HeapType heap_t>
+void sdizo::Heap<ElemType, heap_t>::heapify_down(int32_t index) noexcept
+{
   if(index >= this->ssize/2)
     return;
 
@@ -249,9 +233,33 @@ void sdizo::Heap<ElemType, heap_t>::heapify(int32_t index) noexcept
   if(extreme != index)
   {
     std::swap(this->array[extreme], this->array[index]);
-    this->heapify(extreme);
+    this->heapify_down(extreme);
   }
+}
 
+template<typename ElemType, sdizo::HeapType heap_t>
+void sdizo::Heap<ElemType, heap_t>::heapify_up(int32_t index) noexcept
+{
+  auto parent = PARENT(index);
+
+  bool heap_property_satisfied;
+
+  while(parent > 0)
+  {
+    if constexpr (heap_t == sdizo::HeapType::max)
+      heap_property_satisfied = sdizo::key(this->array[index]) <
+                               sdizo::key(this->array[parent]);
+    else
+      heap_property_satisfied = sdizo::key(this->array[index]) >
+                               sdizo::key(this->array[parent]);
+
+    if (heap_property_satisfied)
+      break;
+
+    std::swap(this->array[parent], this->array[index]);
+    index = parent;
+    parent = PARENT(parent);
+  }
 }
 
 template<typename ElemType, sdizo::HeapType heap_t>

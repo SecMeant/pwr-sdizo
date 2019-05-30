@@ -175,6 +175,8 @@ class LookupHeap
 
   private:
     void heapify(int32_t index) noexcept;
+    void heapify_down(int32_t index) noexcept;
+    void heapify_up(int32_t index) noexcept;
 
     // Reallocs heap to new, bigger space.
     // New space is bigger by Heap::expand_size.
