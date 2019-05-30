@@ -540,7 +540,7 @@ void menu()
     puts("1.Kruskal solver");
     puts("2.Prim solver");
     puts("0.Wyjscie");
-    puts("Podaj opcje:");
+    printf("Podaj opcje: ");
     GET_OPTION(option);
 
     switch (option)

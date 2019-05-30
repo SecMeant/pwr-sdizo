@@ -69,6 +69,7 @@ void sdizo2::MSTList::resize(int32_t newsize) noexcept
 
 void sdizo2::MSTList::display() noexcept
 {
+  fmt::print("Weight: {}\n", this->weight);
   for(auto i = 0; i < this->size; ++i)
   {
     fmt::print("N[{}] -> {}\n", i, this->tree[i]);
@@ -139,6 +140,7 @@ void sdizo2::MSTMatrix::resize(int32_t newsize) noexcept
 
 void sdizo2::MSTMatrix::display() noexcept
 {
+  fmt::print("Weight: {}\n", this->weight);
   for(auto y = 0; y < this->size; ++y)
   {
     for(auto x = 0; x < this->size; ++x)
