@@ -82,8 +82,7 @@ void sdizo2::MSTMatrix::add_single(sdizo2::Edge edge) noexcept
   assert(edge.v1 < this->size);
   assert(edge.v2 < this->size);
 
-  this->set(edge.v1, edge.v2, edge.weight);
-
+  this->set(edge.v1, edge.v2, edge.weight);;
   this->weight += edge.weight;
 }
 

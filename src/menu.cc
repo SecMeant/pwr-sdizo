@@ -563,12 +563,10 @@ void menu()
 
 int main()
 {
-  sdizo2::dijkstra::DijkstraSolver dsolver(10);
-  dsolver.node_list[0].append({1,2});
+  auto dsolver = 
+    sdizo2::dijkstra::DijkstraSolver::buildFromFile("../testfiles/dane_droga.txt");
   dsolver.display();
 
-  dsolver.resize(15);
-  dsolver.display();
 
 
   return 0;

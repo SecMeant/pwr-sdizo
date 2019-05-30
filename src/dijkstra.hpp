@@ -12,7 +12,7 @@ namespace sdizo2::dijkstra{
 // Dijkstra table for holding direction and cost of given path
 // Example:
 //        nodes ->  0  1  2  3  4  5
-//  cosr_tabele ->  0  3  4  6  3  5
+//  cost_tabele ->  0  3  4  6  3  5
 // source_table -> -1  0  1  5  0  4
 // Table shows for example that to node 4 we can come from node 0
 // with total summary cost of 3.
@@ -30,6 +30,7 @@ private:
 
 public:
   CostSourceTable(int32_t size) noexcept;
+  CostSourceTable(CostSourceTable&& cst) noexcept;
   ~CostSourceTable() noexcept;
 
   void reset() noexcept;
@@ -53,8 +54,11 @@ public:
 
 public:
   DijkstraSolver(int32_t size) noexcept;
+  DijkstraSolver(DijkstraSolver&& solver) noexcept = default;
   ~DijkstraSolver() noexcept;
 
+  void loadFromFile(const char *filename);
+  static DijkstraSolver buildFromFile(const char *filename);
   void resize(int32_t newsize) noexcept;
 
   void display() noexcept;
