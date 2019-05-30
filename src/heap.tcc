@@ -10,6 +10,13 @@
 #include <fstream>
 #include <fmt/format.h>
 
+#ifndef HEAP_MACROS
+#define HEAP_MACROS
+#define PARENT(i) ((i - 1)>>1)
+#define LEFT(i) ((i<<1)+1)
+#define RIGHT(i) ((i+1)<<1)
+#endif
+
 template<typename ElemType, sdizo::HeapType heap_t>
 sdizo::Heap<ElemType, heap_t>::Heap() noexcept
 :array{new ElemType[sdizo::Heap<ElemType, heap_t>::expand_size]},
@@ -126,7 +133,7 @@ void sdizo::Heap<ElemType, heap_t>::remove(ElemType element) noexcept
   --this->ssize;
 
   this->heapify(index);
-  
+
   // Heapify up the tree
   // TODO make it a procedure
   auto parent = PARENT(index);

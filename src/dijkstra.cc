@@ -39,7 +39,7 @@ void sdizo2::dijkstra::CostSourceTable::reset() noexcept
             sdizo2::dijkstra::CostSourceTable::INVALID_SOURCE);
 }
 
-void sdizo2::dijkstra::CostSourceTable::set_if(sdizo2::Edge edge)
+void sdizo2::dijkstra::CostSourceTable::set_if_smaller (sdizo2::Edge edge)
 {
   if(this->cost_table[edge.v2] <= edge.weight)
     return;
@@ -52,6 +52,22 @@ void sdizo2::dijkstra::CostSourceTable::set(sdizo2::Edge edge)
 {
   this->cost_table[edge.v2] = edge.weight;
   this->source_table[edge.v2] = edge.v1;
+}
+
+int32_t sdizo2::dijkstra::CostSourceTable::get_cost(int32_t index)
+{
+  if(index >= this->size || index < 0)
+    throw std::out_of_range("Tried getting cost if node that is out of rrange.");
+
+  return this->cost_table[index];
+}
+
+int32_t sdizo2::dijkstra::CostSourceTable::get_source(int32_t index)
+{
+  if(index >= this->size || index < 0)
+    throw std::out_of_range("Tried getting cost if node that is out of rrange.");
+
+  return this->source_table[index];
 }
 
 void sdizo2::dijkstra::CostSourceTable::resize(int32_t newsize) noexcept
@@ -94,7 +110,7 @@ void sdizo2::dijkstra::CostSourceTable::display() noexcept
 sdizo2::dijkstra::DijkstraSolver::DijkstraSolver(int32_t size) noexcept
 :cst(size),
  node_list(new sdizo::List<sdizo::ListNode<MSTListNode>>[size]),
- node_matrix(size), size(size) {}
+ node_matrix(size), size(size), starting_node(0) {}
 
 sdizo2::dijkstra::DijkstraSolver::~DijkstraSolver() noexcept
 {
@@ -145,13 +161,12 @@ sdizo2::dijkstra::DijkstraSolver::buildFromFile(const char *filename)
 
   int32_t edge_cnt;
   int32_t node_cnt;
-  int32_t starting_node;
 
   file >> edge_cnt;
   file >> node_cnt;
-  file >> starting_node;
 
   sdizo2::dijkstra::DijkstraSolver dsolver(node_cnt);
+  file >> dsolver.starting_node;
 
   Edge edge;
 
@@ -182,6 +197,40 @@ void sdizo2::dijkstra::DijkstraSolver::resize(int32_t newsize) noexcept
   this->node_matrix.resize(newsize);
 
   this->size = newsize;
+}
+
+void sdizo2::dijkstra::DijkstraSolver::solve() noexcept
+{
+  sdizo2::dijkstra::LookupHeap edge_heap(this->size);
+  int32_t *node_lookup = new int32_t[this->size];
+  this->cst.reset(); // TODO do i need this?
+
+  // prepare lookup table
+  for(auto i = 0; i < this->size; ++i)
+    node_lookup[i] = i;
+
+  // prepare heap
+  edge_heap.insert({0, 0});
+  for(auto i = 1; i < this->size; ++i)
+    edge_heap.insert({i, sdizo2::dijkstra::CostSourceTable::INF});
+
+  while(!edge_heap.is_empty())
+  {
+    // Get current cheapest node
+    auto node = edge_heap.pop();
+
+    // Get adjacent nodes
+    auto adj = this->node_list[node.node].get_cbegin();
+
+    // For all adjacent nodes
+    for(;adj != nullptr; adj = adj->next)
+    {
+      if(node.cost > this->cst.get_cost(adj->value.node))
+        continue;
+    }
+  }
+
+  delete [] node_lookup;
 }
 
 void sdizo2::dijkstra::DijkstraSolver::display() noexcept

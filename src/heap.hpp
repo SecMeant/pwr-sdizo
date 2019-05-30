@@ -4,9 +4,12 @@
 
 namespace sdizo{
 
+#ifndef HEAP_MACROS
+#define HEAP_MACROS
 #define PARENT(i) ((i - 1)>>1)
 #define LEFT(i) ((i<<1)+1)
 #define RIGHT(i) ((i+1)<<1)
+#endif
 
 enum class HeapType
 {min, max};
@@ -14,7 +17,7 @@ enum class HeapType
 template<typename ElemType, HeapType heap_t = HeapType::max>
 class Heap
 {
-  public:
+  private:
     // Each time heap expands in memory (need to be relocated)
     // it allocates memory of size given in expand_size * sizeof(remove_ptr(array_type)).
     constexpr static size_t expand_size = 4;
@@ -46,6 +49,8 @@ class Heap
     {ElemType ret = this->at(0); this->removeAt(0); return ret;}
 
     void remove(ElemType element) noexcept;
+
+    void update(int32_t index, ElemType element) noexcept;
 
     // Removes all elements
     void clear() noexcept;
