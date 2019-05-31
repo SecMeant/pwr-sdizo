@@ -29,8 +29,7 @@ void sdizo2::CostSourceTable::reset() noexcept
   if(this->size <= 0)
     return;
 
-  this->cost_table[0] = 0;
-  std::fill(this->cost_table+1, this->cost_table+this->size,
+  std::fill(this->cost_table, this->cost_table+this->size,
             sdizo2::CostSourceTable::INF);
   std::fill(this->source_table, this->source_table+this->size,
             sdizo2::CostSourceTable::INVALID_SOURCE);

@@ -70,6 +70,9 @@ public:
   void solve_matrix() noexcept;
 
   void display() noexcept;
+
+private:
+  void set_starting_node(int32_t snode) noexcept;
 };
 
 #ifndef HEAP_MACROS

@@ -43,7 +43,7 @@ void sdizo2::dijkstra::DijkstraSolver::loadFromFile
     }
 
     this->edge_list[edge.v1].append({edge.v2, edge.weight});
-    this->node_matrix.add(edge);
+    this->node_matrix.add_single(edge);
     --edge_cnt;
   }
 }
@@ -95,12 +95,15 @@ void sdizo2::dijkstra::DijkstraSolver::resize(int32_t newsize) noexcept
   this->node_matrix.resize(newsize);
 
   this->size = newsize;
+
+  this->cst.reset();
 }
 
 void sdizo2::dijkstra::DijkstraSolver::solve() noexcept
 {
   sdizo2::dijkstra::LookupHeap node_heap(this->size);
   this->cst.reset(); // TODO do i need this?
+  this->set_starting_node(this->starting_node);
 
   node_heap.reset();
 
@@ -136,6 +139,7 @@ void sdizo2::dijkstra::DijkstraSolver::solve_matrix() noexcept
 {
   sdizo2::dijkstra::LookupHeap node_heap(this->size);
   this->cst.reset(); // TODO do i need this?
+  this->set_starting_node(this->starting_node);
 
   node_heap.reset();
 
@@ -175,4 +179,10 @@ void sdizo2::dijkstra::DijkstraSolver::display() noexcept
     fmt::print("[{}] {}\n", i, this->edge_list[i]);
 
   this->node_matrix.display();
+}
+
+void sdizo2::dijkstra::DijkstraSolver::
+set_starting_node(int32_t snode) noexcept
+{
+  this->cst.set({-1, snode, 0});
 }
