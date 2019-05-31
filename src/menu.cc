@@ -7,6 +7,7 @@
 #include "test.hpp"
 #include "mst.hpp"
 #include "dijkstra.hpp"
+#include "bellman-ford.hpp"
 #include "timeutils.hpp"
 #include <fmt/format.h>
 #include <iostream>
@@ -564,9 +565,10 @@ void menu()
 int main()
 {
   using namespace sdizo2::dijkstra;
+  using sdizo2::bfSolver;
 
-  DijkstraSolver ds(0);
-  ds.loadFromFile("../testfiles/dane_droga.txt");
+  bfSolver ds(0);
+  ds.loadFromFile("../testfiles/dane_droga_BF.txt");
 
   ds.solve();
   ds.display();
