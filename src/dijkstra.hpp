@@ -88,7 +88,7 @@ class DijkstraSolver
 {
 private:
   CostSourceTable cst;
-  sdizo::List<sdizo::ListNode<MSTListNode>> *node_list;
+  sdizo::List<sdizo::ListNode<MSTListNode>> *edge_list;
   sdizo2::MSTMatrix node_matrix;
 
   int32_t size;
@@ -140,32 +140,20 @@ class LookupHeap
     // Throws std::out_of_range if index exceeds read span of array.
     ElemType at(int32_t index) const;
 
-    // Inserts element at location given by index.
-    // Throws std::out_of_range if index exceeds insert span of array,
-    void insert(ElemType element);
-
-    // Throws std::out_of_range if index exceeds span of array.
-    void removeAt(int32_t index);
-
     inline ElemType pop()
     {ElemType ret = this->at(0); this->removeAt(0); return ret;}
-
-    void remove(ElemType element) noexcept;
-
-    void update(int32_t index, ElemType element) noexcept;
 
     // Removes all elements
     void clear() noexcept;
 
-    // Searches for element in container.
-    // Returns true if element is in container.
-    // False otherwise.
-    bool contains(ElemType element) const noexcept;
-
     void display() const noexcept;
 
-    // Checks if container is proper heap,
+    // Checks if container is proper heap
     bool verify() const noexcept;
+
+    void reset(int32_t starting_node = 0);
+
+    void update(int32_t node, int32_t cost);
 
     inline decltype(auto) get_ssize() const noexcept
     {return this->ssize;}
@@ -173,18 +161,24 @@ class LookupHeap
     inline bool is_empty() const noexcept
     {return this->ssize == 0;}
 
+    // Finds element in table.
+    // If element is in the table, returns it's index, -1 otherwise.
+    int32_t find(ElemType elem) const;
+
   private:
     void heapify(int32_t index) noexcept;
     void heapify_down(int32_t index) noexcept;
     void heapify_up(int32_t index) noexcept;
 
+    void insert(ElemType element) noexcept;
+
     // Reallocs heap to new, bigger space.
     // New space is bigger by Heap::expand_size.
     void expand() noexcept;
 
-    // Finds element in table.
-    // If element is in the table, returns it's index, -1 otherwise.
-    int32_t find(ElemType elem) const noexcept;
+    // Throws std::out_of_range if index exceeds span of array.
+    // Removing from LookupHeap for dijkstra is forbidden
+    void removeAt(int32_t index);
 };
 
 }; // namespace sdizo2

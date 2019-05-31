@@ -563,11 +563,13 @@ void menu()
 
 int main()
 {
-  auto dsolver = 
-    sdizo2::dijkstra::DijkstraSolver::buildFromFile("../testfiles/dane_droga.txt");
-  dsolver.display();
+  using namespace sdizo2::dijkstra;
 
+  DijkstraSolver ds(0);
+  ds.loadFromFile("../testfiles/dane_droga.txt");
 
+  ds.solve();
+  ds.display();
 
   return 0;
 }

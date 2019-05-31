@@ -81,7 +81,8 @@ void sdizo2::dijkstra::CostSourceTable::resize(int32_t newsize) noexcept
   this->size = newsize;
 }
 
-void sdizo2::dijkstra::CostSourceTable::display() noexcept
+void sdizo2::dijkstra::CostSourceTable::display()
+noexcept
 {
   constexpr int32_t alignment = 15;
 
@@ -105,16 +106,32 @@ void sdizo2::dijkstra::CostSourceTable::display() noexcept
     fmt::print("{:<10} ", this->source_table[i]);
 
   putchar('\n');
+
+
+  // Print path for each node from starting node
+  for(auto i = 0; i < this->size; ++i)
+  {
+    auto current_node = this->source_table[i];
+    fmt::print("{}", i);
+
+    while(current_node != -1)
+    {
+      fmt::print(" <- {}", current_node);
+      current_node = this->source_table[current_node];
+    }
+
+    putchar('\n');
+  }
 }
 
 sdizo2::dijkstra::DijkstraSolver::DijkstraSolver(int32_t size) noexcept
 :cst(size),
- node_list(new sdizo::List<sdizo::ListNode<MSTListNode>>[size]),
+ edge_list(new sdizo::List<sdizo::ListNode<MSTListNode>>[size]),
  node_matrix(size), size(size), starting_node(0) {}
 
 sdizo2::dijkstra::DijkstraSolver::~DijkstraSolver() noexcept
 {
-  delete [] this->node_list;
+  delete [] this->edge_list;
 }
 
 void sdizo2::dijkstra::DijkstraSolver::loadFromFile
@@ -146,7 +163,7 @@ void sdizo2::dijkstra::DijkstraSolver::loadFromFile
         " Excepted from [0,{}), got {}", this->size, edge.v1));
     }
 
-    this->node_list[edge.v1].append({edge.v2, edge.weight});
+    this->edge_list[edge.v1].append({edge.v2, edge.weight});
     --edge_cnt;
   }
 }
@@ -179,7 +196,7 @@ sdizo2::dijkstra::DijkstraSolver::buildFromFile(const char *filename)
         " Excepted from [0,{}), got {}", dsolver.size, edge.v1));
     }
 
-    dsolver.node_list[edge.v1].append({edge.v2, edge.weight});
+    dsolver.edge_list[edge.v1].append({edge.v2, edge.weight});
     --edge_cnt;
   }
 
@@ -190,8 +207,8 @@ void sdizo2::dijkstra::DijkstraSolver::resize(int32_t newsize) noexcept
 {
   this->cst.resize(newsize);
 
-  delete [] this->node_list;
-  this->node_list =
+  delete [] this->edge_list;
+  this->edge_list =
     new sdizo::List<sdizo::ListNode<MSTListNode>>[newsize];
 
   this->node_matrix.resize(newsize);
@@ -201,36 +218,37 @@ void sdizo2::dijkstra::DijkstraSolver::resize(int32_t newsize) noexcept
 
 void sdizo2::dijkstra::DijkstraSolver::solve() noexcept
 {
-  sdizo2::dijkstra::LookupHeap edge_heap(this->size);
-  int32_t *node_lookup = new int32_t[this->size];
+  sdizo2::dijkstra::LookupHeap node_heap(this->size);
   this->cst.reset(); // TODO do i need this?
 
-  // prepare lookup table
-  for(auto i = 0; i < this->size; ++i)
-    node_lookup[i] = i;
+  node_heap.reset();
 
-  // prepare heap
-  edge_heap.insert({0, 0});
-  for(auto i = 1; i < this->size; ++i)
-    edge_heap.insert({i, sdizo2::dijkstra::CostSourceTable::INF});
-
-  while(!edge_heap.is_empty())
+  while(!node_heap.is_empty())
   {
     // Get current cheapest node
-    auto node = edge_heap.pop();
+    auto node = node_heap.pop();
 
     // Get adjacent nodes
-    auto adj = this->node_list[node.node].get_cbegin();
+    auto edge = this->edge_list[node.node].get_cbegin();
 
     // For all adjacent nodes
-    for(;adj != nullptr; adj = adj->next)
+    for(;edge != nullptr; edge = edge->next)
     {
-      if(node.cost > this->cst.get_cost(adj->value.node))
-        continue;
+      auto current_node_cost = this->cst.get_cost(node.node);
+      auto current_edge_cost = edge->value.weight;
+      auto current_dest_cost = this->cst.get_cost(edge->value.node);
+
+      auto new_cost = current_node_cost + current_edge_cost;
+      if(new_cost < current_dest_cost)
+      {
+        auto current_dest_node = edge->value.node;
+        auto current_node = node.node;
+
+        node_heap.update(current_dest_node, new_cost);
+        cst.set({current_node, current_dest_node, new_cost});
+      }
     }
   }
-
-  delete [] node_lookup;
 }
 
 void sdizo2::dijkstra::DijkstraSolver::display() noexcept
@@ -238,5 +256,5 @@ void sdizo2::dijkstra::DijkstraSolver::display() noexcept
   this->cst.display();
 
   for(auto i = 0; i < this->size; ++i)
-    fmt::print("[{}] {}\n", i, this->node_list[i]);
+    fmt::print("[{}] {}\n", i, this->edge_list[i]);
 }
