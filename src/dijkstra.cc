@@ -43,6 +43,7 @@ void sdizo2::dijkstra::DijkstraSolver::loadFromFile
     }
 
     this->edge_list[edge.v1].append({edge.v2, edge.weight});
+    this->node_matrix.add(edge);
     --edge_cnt;
   }
 }
@@ -76,6 +77,7 @@ sdizo2::dijkstra::DijkstraSolver::buildFromFile(const char *filename)
     }
 
     dsolver.edge_list[edge.v1].append({edge.v2, edge.weight});
+    dsolver.node_matrix.add_single(edge);
     --edge_cnt;
   }
 
@@ -130,10 +132,47 @@ void sdizo2::dijkstra::DijkstraSolver::solve() noexcept
   }
 }
 
+void sdizo2::dijkstra::DijkstraSolver::solve_matrix() noexcept
+{
+  sdizo2::dijkstra::LookupHeap node_heap(this->size);
+  this->cst.reset(); // TODO do i need this?
+
+  node_heap.reset();
+
+  while(!node_heap.is_empty())
+  {
+    // Get current cheapest node
+    auto node = node_heap.pop();
+
+    // Get adjacent nodes
+    auto edge = this->edge_list[node.node].get_cbegin();
+
+    // For all adjacent nodes
+    for(;edge != nullptr; edge = edge->next)
+    {
+      auto current_node_cost = this->cst.get_cost(node.node);
+      auto current_edge_cost = edge->value.weight;
+      auto current_dest_cost = this->cst.get_cost(edge->value.node);
+
+      auto new_cost = current_node_cost + current_edge_cost;
+      if(new_cost < current_dest_cost)
+      {
+        auto current_dest_node = edge->value.node;
+        auto current_node = node.node;
+
+        node_heap.update(current_dest_node, new_cost);
+        cst.set({current_node, current_dest_node, new_cost});
+      }
+    }
+  }
+}
+
 void sdizo2::dijkstra::DijkstraSolver::display() noexcept
 {
   this->cst.display();
 
   for(auto i = 0; i < this->size; ++i)
     fmt::print("[{}] {}\n", i, this->edge_list[i]);
+
+  this->node_matrix.display();
 }

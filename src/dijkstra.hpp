@@ -67,6 +67,7 @@ public:
   void resize(int32_t newsize) noexcept;
 
   void solve() noexcept;
+  void solve_matrix() noexcept;
 
   void display() noexcept;
 };

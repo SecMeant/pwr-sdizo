@@ -129,8 +129,23 @@ void sdizo2::MSTMatrix::resize(int32_t newsize) noexcept
 void sdizo2::MSTMatrix::display() noexcept
 {
   fmt::print("Weight: {}\n", this->weight);
+
+  fmt::print("{:<4}"," ");
+  for(auto x = 0; x < this->size; ++x)
+  {
+    fmt::print("{:<3} ", x);
+  }
+  putchar('\n');
+
+  for(auto x = 0; x < this->size+1; ++x)
+  {
+    fmt::print("----");
+  }
+  putchar('\n');
+
   for(auto y = 0; y < this->size; ++y)
   {
+    fmt::print("{} | ", y);
     for(auto x = 0; x < this->size; ++x)
     {
       fmt::print("{:<3} ", this->get(x,y));
