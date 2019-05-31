@@ -1,4 +1,5 @@
 #include "dijkstra.hpp"
+#include "costsourcetable.hpp"
 #include "treeprinter.hpp"
 #include "common.hpp"
 #include <stdexcept>
@@ -30,7 +31,7 @@ sdizo2::dijkstra::LookupHeap::LookupHeap
   // prepare heap
   this->array[0] = {0,0};
   for(auto i = 1; i < this->ssize; ++i)
-    this->array[i] = {i, sdizo2::dijkstra::CostSourceTable::INF};
+    this->array[i] = {i, sdizo2::CostSourceTable::INF};
 
   this->ssize = size;
   this->length = size;
@@ -277,7 +278,7 @@ void sdizo2::dijkstra::LookupHeap::reset(int32_t starting_node)
 
   // prepare heap
   for(auto i = 0; i < this->ssize; ++i)
-    this->array[i] = {i, sdizo2::dijkstra::CostSourceTable::INF};
+    this->array[i] = {i, sdizo2::CostSourceTable::INF};
 
   this->array[starting_node] = {starting_node,0};
 }
