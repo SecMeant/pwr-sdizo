@@ -41,6 +41,7 @@ void sdizo2::bfSolver::loadFromFile
     }
 
     this->edge_list[edge.v1].append({edge.v2, edge.weight});
+    this->node_matrix.add_single(edge);
     --edge_cnt;
   }
 }
@@ -74,6 +75,7 @@ sdizo2::bfSolver::buildFromFile(const char *filename)
     }
 
     dsolver.edge_list[edge.v1].append({edge.v2, edge.weight});
+    dsolver.node_matrix.add_single(edge);
     --edge_cnt;
   }
 
@@ -90,12 +92,15 @@ void sdizo2::bfSolver::resize(int32_t newsize) noexcept
 
   this->node_matrix.resize(newsize);
 
+  this->cst.reset();
+
   this->size = newsize;
 }
 
 void sdizo2::bfSolver::solve() noexcept
 {
   this->cst.reset(); // TODO do i need this?
+  this->set_starting_node(this->starting_node);
 
   for(auto i = 0 ; i < this->size; ++i)
   {
@@ -129,11 +134,58 @@ void sdizo2::bfSolver::solve() noexcept
   }
 }
 
+void sdizo2::bfSolver::solve_matrix() noexcept
+{
+  this->cst.reset(); // TODO do i need this?
+  this->set_starting_node(this->starting_node);
+
+  for(auto i = 0 ; i < this->size; ++i)
+  {
+    for(auto current_node = 0;
+        current_node < this->size;
+        ++current_node)
+    {
+      // Get adjacent nodes
+      auto edge = this->node_matrix.get_next_adjacent(current_node, 0);
+
+      // For all adjacent nodes
+      for(;edge != MSTListNode{-1, -1};
+          edge = this->node_matrix.get_next_adjacent(current_node, edge.node))
+      {
+        auto current_node_cost = this->cst.get_cost(current_node);
+
+        if(current_node_cost == sdizo2::CostSourceTable::INF)
+          continue;
+
+        auto current_edge_cost = edge.weight;
+        auto current_dest_cost = this->cst.get_cost(edge.node);
+
+        auto new_cost = current_node_cost + current_edge_cost;
+        if(new_cost < current_dest_cost)
+        {
+          auto current_dest_node = edge.node;
+
+          cst.set({current_node, current_dest_node, new_cost});
+        }
+      }
+    }
+  }
+}
+
 void sdizo2::bfSolver::display() noexcept
 {
   this->cst.display();
+  this->node_matrix.display();
 
   for(auto i = 0; i < this->size; ++i)
     fmt::print("[{}] {}\n", i, this->edge_list[i]);
 }
+
+void sdizo2::bfSolver::
+set_starting_node(int32_t snode) noexcept
+{
+  this->cst.set({-1, snode, 0});
+}
+
+
 

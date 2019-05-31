@@ -24,8 +24,12 @@ public:
   void resize(int32_t newsize) noexcept;
 
   void solve() noexcept;
+  void solve_matrix() noexcept;
 
   void display() noexcept;
+
+private:
+  void set_starting_node(int32_t snode) noexcept;
 };
 
 }; // namespace sdizo2

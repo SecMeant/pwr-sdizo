@@ -103,7 +103,6 @@ noexcept
 
   putchar('\n');
 
-
   // Print path for each node from starting node
   for(auto i = 0; i < this->size; ++i)
   {

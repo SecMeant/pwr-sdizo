@@ -96,6 +96,16 @@ struct MSTListNode
 
   value_type node;
   value_type weight;
+
+  inline bool operator==(MSTListNode n)
+  {
+    return this->node == n.node;
+  }
+
+  inline bool operator!=(MSTListNode n)
+  {
+    return !(*this == n);
+  }
 };
 
 class MSTList
@@ -134,6 +144,11 @@ public:
 
   int32_t get(int32_t x, int32_t y);
   void set(int32_t x, int32_t y, int32_t val);
+
+  // Returns next adjacent node to node passed as argument
+  // after the one passed as second argument
+  // returns {-1, -1} if no more adjacent nodes
+  MSTListNode get_next_adjacent(int32_t node, int32_t last_adj);
 
   // Clears and resizes matrix
   void resize(int32_t newsize) noexcept;

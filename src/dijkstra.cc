@@ -149,19 +149,20 @@ void sdizo2::dijkstra::DijkstraSolver::solve_matrix() noexcept
     auto node = node_heap.pop();
 
     // Get adjacent nodes
-    auto edge = this->edge_list[node.node].get_cbegin();
+    auto edge = this->node_matrix.get_next_adjacent(node.node, 0);
 
     // For all adjacent nodes
-    for(;edge != nullptr; edge = edge->next)
+    for(;edge != MSTListNode{-1, -1};
+        edge = this->node_matrix.get_next_adjacent(node.node, edge.node))
     {
       auto current_node_cost = this->cst.get_cost(node.node);
-      auto current_edge_cost = edge->value.weight;
-      auto current_dest_cost = this->cst.get_cost(edge->value.node);
+      auto current_edge_cost = edge.weight;
+      auto current_dest_cost = this->cst.get_cost(edge.node);
 
       auto new_cost = current_node_cost + current_edge_cost;
       if(new_cost < current_dest_cost)
       {
-        auto current_dest_node = edge->value.node;
+        auto current_dest_node = edge.node;
         auto current_node = node.node;
 
         node_heap.update(current_dest_node, new_cost);

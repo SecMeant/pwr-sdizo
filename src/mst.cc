@@ -82,7 +82,7 @@ void sdizo2::MSTMatrix::add_single(sdizo2::Edge edge) noexcept
   assert(edge.v1 < this->size);
   assert(edge.v2 < this->size);
 
-  this->set(edge.v1, edge.v2, edge.weight);;
+  this->set(edge.v1, edge.v2, edge.weight);
   this->weight += edge.weight;
 }
 
@@ -115,7 +115,32 @@ void sdizo2::MSTMatrix::set(int32_t x, int32_t y, int32_t val)
   assert(y >= 0);
 
   this->tree[x + y * this->size] = val;
-  this->tree[y + x * this->size] = val;
+}
+
+sdizo2::MSTListNode
+sdizo2::MSTMatrix::get_next_adjacent(int32_t node, int32_t last_adj)
+{
+  if(node < 0 || node >= this->size)
+    throw std::out_of_range(fmt::format(
+      "Tried getting adjacent of Node out of range, "
+      "expected one from range [0, {}), got {}.",
+      this->size, node));
+
+  if(last_adj < 0 || last_adj >= this->size)
+    throw std::out_of_range(fmt::format(
+      "Last adjacent out of range, expected "
+      "one from range [0, {}), got {}.",
+      this->size, last_adj));
+
+  ++last_adj;
+  for(;last_adj < this->size; ++last_adj)
+  {
+    auto adj_node_weight = this->get(node, last_adj);
+    if(adj_node_weight != 0)
+      return {last_adj, adj_node_weight};
+  }
+
+  return {-1, -1};
 }
 
 void sdizo2::MSTMatrix::resize(int32_t newsize) noexcept
