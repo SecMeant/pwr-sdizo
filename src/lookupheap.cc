@@ -153,10 +153,10 @@ void sdizo2::dijkstra::LookupHeap::heapify_up(int32_t index) noexcept
 
   bool heap_property_satisfied;
 
-  while(parent > 0)
+  while(parent >= 0)
   {
     heap_property_satisfied = sdizo::key(this->array[index]) >
-                             sdizo::key(this->array[parent]);
+                              sdizo::key(this->array[parent]);
 
     if (heap_property_satisfied)
       break;

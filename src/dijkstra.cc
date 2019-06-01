@@ -84,6 +84,59 @@ sdizo2::dijkstra::DijkstraSolver::buildFromFile(const char *filename)
   return dsolver;
 }
 
+int32_t
+sdizo2::dijkstra::DijkstraSolver::generate(int32_t node_count, double density)
+noexcept
+{
+  constexpr int32_t node_dist_range_begin = 0;
+  constexpr int32_t weight_dist_range_begin = 1;
+  constexpr int32_t weight_dist_range_end = 5;
+
+  if(density < 0.0 || density > 1.0)
+    return -1;
+
+  this->resize(node_count);
+
+  int32_t edges_to_gen = (node_count-1) * node_count / 2 * density;
+
+  std::random_device generator;
+  std::uniform_int_distribution<int32_t>
+   node_dist(node_dist_range_begin, node_count-1);
+  std::uniform_int_distribution<int32_t>
+   weight_dist(weight_dist_range_begin, weight_dist_range_end);
+
+  for(auto i = 0; i < node_count-1; ++i)
+  {
+    auto w = weight_dist(generator);
+    node_matrix.add_single({i, i+1, w});
+    this->edge_list[i].append({i+1,w});
+  }
+
+  edges_to_gen -= node_count;
+  if(edges_to_gen <= 0)
+    return 0;
+
+  // TODO faster generation -- if density is for example 0.99,
+  // there will be a lot of misses until hitting edge that is not
+  // already in use.
+  for(int32_t curr_node_cnt = 0; curr_node_cnt < edges_to_gen;)
+  {
+    auto x = node_dist(generator);
+    auto y = node_dist(generator);
+
+    if(!!node_matrix.get(x, y) || x == y)
+      continue;
+
+    auto weight = weight_dist(generator);
+
+    node_matrix.add_single({x,y,weight});
+    this->edge_list[x].append({y,weight});
+    ++curr_node_cnt;
+  }
+
+  return 0;
+}
+
 void sdizo2::dijkstra::DijkstraSolver::resize(int32_t newsize) noexcept
 {
   this->cst.resize(newsize);
@@ -101,11 +154,15 @@ void sdizo2::dijkstra::DijkstraSolver::resize(int32_t newsize) noexcept
 
 void sdizo2::dijkstra::DijkstraSolver::solve() noexcept
 {
+  constexpr auto INF = sdizo2::CostSourceTable::INF;
+
   sdizo2::dijkstra::LookupHeap node_heap(this->size);
   this->cst.reset(); // TODO do i need this?
   this->set_starting_node(this->starting_node);
 
   node_heap.reset();
+
+  this->display();
 
   while(!node_heap.is_empty())
   {
@@ -122,7 +179,10 @@ void sdizo2::dijkstra::DijkstraSolver::solve() noexcept
       auto current_edge_cost = edge->value.weight;
       auto current_dest_cost = this->cst.get_cost(edge->value.node);
 
-      auto new_cost = current_node_cost + current_edge_cost;
+      auto new_cost = current_node_cost == INF ?
+                      current_edge_cost :
+                      current_node_cost + current_edge_cost;
+
       if(new_cost < current_dest_cost)
       {
         auto current_dest_node = edge->value.node;
@@ -130,6 +190,8 @@ void sdizo2::dijkstra::DijkstraSolver::solve() noexcept
 
         node_heap.update(current_dest_node, new_cost);
         cst.set({current_node, current_dest_node, new_cost});
+        cst.display();
+        node_heap.display();
       }
     }
   }

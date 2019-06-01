@@ -244,7 +244,7 @@ void sdizo::Heap<ElemType, heap_t>::heapify_up(int32_t index) noexcept
 
   bool heap_property_satisfied;
 
-  while(parent > 0)
+  while(parent >= 0)
   {
     if constexpr (heap_t == sdizo::HeapType::max)
       heap_property_satisfied = sdizo::key(this->array[index]) <

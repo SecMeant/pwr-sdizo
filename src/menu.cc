@@ -567,31 +567,10 @@ int main()
   using namespace sdizo2::dijkstra;
   using sdizo2::bfSolver;
 
-  bfSolver bfs(0);
-  bfs.loadFromFile("../testfiles/dane_droga_BF.txt");
-
-  bfs.solve();
-  bfs.display();
-
-  puts("\n\n ***** ds\n\n");
-
-  bfs.loadFromFile("../testfiles/dane_droga_BF.txt");
-  bfs.solve_matrix();
-  bfs.display();
-
-  puts("\n\n ==== ds\n\n");
-
-  auto ds = sdizo2::dijkstra::DijkstraSolver::buildFromFile("../testfiles/dane_droga.txt");
-
-  ds.solve_matrix();
-  ds.display();
-
-  puts("\n\n ==== ds2\n\n");
-
   DijkstraSolver ds2(0);
-  ds2.loadFromFile("../testfiles/dane_droga.txt");
 
-  ds2.solve_matrix();
+  ds2.generate(20, 0.99);
+  ds2.solve();
   ds2.display();
 
   return 0;

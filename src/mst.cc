@@ -155,7 +155,7 @@ void sdizo2::MSTMatrix::display() noexcept
 {
   fmt::print("Weight: {}\n", this->weight);
 
-  fmt::print("{:<4}"," ");
+  fmt::print("{:<5}"," ");
   for(auto x = 0; x < this->size; ++x)
   {
     fmt::print("{:<3} ", x);
@@ -170,7 +170,7 @@ void sdizo2::MSTMatrix::display() noexcept
 
   for(auto y = 0; y < this->size; ++y)
   {
-    fmt::print("{} | ", y);
+    fmt::print("{:<2} | ", y);
     for(auto x = 0; x < this->size; ++x)
     {
       fmt::print("{:<3} ", this->get(x,y));
@@ -264,7 +264,7 @@ int32_t sdizo2::MSTSolver::generate(int32_t node_count, double density) noexcept
   for(auto i = 0; i < node_count-1; ++i)
   {
     auto w = weight_dist(generator);
-    edge_matrix.set(i, i+1, w);
+    edge_matrix.add({i, i+1, w});
     this->edge_list.append({i,i+1,w});
   }
 
@@ -285,7 +285,7 @@ int32_t sdizo2::MSTSolver::generate(int32_t node_count, double density) noexcept
 
     auto weight = weight_dist(generator);
 
-    edge_matrix.set(x,y,weight);
+    edge_matrix.add({x,y,weight});
     this->edge_list.append({x,y,weight});
     ++curr_node_cnt;
   }

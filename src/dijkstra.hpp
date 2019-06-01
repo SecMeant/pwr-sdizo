@@ -64,6 +64,8 @@ public:
 
   void loadFromFile(const char *filename);
   static DijkstraSolver buildFromFile(const char *filename);
+
+  int32_t generate(int32_t node_cnt, double density) noexcept;
   void resize(int32_t newsize) noexcept;
 
   void solve() noexcept;
