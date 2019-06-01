@@ -240,10 +240,18 @@ void sdizo2::dijkstra::DijkstraSolver::solve_matrix() noexcept
 void sdizo2::dijkstra::DijkstraSolver::display() noexcept
 {
   this->cst.display();
+  this->display_list();
+  this->display_matrix();
+}
 
+void sdizo2::dijkstra::DijkstraSolver::display_list() noexcept
+{
   for(auto i = 0; i < this->size; ++i)
     fmt::print("[{}] {}\n", i, this->edge_list[i]);
+}
 
+void sdizo2::dijkstra::DijkstraSolver::display_matrix() noexcept
+{
   this->node_matrix.display();
 }
 

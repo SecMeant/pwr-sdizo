@@ -288,11 +288,21 @@ noexcept
 
 void sdizo2::bfSolver::display() noexcept
 {
-  this->cst.display();
-  this->node_matrix.display();
+  this->display_list();
+  this->display_matrix();
+}
 
+void sdizo2::bfSolver::display_list() noexcept
+{
+  this->cst.display();
   for(auto i = 0; i < this->size; ++i)
     fmt::print("[{}] {}\n", i, this->edge_list[i]);
+}
+
+void sdizo2::bfSolver::display_matrix() noexcept
+{
+  this->cst.display();
+  this->node_matrix.display();
 }
 
 void sdizo2::bfSolver::

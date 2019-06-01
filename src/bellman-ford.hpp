@@ -28,6 +28,8 @@ public:
   int32_t generate(int32_t node_cnt, double density) noexcept;
 
   void display() noexcept;
+  void display_list() noexcept;
+  void display_matrix() noexcept;
 
 private:
   void set_starting_node(int32_t snode) noexcept;

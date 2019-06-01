@@ -381,94 +381,47 @@ void menu()
 }; // namespace sdizo
 
 namespace sdizo2{
-void menu_kruskal(sdizo2::KruskalSolver& ksolver)
+
+template<class SolverType>
+const char* get_solver_name()
 {
-  using namespace std;
-  char option;
-  string fileName;
-
-  do
-  {
-    puts("--- Algorytm Kruskala MST ---");
-    puts("1.Wczytaj z pliku");
-    puts("2.Rozwiaż");
-    puts("3.Wyświetl wynik w postaci listy");
-    puts("4.Wyświetl wynik w postaci macierzy");
-    puts("5.Wyświetl wczytane dane (macierz)");
-    puts("6.Wyświetl wczytane dane (lista)");
-    puts("7.Generuj");
-    puts("0.Wyjdz");
-
-    printf("Podaj opcje: ");
-    GET_OPTION(option);
-
-    switch (option)
-    {
-      case '1':
-        printf(" Podaj nazwe pliku:");
-        cin >> fileName;
-
-        try{
-          ksolver.loadFromFile(fileName.c_str());
-        }catch(std::runtime_error& err){
-          err.what();
-        }
-
-        break;
-
-      case '2':
-        ksolver.solve();
-        break;
-
-      case '3':
-        ksolver.display_list();
-        break;
-
-      case '4':
-        ksolver.display_matrix();
-        break;
-
-      case '5':
-        ksolver.display_buffer_matrix();
-        break;
-
-      case '6':
-        ksolver.display_buffer_list();
-        break;
-
-      case '7':
-      {
-        int32_t node_cnt;
-        double density;
-
-        fmt::print("Podaj ilość wierzchołkóœ: ");
-        cin >> node_cnt;
-
-        fmt::print("Podaj gęstość: ");
-        cin >> density;
-
-        ksolver.generate(node_cnt, density);
-        break;
-      }
-    }
-  } while (option != '0');
+  if constexpr(std::is_same<SolverType, sdizo2::KruskalSolver>::value)
+    return "KruskalSolver";
+  else if (std::is_same<SolverType, sdizo2::PrimSolver>::value)
+    return "PrimSolver";
+  else if (std::is_same<SolverType,
+                        sdizo2::dijkstra::DijkstraSolver>::value)
+    return "Dijkstra";
+  else if (std::is_same<SolverType, sdizo2::bfSolver>::value)
+    return "Bellman-Ford";
 }
 
-void menu_prim(sdizo2::PrimSolver& psolver)
+template<class SolverType>
+void menu_solver(SolverType& solver)
 {
   using namespace std;
   char option;
   string fileName;
 
+
+  constexpr bool is_mst_solver =
+    std::is_base_of<sdizo2::MSTSolver, SolverType>::value;
+
   do
   {
-    puts("--- Algorytm Prima MST ---");
+    puts(fmt::format("--- MENU ({}) ---",
+         get_solver_name<SolverType>()).c_str());
     puts("1.Wczytaj z pliku");
     puts("2.Rozwiaż");
     puts("3.Wyświetl wynik w postaci listy");
     puts("4.Wyświetl wynik w postaci macierzy");
-    puts("5.Wyświetl wczytane dane (macierz)");
-    puts("6.Wyświetl wczytane dane (lista)");
+
+    if constexpr(is_mst_solver)
+    {
+      puts("5.Wyświetl wczytane dane (macierz)");
+      puts("6.Wyświetl wczytane dane (lista)");
+    }
+
     puts("7.Generuj");
     puts("0.Wyjdz");
 
@@ -482,7 +435,7 @@ void menu_prim(sdizo2::PrimSolver& psolver)
         cin >> fileName;
 
         try{
-          psolver.loadFromFile(fileName.c_str());
+          solver.loadFromFile(fileName.c_str());
         }catch(std::runtime_error& err){
           err.what();
         }
@@ -490,23 +443,25 @@ void menu_prim(sdizo2::PrimSolver& psolver)
         break;
 
       case '2':
-        psolver.solve();
+        solver.solve();
         break;
 
       case '3':
-        psolver.display_list();
+        solver.display_list();
         break;
 
       case '4':
-        psolver.display_matrix();
+        solver.display_matrix();
         break;
 
       case '5':
-        psolver.display_buffer_matrix();
+        if constexpr(is_mst_solver)
+          solver.display_buffer_matrix();
         break;
 
       case '6':
-        psolver.display_buffer_list();
+        if constexpr(is_mst_solver)
+          solver.display_buffer_list();
         break;
 
       case '7':
@@ -520,7 +475,7 @@ void menu_prim(sdizo2::PrimSolver& psolver)
         fmt::print("Podaj gęstość: ");
         cin >> density;
 
-        psolver.generate(node_cnt, density);
+        solver.generate(node_cnt, density);
         break;
       }
     }
@@ -533,8 +488,8 @@ void menu()
 
   sdizo2::KruskalSolver ksolver;
   sdizo2::PrimSolver psolver;
-  sdizo2::dijkstra::DijkstraSolver dsolver;
-  sdizo2::bfSolver bfsolver;
+  sdizo2::dijkstra::DijkstraSolver dsolver(0);
+  sdizo2::bfSolver bfsolver(0);
 
   char option;
   do
@@ -552,19 +507,19 @@ void menu()
     switch (option)
     {
       case '1':
-        menu_kruskal(ksolver);
+        menu_solver(ksolver);
         break;
 
       case '2':
-        menu_prim(psolver);
+        menu_solver(psolver);
         break;
 
       case '3':
-        menu_dijkstra(dsolver);
+        menu_solver(dsolver);
         break;
 
       case '4':
-        menu_bf(bfsolver);
+        menu_solver(bfsolver);
         break;
 
       default:
@@ -579,12 +534,7 @@ int main()
   using namespace sdizo2::dijkstra;
   using sdizo2::bfSolver;
 
-  bfSolver solver(0);
-  solver.generate(20, 0.99);
-  solver.solve_matrix();
-  solver.display();
-  solver.solve();
-  solver.display();
+  sdizo2::menu();
 
   return 0;
 }
