@@ -533,6 +533,8 @@ void menu()
 
   sdizo2::KruskalSolver ksolver;
   sdizo2::PrimSolver psolver;
+  sdizo2::dijkstra::DijkstraSolver dsolver;
+  sdizo2::bfSolver bfsolver;
 
   char option;
   do
@@ -541,6 +543,8 @@ void menu()
     puts("==== MENU GLOWNE ===");
     puts("1.Kruskal solver");
     puts("2.Prim solver");
+    puts("3.Dijkstra path find");
+    puts("4.Bellman-Ford path find");
     puts("0.Wyjscie");
     printf("Podaj opcje: ");
     GET_OPTION(option);
@@ -555,6 +559,14 @@ void menu()
         menu_prim(psolver);
         break;
 
+      case '3':
+        menu_dijkstra(dsolver);
+        break;
+
+      case '4':
+        menu_bf(bfsolver);
+        break;
+
       default:
         break;
     }
@@ -567,11 +579,12 @@ int main()
   using namespace sdizo2::dijkstra;
   using sdizo2::bfSolver;
 
-  DijkstraSolver ds2(0);
-
-  ds2.generate(20, 0.99);
-  ds2.solve();
-  ds2.display();
+  bfSolver solver(0);
+  solver.generate(20, 0.99);
+  solver.solve_matrix();
+  solver.display();
+  solver.solve();
+  solver.display();
 
   return 0;
 }

@@ -23,8 +23,9 @@ public:
   static bfSolver buildFromFile(const char *filename);
   void resize(int32_t newsize) noexcept;
 
-  void solve() noexcept;
-  void solve_matrix() noexcept;
+  void solve();
+  void solve_matrix();
+  int32_t generate(int32_t node_cnt, double density) noexcept;
 
   void display() noexcept;
 

@@ -190,8 +190,6 @@ void sdizo2::dijkstra::DijkstraSolver::solve() noexcept
 
         node_heap.update(current_dest_node, new_cost);
         cst.set({current_node, current_dest_node, new_cost});
-        cst.display();
-        node_heap.display();
       }
     }
   }
@@ -199,6 +197,8 @@ void sdizo2::dijkstra::DijkstraSolver::solve() noexcept
 
 void sdizo2::dijkstra::DijkstraSolver::solve_matrix() noexcept
 {
+  constexpr auto INF = sdizo2::CostSourceTable::INF;
+
   sdizo2::dijkstra::LookupHeap node_heap(this->size);
   this->cst.reset(); // TODO do i need this?
   this->set_starting_node(this->starting_node);
@@ -221,7 +221,10 @@ void sdizo2::dijkstra::DijkstraSolver::solve_matrix() noexcept
       auto current_edge_cost = edge.weight;
       auto current_dest_cost = this->cst.get_cost(edge.node);
 
-      auto new_cost = current_node_cost + current_edge_cost;
+      auto new_cost = current_node_cost == INF ?
+                      current_edge_cost :
+                      current_node_cost + current_edge_cost;
+
       if(new_cost < current_dest_cost)
       {
         auto current_dest_node = edge.node;
